@@ -22,7 +22,7 @@ import { useContractContext } from '../../src/context/ContractContext.js';
 import ProvenanceSuccess from '../provenance-success/ProvenanceSuccess.js';
 
 //styling imports
-//import "./pagesStyling/RegisterItem.css"
+import styles from "./RegisterItem.module.css"
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
@@ -336,16 +336,16 @@ const createPracticeProvenance = async() => {
             </>
             :null
             }
-
-            <Col>
-              <div className="dropdown">
-                <Button className="button-6" onClick={resetTokenDetails}>Mint a New Token</Button>              
+            //clean up the layout in this element
+            <Col style={{textAlign: 'center'}}>
+              <div className={styles.Dropdown}>
+                <Button className={styles.button-6} onClick={resetTokenDetails}>Mint a New Token</Button>              
               </div>
             </Col>
             { formData.verificationphotohash.length > 0 && readyToMint  ?
             <Col>
 
-              <Button className="dropbtn" style={{backgroundColor: 'red'}} onClick={mintToken} disabled={null}> Mint Token {tokenToMint}</Button>            
+              <Button className={styles.dropbtn} style={{backgroundColor: 'red'}} onClick={mintToken} disabled={null}> Mint Token {tokenToMint}</Button>            
             </Col>  :
             null }
 
@@ -383,10 +383,10 @@ const createPracticeProvenance = async() => {
 
 
     return(
-        <div className="NewProvenance">
+        <div className={styles.NewProvenance}>
           <Container>
             <Link href="/provenances">Back to User Main</Link>
-            <h1 className="pt-5">Create A Deed of Provenance</h1>
+            <h1 className="pt-5 mx-auto">Create A Deed of Provenance</h1>
 
             {/*Verfication Photo Upload*/} 
             {readyToMint === false && formData.verificationphotohash.length > 0 ?
@@ -415,7 +415,6 @@ const createPracticeProvenance = async() => {
           {/*readyToMint ? null : <p>You are currently creating a provenance for this token: {tokenToMint}</p>*/}
           <Row className="pt-4">
             <UserTokens />
-
           </Row>
           
 
