@@ -8,7 +8,7 @@ import waitingkitten from '../../public/images/waitingkitten.jpeg'
 
 //import './DragAndDrop.css';
 
-const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMessage, setFormData}) => {
+const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMessage, setFormData, claimPhoto}) => {
 
     const FormData = require('form-data');
 
@@ -24,13 +24,12 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
     const [unsupportedFiles, setUnsupportedFiles] = useState([]);
 
     const [loading, setLoading] = useState('');
+
+    /*
     const [tokenMinted, setTokenMinted] = useState(false);
     const [tokenID, setTokenID] = useState(0);
 
-
-
-
-
+    */
 
     
     const [photoLimitMessage, setPhotoLimitMessage] = useState(false);
@@ -155,7 +154,9 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                 if (validateFile(files[i])) {
                     if (photoLimit === 1 && validFiles.length < 1) {
                         setSelectedFiles(prevArray => [...prevArray, files[i]]);
+                        if (!claimPhoto) {
                         setReadyToMint(true)
+                        }
                     } else if (photoLimit === 20 && validFiles.length < 20) {
                         setSelectedFiles(prevArray => [...prevArray, files[i]]);
                         setReadyToMint(false)
@@ -368,6 +369,11 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
             photoMsg = msg;
         }
 
+        if (photoLimit === 1 && claimPhoto) {
+            const msg = formDataImport.verificationphotohash.length > 0 ? 'Verication Photo Successfully Uploaded. Upload Another Photo to Change' : 'Upload Your Verification Photo to Claim Provenance';
+            photoMsg = msg;
+        }
+
         if (photoLimit === 20) {
             const msg = formDataImport && formDataImport.instrumentphotohashes.length >= 1 ? 'Item Photos Successfully Uploaded' : 'Upload Your Item Photos';
             photoMsg = msg;
@@ -381,6 +387,7 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
     {/*REMOVE WHEN DONE*/}    
 
     function testdisplaymodal( ){
+        setLoading(true)
         uploadModalRef.current.style.display = 'block';
     }
 
@@ -434,46 +441,27 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                 <span className="close" onClick={(() => closeModal())}>X</span>
                 <div className="modal-image" ref={modalImageRef}></div>
             </div>
-
+                
             <div className="upload-modal" ref={uploadModalRef}>
                 <div className="overlay"></div>
                 <div className="close" onClick={(() => closeUploadModal())}>X</div>
                 <div className="progress-container">
                     <span ref={uploadRef}></span>
-                    {loading ? <h4 className="mt-4 mb-3">Uploading Files to IPFS...</h4> : null }
-                    <div style={{width: '100%', height:'50%'}}>
-                        <Image className={{height: '100%', width: '100%', objectFit: 'contain'}} src={waitingkitten} alt={'please hang in there'} />
+                    {loading ? <h4>Uploading Files to IPFS...</h4> : null }
+                    <div style={{width: '35%', height:'auto', margin: '0 auto', position: 'relative'}}>
+                        <Image className={{height: '50%', width: '50%', objectFit: 'contain'}} src={waitingkitten} alt={'please hang in there'} />
 
                     </div>
                     
-                    <Spinner animation="border" className='mx-auto mt-3' />
+                    <Spinner animation="border" className='mx-auto' />
                 </div>
             </div>
+            <button onClick={testdisplaymodal}>Test Modal</button>
 
-            {/*REMOVE WHEN DONE*/}
-            {/*<button onClick={() => testdisplaymodal()}>openMOdal</button>*/}
         </>
     );
 }
 
 export default DragAndDrop;
 
-/*
 
-{
-                onUploadProgress: progressEvent => {
-                    console.log(progressEvent.loaded )
-                    const uploadPercentage = Math.floor((progressEvent.loaded / progressEvent.total) * 100);
-                    progressRef.current.innerHTML = `${uploadPercentage}%`;
-                    progressRef.current.style.width = `${uploadPercentage}%`;
-
-                    if (uploadPercentage === 100) {
-                        uploadRef.current.innerHTML = 'File(s) Uploaded';
-                        validFiles.length = 0;
-                        setValidFiles([...validFiles]);
-                        setSelectedFiles([...validFiles]);
-                        setUnsupportedFiles([...validFiles]);
-                    }
-                },
-            }
-            */

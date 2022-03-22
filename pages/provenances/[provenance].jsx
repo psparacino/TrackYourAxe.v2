@@ -28,7 +28,7 @@ import greencheckmark from '../../public/images/green_checkmark.png';
 import waitingkitten from '../../public/images/waitingkitten.jpeg';
 
 
-const ProvenanceHub = (props) => {
+const ProvenanceProfile = (props) => {
 
   const { provenanceObjects, ipfsGetterRootURL } = useItemContext();
   const { TokenContract, MothershipContract } = useContractContext();
@@ -133,6 +133,8 @@ const ProvenanceHub = (props) => {
           :
           <div>
             <h3>Sell To Address: {buyerAccount}</h3>
+            <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
+            0x14dC79964da2C08b23698B3D3cc7Ca32193d9955
             <input 
                 name="userAddress" 
                 type="text" 
@@ -157,61 +159,6 @@ const ProvenanceHub = (props) => {
       )
     }
 
-    function ClaimProvenance() {
-
-      async function claim() {
-      setErrorMessage('')
-      if (ethers.utils.isAddress(buyerAccount)) {
-
-        await TokenContract.approve(provenanceContract.address, provenanceProps.instrumentDeedToken.toString())
-        .then(async(result) => {
-          provider.waitForTransaction(result.hash)
-          .then(async(mined) => {
-              if (mined) {
-                await provenanceContract.claimOwnership(buyerAccount, waitingkitten, provenanceOwnerInfo.verificationPhotoHash)
-                .then(async(result) => {
-                  provider.waitForTransaction(result.hash)
-                  .then(async(mined) => {
-                    if (mined) {
-                      //  need to fix this from react router
-                      router.push(`/${mainAccount}`)
-                    }
-                  })})
-                .catch((error)=> {
-                  console.log(error)       
-                })
-              } else {
-                setErrorMessage('Please enter a valid Ethereum address')
-              }
-              })}
-          )
-      }
-    }
-
-      return (          
-        <div>
-          <h3>sell To Address: 0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h3>
-          <input 
-              name="userAddress" 
-              type="text" 
-              placeholder='enter address to transfer to here'
-              onChange={(e) => setBuyerAccount(e.target.value)} 
-              value={buyerAccount || ''}
-              style={{width: '65%', height: '40px', fontSize: '20px', marginTop: '30px', textAlign: 'center'}} />
-
-          <div>
-            <button onClick={claim}>Transfer This Token and Provenance</button>  
-          </div>    
-
-          <div>
-            <Link href={`/${mainAccount}`}>Back To Main</Link> 
-          </div>
-        </div>
-   
-     
-      )
-    }
-    
     
     if (loaded) {
 
@@ -289,7 +236,7 @@ const ProvenanceHub = (props) => {
 }
 
 
-export default ProvenanceHub;
+export default ProvenanceProfile;
 
 
 

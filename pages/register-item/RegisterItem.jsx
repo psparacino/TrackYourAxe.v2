@@ -270,13 +270,6 @@ const createPracticeProvenance = async() => {
 
 
 
-
-
-
-  const getMintedTokens = () => {
-    console.log(tokens)
-  };
-
   //Page Components
 
   //check if token has been used in a Provenance

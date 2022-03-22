@@ -83,35 +83,31 @@ describe("Provenance Tests", function () {
         // console.log(await TokenContract.getApproved(0), "approved for token zero")
         await ProvenanceContractTest.connect(addr1).setPendingOwner(addr2.address)
 
-        //old owner of provenance
+
+        // original owner of provenance
         let provenanceOwner = (await ProvenanceContractTest.ownerProvenance(1)).ownerAddress;
 
-      
-        // console.log(ProvenanceAddress, "provenanace address")
-        // console.log(addr2.address, "addr2")
-        // console.log(await ProvenanceContractTest.pendingOwner(), "pending Owner")
-        // console.log(provenanceOwner, "ownerAddress")
 
-        console.log(await MothershipContract.pendingTransfers(addr2.address, 0), "pending array")
-        
-
-
+        //need to break this into other tests and also make sure that old provenance is removed from the old owner
         const ProvenanceContractTestSecondSigner = await ProvenanceContractTest.connect(addr2);  
+
 
         await ProvenanceContractTestSecondSigner.connect(addr2).claimOwnership(provenanceOwner, 'verificationPhoto2');    
 
-        //console.log(await TokenContract.ownerOf(0), "tokenOwner2");
-        //console.log(await MothershipContract.ownersToAxes(addr2.address, 0), "ownerstoAxes");
-        // console.log((await ProvenanceContractTestSecondSigner.ownerProvenance(2)).ownerAddress, addr2.address, "address2 check");
-        // console.log(((await ProvenanceContractTestSecondSigner.ownerProvenance(1)).ownerAddress), addr1.address, "address1 check");
-        console.log(await MothershipContract.getPendingTransfersOfBuyer(addr2.address), "multiple array")
+
+        const updatedAddr1Provs = await MothershipContract.connect(addr1).getOwnersInstruments();
+        const updatedAddr2Provs = await MothershipContract.connect(addr2).getOwnersInstruments();
+  
         
+
+        expect(updatedAddr1Provs).to.deep.equal([])
+        expect(updatedAddr2Provs[0]).to.equal(ProvenanceContractTest.address)
+
         expect((await ProvenanceContractTestSecondSigner.ownerProvenance(2)).ownerAddress).to.equal(addr2.address);
         expect((await ProvenanceContractTestSecondSigner.ownerProvenance(1)).ownerAddress).to.equal(addr1.address);
         
         //expect((await MothershipContract.ownersToAxes(addr2.address)).to.equal(addr2.address)
 
-     
         
     });
 

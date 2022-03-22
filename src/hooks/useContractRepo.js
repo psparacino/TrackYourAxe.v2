@@ -5,6 +5,10 @@ import { ethers } from 'ethers';
 //import { injectedProvider } from '../components/wallet/connectors.js';
 //import { useWeb3React } from "@web3-react/core"
 
+//context
+
+import { useUserContext } from "../context/UserContext";
+
 //abis
 
 import Mothership from '../../artifacts/contracts/Mothership.sol/Mothership.json';
@@ -26,8 +30,10 @@ const useContractObjectRepo = () => {
     const [MothershipContract, setMothershipContract] = useState('');
     const [TokenContract, setTokenContract] = useState('');
 
+    const { provider, signer } = useUserContext();
+
     //need to adjust this hook for non-Ethereum
-    useEffect(()=> {
+    useEffect(async()=> {
           if (window.ethereum) {
             contractObjects();
           } else {
@@ -35,24 +41,27 @@ const useContractObjectRepo = () => {
           }
           async function contractObjects() {
 
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner(0);
+            //const provider = new ethers.providers.Web3Provider(window.ethereum);
+            //const signer = provider.getSigner(0);
+            const contextSigner = await signer;
             
+            if (signer) {
             //MothershipContract
             const MothershipContractAddress = deployedMothershipAddress.address;
-            console.log(MothershipContractAddress, "address")
-            const MothershipContractObject = await new ethers.Contract(MothershipContractAddress, Mothership.abi, signer);
+            const MothershipContractObject = new ethers.Contract(MothershipContractAddress, Mothership.abi, contextSigner);
             setMothershipContract(MothershipContractObject);
 
             //TokenContract (need to put this in here Mothership and Provenance)
             const TokenContractAddress = deployedTokenAddress.address;
-            const TokenContractObject = await new ethers.Contract(TokenContractAddress, InstrumentDeedToken.abi, signer);
+            const TokenContractObject = new ethers.Contract(TokenContractAddress, InstrumentDeedToken.abi, contextSigner);
             setTokenContract(TokenContractObject);
+          }
 
         }
 
-    },[]) 
-    return { MothershipContract, TokenContract };
+    },[signer]) 
+
+    return { MothershipContract, TokenContract};
 }
 
 export default useContractObjectRepo;

@@ -13,7 +13,6 @@ const useHandleEthereum = () => {
 
     const [provider, setProvider] = useState('');
 
-    
 
 
     useEffect(()=> {

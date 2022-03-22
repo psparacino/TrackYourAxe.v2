@@ -10,7 +10,8 @@ const PhotoPreviews = ({
     readyToMint, 
     unusedTokenID, 
     tokenToMint,
-    ipfsGetterRootURL}) => {
+    ipfsGetterRootURL,
+    claimPhoto}) => {
 
     let itemPhotoArray = [];
 
@@ -63,37 +64,44 @@ const PhotoPreviews = ({
     if (formData.verificationphotohash.length > 0 || itemPhotoArray.length >= 1 ) {
       return (
       
-      <div className="previewContainer">
-        { photoLimit == 1 ?
-        <div className="previewPhoto" >
+        <div className="previewContainer">
+          { photoLimit == 1 ?
+          <div className="previewPhoto" >
 
-        { readyToMint ?
-          <h2>Verification Photo for Token {tokenToMint}</h2> :
-          <h2>Verification Photo for Token {unusedTokenID}</h2> 
-        }
-          {/*alternate not yet uploaded image here with ternary */}
-          <img src={verificationHashURL} alt="verification photo not yet uploaded" />
+          { claimPhoto ?
+            <h2>New Verification Photo for Provenance</h2> :
+            readyToMint ?
+            <h2>Verification Photo for Token {tokenToMint}</h2> :
+            <h2>Verification Photo for Token {unusedTokenID}</h2> 
+          }
+          {/*
+          { readyToMint ?
+            <h2>Verification Photo for Token {tokenToMint}</h2> :
+            <h2>Verification Photo for Token {unusedTokenID}</h2> 
+          } */}
+
+            {/*alternate not yet uploaded image here with ternary */}
+            <img src={verificationHashURL} alt="verification photo not yet uploaded" />
         </div>
+
           :
-        <div className="previewPhoto">
-          
-            {photoLimit == 20 ?
-              <div>
-                <h2>Item Photos</h2>
-                <img key={itemPhotoArray} src={itemPhotoArray} alt="item photos not yet loaded" /> 
-              </div>
-            :
 
-              <Slider {...settings}>
-              {console.log(itemPhotoArray, "itemPhotoArray")}
-              {itemPhotoArray.map((photo)=> {
-                return  <div>
-                          <img key={photo} src={photo} alt="item photos not yet loaded" />  
-                        </div>
-                })}
-
-              </Slider>
-            }
+        <div className="previewPhoto">     
+          {photoLimit == 20 ?
+            <div>
+              <h2>Item Photos</h2>
+              <img key={itemPhotoArray} src={itemPhotoArray} alt="item photos not yet loaded" /> 
+            </div>
+          :
+            <Slider {...settings}>
+            {console.log(itemPhotoArray, "itemPhotoArray")}
+            {itemPhotoArray.map((photo)=> {
+              return  <div>
+                        <img key={photo} src={photo} alt="item photos not yet loaded" />  
+                      </div>
+              })}
+            </Slider>
+          }      
         </div>
         }
 

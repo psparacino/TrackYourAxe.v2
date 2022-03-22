@@ -113,7 +113,10 @@ contract Provenance is Ownable {
         // require(msg.sender == instrumentDeedTokenContract.ownerOf(instrument.instrumentDeedToken), "You are not the owner of the Deed Token for this instrument and therefore cannot sell it");
         require(msg.sender == pendingOwner, "You are not the pendingOwner of this item and therefore cannot claim it");
 
+        // mothership updates
         mothershipContract.updateOnProvenanceSale(_seller, msg.sender, this);
+        mothershipContract.removePendingTransfer(msg.sender, address(this));
+
         pendingOwner = address(0);
         //set new owner
         ++ownerCount;

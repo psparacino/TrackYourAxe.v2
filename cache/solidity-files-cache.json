@@ -556,8 +556,8 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/contracts/Provenance.sol": {
-      "lastModificationDate": 1647894308369,
-      "contentHash": "7e90d5044cee9c891327483a9b0261c4",
+      "lastModificationDate": 1647971930066,
+      "contentHash": "59ed783b903adcae28a4fc58021f84fa",
       "sourceName": "contracts/Provenance.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -631,8 +631,8 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/contracts/Mothership.sol": {
-      "lastModificationDate": 1647912905489,
-      "contentHash": "3793f357dd829a335cfe7ddd6418442e",
+      "lastModificationDate": 1647979637502,
+      "contentHash": "4b3e8e909189b5f2df453c9752a0493d",
       "sourceName": "contracts/Mothership.sol",
       "solcConfig": {
         "version": "0.8.10",
