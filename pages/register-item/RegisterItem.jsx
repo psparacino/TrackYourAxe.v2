@@ -71,20 +71,20 @@ const RegisterItem = () => {
 
     const {items, 
           setItems, 
+          setItemAdded,
           tokens, 
           setTokens, 
           provenanceObjects, 
           setProvenanceObjects, 
           newProvenanceAddress, 
-          setNewProvenanceAddress } = useItemContext();
+          setNewProvenanceAddress,
+          ipfsGetterRootURL } = useItemContext();
     
 
     const router = useRouter();
 
       // low priority but keep this lifted, and fixed undefined on child components
     //const [ipfsGetterRootURL] = useState("https://gateway.pinata.cloud/ipfs/");
-
-    const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
 
     //let navigate = useNavigate();
 
@@ -175,9 +175,10 @@ const RegisterItem = () => {
         provider.waitForTransaction(result.hash)
         .then(mined => {
             if (mined) {
-              
+              setItemAdded(true)
               MothershipContract.once("ProvenanceCreated", (type, newAddress) => {
                 setNewProvenanceAddress(newAddress)
+                
                 router.push('/provenance-success')
             })}
         })
@@ -336,8 +337,8 @@ const createPracticeProvenance = async() => {
             </>
             :null
             }
-            //clean up the layout in this element
-            <Col style={{textAlign: 'center'}}>
+          
+            <Col className={styles.buttonContainer}>
               <div className={styles.Dropdown}>
                 <Button className={styles.button-6} onClick={resetTokenDetails}>Mint a New Token</Button>              
               </div>
@@ -349,7 +350,7 @@ const createPracticeProvenance = async() => {
             </Col>  :
             null }
 
-            <Col>
+            <Col className={styles.buttonContainer}>
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="unused-token-dropdown">
                   Unused Tokens
@@ -378,14 +379,13 @@ const createPracticeProvenance = async() => {
     )
   }
 
-
-    console.log(formData, "formData")
+  
+  // console.log(formData, "formData")
 
 
     return(
         <div className={styles.NewProvenance}>
           <Container>
-            <Link href="/provenances">Back to User Main</Link>
             <h1 className="pt-5 mx-auto">Create A Deed of Provenance</h1>
 
             {/*Verfication Photo Upload*/} 
@@ -428,7 +428,7 @@ const createPracticeProvenance = async() => {
                 {enableForm ?
                   <h1>Create Provenance with token # {unusedTokenID}</h1>
                     :
-                  <h4 style={enableForm ? {} : {color: 'gray'}}> Mint a New Token or Select an Unused Token to Create a Provenance </h4>
+                  <h2 style={enableForm ? {} : {color: 'gray'}}> Mint a New Token or Select an Unused Token to Create a Provenance </h2>
                   
                 }
             

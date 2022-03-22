@@ -23,18 +23,9 @@ import deployedMothershipAddress from '../deployedContractAddresses/mothershipad
 const useContractObjectRepo = () => {
     
     
-
-    //const [RootContract, setRootContract] = useState('');
-    
     const [MothershipContract, setMothershipContract] = useState('');
     const [TokenContract, setTokenContract] = useState('');
 
- 
-      
-
-    //const [signer, setSigner] = useState('');
-
-    //const [provider, setProvider] = useState('');
     //need to adjust this hook for non-Ethereum
     useEffect(()=> {
           if (window.ethereum) {

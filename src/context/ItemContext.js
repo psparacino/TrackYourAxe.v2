@@ -15,18 +15,22 @@ import { useContractContext} from './ContractContext.js'
 const ItemContext= createContext();
 
 export function ItemContextProvider({ children }) {
+  // use hooks to handle these
 
   const { mainAccount, signer } = useUserContext();  
   const { MothershipContract, TokenContract } = useContractContext();
 
+  // 
 
+  const [ itemAdded, setItemAdded ] = useState(false);
   const [newProvenanceAddress, setNewProvenanceAddress] = useState('');
   const [tokens, setTokens] = useState([]);
   const [items, setItems] = useState([]);
-  //const [tokens, setTokens] = useState([]);
   const [provenanceObjects, setProvenanceObjects] = useState([]);
 
-//load user tokens
+  const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
+
+//load user tokens. need the for loop to convert to #.
   useEffect(() => {  
     getTokens()
     .then(tokenIDs => {
@@ -52,7 +56,7 @@ export function ItemContextProvider({ children }) {
   }, [mainAccount, TokenContract])
    
   
-    //load addresses of user items
+    //load addresses of user provenances
     useEffect(() => {
   
       (async function getItems() {
@@ -66,22 +70,19 @@ export function ItemContextProvider({ children }) {
   
     },[MothershipContract])
   
-    //Loads all users provenance objects
+    //Loads all users provenance contract instances
   
     useEffect(() => {
-  
       if (items || newProvenanceAddress) {
         populateProvenances()
-        .then((result) => console.log(result, 'populate result'))
+        .then(setItemAdded(false)
+        )
         .catch(error => console.log(error, 'populate error'));
       }
       async function populateProvenances() {
         let provenanceArray = [];
         
             for (let address of items) {
-                //TokenContract (need to put this in here Mothership and Provenance)
-                
-                //const ProvenanceAddress = address;
                 const ProvenanceContract = new ethers.Contract(address, Provenance.abi, signer);
                 const ProvenanceProps = await ProvenanceContract.instrument()
                 const index = ProvenanceContract.ownerCount();
@@ -92,7 +93,7 @@ export function ItemContextProvider({ children }) {
          setProvenanceObjects(provenanceArray);          
       }   
         
-    },[items, newProvenanceAddress])
+    },[items, newProvenanceAddress, itemAdded])
 
     
 
@@ -102,12 +103,14 @@ export function ItemContextProvider({ children }) {
   const state = { 
       items, 
       setItems, 
+      setItemAdded,
       tokens, 
       setTokens, 
       provenanceObjects, 
       setProvenanceObjects, 
       newProvenanceAddress, 
-      setNewProvenanceAddress 
+      setNewProvenanceAddress,
+      ipfsGetterRootURL
     };
 
   return (

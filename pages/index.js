@@ -118,8 +118,11 @@ function App() {
         <main>
           <h2>The Last Gear Registration Solution You'll Ever Need</h2>
         </main>
-
-        <Image src={coverphoto}/>
+    
+        <Image 
+        src={coverphoto}
+        alt="cover image"
+        /> 
       </>
     );
   }
@@ -127,7 +130,7 @@ function App() {
   return (
  
         <div className="App" id="bootstrap-overrides">
-
+         
           <Home />
           
             {/*

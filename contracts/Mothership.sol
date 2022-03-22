@@ -16,6 +16,8 @@ contract Mothership is Ownable {
 
     mapping(address => bool) public provenanceVerify;
 
+    mapping(address => address[]) public pendingTransfers;
+
     //to loop and get all provenances on frontend
     address[] public ownerArray;
 
@@ -50,7 +52,8 @@ contract Mothership is Ownable {
         address provenanaceAddress
     );
 
-    
+    // SETTERS 
+
     //this function needs to check that an existing provenance doesn't already exist for this instrument
     function createNewProvenance(
         Provenance.Types _enumType,
@@ -100,7 +103,17 @@ contract Mothership is Ownable {
         
     }
 
+    function setPendingTransfer(address buyer, address provenanceAddress) external {
+        pendingTransfers[buyer].push(provenanceAddress);
+    }
+
     //GETTERS
+
+    function getPendingTransfersOfBuyer(address buyer) public view returns( address  [] memory){
+    return pendingTransfers[buyer];
+}
+
+    //  Updated on Sale
 
     function _findProvenanceIndex(address seller, Provenance provenanceForIndex) view internal returns(uint) {
         uint index;

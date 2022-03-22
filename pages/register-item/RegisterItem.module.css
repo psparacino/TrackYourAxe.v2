@@ -1,7 +1,7 @@
 .NewProvenance {
     padding: 5px 20px;
     display: block;
-    align-items: center;
+    text-align: center;
 }
 
 .NewProvenance fieldset {
@@ -16,6 +16,10 @@
     min-height: 200px;
     width: 80%;
     margin: 0 auto;
+}
+
+.buttonContainer {
+  text-align: center;
 }
 
 .previewPhoto {

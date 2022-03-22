@@ -10,7 +10,7 @@ describe("Provenance Tests", function () {
     
     let TokenContract;
     let MothershipContract;
-    let ProvenanceContract;
+    //let ProvenanceContract;
     let owner;
     let addr1;
     let addr2;
@@ -66,25 +66,48 @@ describe("Provenance Tests", function () {
     it("sale of from one owner to another", async function() { 
         //console.log(addr1.address,"addr1.address")
         //console.log(MothershipContract.address, "MothershipContract address")
+        let ProvenanceContractTest;
+        
 
         const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, 'ipfs', 'John', ["ipfs"])
         let receipt = await result.wait()
         let event = await receipt.events?.filter((x) => {return x.event == "ProvenanceCreated"});
         let ProvenanceAddress = event[0].args.childAddress;
-        ProvenanceContract = new ethers.Contract(ProvenanceAddress, ProvenanceABI.abi, addr1);
-        await TokenContract.connect(addr1).approve(ProvenanceContract.address, 0)
 
-        //console.log(await TokenContract.ownerOf(0), "tokenOwner")
-        //console.log(await ProvenanceAddress, "provOwner")
-
-        await ProvenanceContract.sale(addr2.address, 'owner2name', 'verificationPhoto2');
-
-        //console.log(await TokenContract.ownerOf(0), "tokenOwner2")
-
-        //console.log(await MothershipContract.ownersToAxes(addr2.address, 0), "ownerstoAxes")
         
-        expect((await ProvenanceContract.ownerProvenance(2)).ownerAddress).to.equal(addr2.address)
-        expect((await ProvenanceContract.ownerProvenance(1)).ownerAddress).to.equal(addr1.address)
+
+        // prepare transfer
+        ProvenanceContractTest = new ethers.Contract(ProvenanceAddress, ProvenanceABI.abi, addr1);
+
+        await TokenContract.connect(addr1).approve(ProvenanceContractTest.address, 0)
+        // console.log(await TokenContract.getApproved(0), "approved for token zero")
+        await ProvenanceContractTest.connect(addr1).setPendingOwner(addr2.address)
+
+        //old owner of provenance
+        let provenanceOwner = (await ProvenanceContractTest.ownerProvenance(1)).ownerAddress;
+
+      
+        // console.log(ProvenanceAddress, "provenanace address")
+        // console.log(addr2.address, "addr2")
+        // console.log(await ProvenanceContractTest.pendingOwner(), "pending Owner")
+        // console.log(provenanceOwner, "ownerAddress")
+
+        console.log(await MothershipContract.pendingTransfers(addr2.address, 0), "pending array")
+        
+
+
+        const ProvenanceContractTestSecondSigner = await ProvenanceContractTest.connect(addr2);  
+
+        await ProvenanceContractTestSecondSigner.connect(addr2).claimOwnership(provenanceOwner, 'verificationPhoto2');    
+
+        //console.log(await TokenContract.ownerOf(0), "tokenOwner2");
+        //console.log(await MothershipContract.ownersToAxes(addr2.address, 0), "ownerstoAxes");
+        // console.log((await ProvenanceContractTestSecondSigner.ownerProvenance(2)).ownerAddress, addr2.address, "address2 check");
+        // console.log(((await ProvenanceContractTestSecondSigner.ownerProvenance(1)).ownerAddress), addr1.address, "address1 check");
+        console.log(await MothershipContract.getPendingTransfersOfBuyer(addr2.address), "multiple array")
+        
+        expect((await ProvenanceContractTestSecondSigner.ownerProvenance(2)).ownerAddress).to.equal(addr2.address);
+        expect((await ProvenanceContractTestSecondSigner.ownerProvenance(1)).ownerAddress).to.equal(addr1.address);
         
         //expect((await MothershipContract.ownersToAxes(addr2.address)).to.equal(addr2.address)
 

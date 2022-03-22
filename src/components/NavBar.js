@@ -26,8 +26,9 @@ const NavBar = ({mainAccount, setMainAccount}) => {
           <Nav className="m-auto">
           <Navbar.Brand href="/">Track Your Axe</Navbar.Brand>
             <Nav.Link href="/about">About</Nav.Link>
-            <Nav.Link href="/provenances">{mainAccount} Items</Nav.Link>
             <Nav.Link href="/register-item">Register Item</Nav.Link>
+            <Nav.Link href="/provenances">{mainAccount} Items</Nav.Link>
+            <Nav.Link href="/transfers">Transfers</Nav.Link>            
           </Nav>
           </Navbar.Collapse>
         </Navbar>
