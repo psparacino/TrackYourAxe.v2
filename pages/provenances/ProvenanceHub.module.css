@@ -17,3 +17,11 @@
 .container {
     text-align: center;
 }
+
+.containerBorder  {
+    border: 3px solid red; 
+    border-radius: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+}

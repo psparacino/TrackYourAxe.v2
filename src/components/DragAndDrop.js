@@ -456,8 +456,7 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                     <Spinner animation="border" className='mx-auto' />
                 </div>
             </div>
-            <button onClick={testdisplaymodal}>Test Modal</button>
-
+            {/*<button onClick={testdisplaymodal}>Test Modal</button> */}
         </>
     );
 }

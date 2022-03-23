@@ -36,19 +36,7 @@ const Transfers = () => {
 
   const [buyerAccount, setBuyerAccount] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-/*
-  useEffect(async() => {
 
-    if (MothershipContract) {
-      console.log((await MothershipContract.getPendingTransfersOfBuyer(mainAccount)), "pending")
-    } 
-    
-  },[MothershipContract])
-
-  */
-
-
- 
 
   const TransferTable = () => {
     
@@ -138,7 +126,7 @@ const Transfers = () => {
     <TransferTable />
       :
     <div className={styles.container}>
-      <h2>You have no pending Provenance transfers.</h2>
+      <h1 style={{paddingTop: '20%'}}>You have no pending Provenance transfers.</h1>
     </div>
     }
     </>

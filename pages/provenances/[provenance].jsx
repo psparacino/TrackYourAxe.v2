@@ -6,19 +6,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router';
 
 //react-bootstrap imports
-import { Container, Carousel, Table, Row, Col, Card, Image, Button, ListGroup, ListGroupItem} from 'react-bootstrap';
+import { Container, Carousel, Table, Row, Col, Card, Image, Button, ListGroup, ListGroupItem, InputGroup, Form, FormControl} from 'react-bootstrap';
 
 // context imports
 import { useItemContext } from '../../src/context/ItemContext';
 import { useContractContext } from '../../src/context/ContractContext';
 import { useUserContext } from '../../src/context/UserContext';
-
-//abi
-import Provenance from '../../artifacts/contracts/Provenance.sol/Provenance.json';
-
-//lib
-import { getProvenanceAddresses } from '../../lib/getPathsAndProps';
-
 
 // styles
 import styles from './ProvenanceHub.module.css'
@@ -28,7 +21,7 @@ import greencheckmark from '../../public/images/green_checkmark.png';
 import waitingkitten from '../../public/images/waitingkitten.jpeg';
 
 
-const ProvenanceProfile = (props) => {
+const ProvenanceProfile = () => {
 
   const { provenanceObjects, ipfsGetterRootURL } = useItemContext();
   const { TokenContract, MothershipContract } = useContractContext();
@@ -44,8 +37,9 @@ const ProvenanceProfile = (props) => {
   const [ provenanceProps, setProvenanceProps ] = useState();
   const [ provenanceOwnerInfo, setProvenanceOwnerInfo ] = useState();
 
-  const [buyerAccount, setBuyerAccount] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  
+  const [ successMessage, setSuccessMessage ] = useState('');
+
  
   //load all info 
   useEffect(async() => {
@@ -69,22 +63,89 @@ const ProvenanceProfile = (props) => {
 
 
 
-  useEffect(async() => {
-   
-  },[])
+
+
+
+  const ProvenanceHistory = () => { 
+
+    const [ provenanceHistoryArray, setProvenanceHistoryArray ] = useState([]);
+
+    useEffect(async() => {
+      
+      if (MothershipContract) {
+      loadProvenanceHistory()
+      }
+      async function loadProvenanceHistory() { 
+          const history = await provenanceContract.getOwnershipHistory();
+          const historyShift = [...history];
+          historyShift.shift();
+          setProvenanceHistoryArray(historyShift);
+          
+        }
+    },[MothershipContract])
+
+
+    if (loaded){
+      return (  
+          <div>
+          <hr />
+          <h1>Provenance Ownership History</h1>
+          {provenanceHistoryArray.map((provenanceOwnerInfo, index)=> {
+            const { ownerAddress, date, verificationPhotoHash, ownerCount  } = provenanceOwnerInfo;
+  
+            return (
+
+              <Container key={ownerAddress}>
+                <Card>
+                  <Card.Header>Owner {ownerCount}</Card.Header>
+                    <Card.Body>
+
+                      <Card.Title>Owner Address</Card.Title>
+                      <Card.Text style={{color: 'black'}}>
+                        {ownerAddress}
+                      </Card.Text>
+
+                      <Card.Title>Date Acquired</Card.Title>
+                      <Card.Text style={{color: 'black'}}>
+                        {date}
+                      </Card.Text>
+
+                      <Card.Title>Notes</Card.Title>
+                      <Card.Text style={{color: 'black'}}>
+                        Additional data can maybe stored off-chain?
+                      </Card.Text>
+
+                    </Card.Body>
+                  </Card>    
+                </Container>
+              )
+            })
+          }              
+        </div>
+        
+       )} else {
+        return (
+          <p>nothing to show here</p>
+        )}
+}
   
 
 
-  function ReleaseProvenance() {
+  const ReleaseProvenance = () => {
 
-    const [pendingTransfer, setPendingTransfer] = useState(false)
+    const [ pendingTransfer, setPendingTransfer ] = useState(false)
 
-    const [pendingTransferAddress, setPendingTransferAddress] = useState();
+    const [ pendingTransferAddress, setPendingTransferAddress ] = useState();
 
-      useEffect(async() => {
+    const [ buyerAccount, setBuyerAccount ] = useState();
+
+    const [ addressErrorMessage, setAddressErrorMessage ] = useState('')
+
+    
+
+    useEffect(async() => {
+
        const pendingOwner = await provenanceContract.pendingOwner();
-
-       console.log(pendingOwner, "pendingOwner address")
 
        if (pendingOwner != ethers.constants.AddressZero) {
          setPendingTransfer(true)
@@ -93,11 +154,17 @@ const ProvenanceProfile = (props) => {
       
       },[])
 
+    const handleChange = event => {
+      console.log(event.target.value, "value")
+      setBuyerAccount(event.target.value);
+    }
+
       
 
       async function release() {
-      setErrorMessage('')
-      if (ethers.utils.isAddress(buyerAccount)) {
+      setSuccessMessage('')
+      setAddressErrorMessage('')
+      if (ethers.utils.isAddress(buyerAccount) && buyerAccount != mainAccount) {
 
         await TokenContract.approve(provenanceContract.address, provenanceProps.instrumentDeedToken.toString())
         .then(async(result) => {
@@ -110,60 +177,61 @@ const ProvenanceProfile = (props) => {
                   .then(async(mined) => {
                     if (mined) {
                       //  need to fix this from react router
-                      setErrorMessage(`this provenance has been approved to ${buyerAccount} and is waiting to be claimed`)
-                    }
-                  })})
+                      setSuccessMessage('Transaction Success')
+                      }}
+                    )})
                 .catch((error)=> {
                   console.log(error)       
-                })
-              } else {
-                setErrorMessage('Please enter a valid Ethereum address')
-              }
-              })}
+                  })
+                 }
+              })
+            }
           )
+      }  else {
+        setAddressErrorMessage('You are either attempting to transfer to your own Ethereum address or an invalid address. Please check and re-enter.')
       }
     }
 
       return (          
         <div>
         {pendingTransfer ? 
-          <div>
-              <h4>This provenance has been released and is awaiting claim & verification by {pendingTransferAddress}</h4>
-           </div> 
+
+          <div className={styles.containerBorder}>
+            <h4>This provenance has been released and is awaiting claim & verification by: <p>{pendingTransferAddress}</p></h4>
+          </div> 
           :
           <div>
-            <h3>Sell To Address: {buyerAccount}</h3>
+            <h2>Transfer this Provenance</h2>
+            {ethers.utils.isAddress(buyerAccount) ? <h3>You are transferring this provenance to this address: {buyerAccount}</h3> : null}
+            
             <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
-            0x14dC79964da2C08b23698B3D3cc7Ca32193d9955
+            <h6>0x14dC79964da2C08b23698B3D3cc7Ca32193d9955</h6>
+            {addressErrorMessage ?
+            <p>{addressErrorMessage}</p> : null}
+            
             <input 
                 name="userAddress" 
                 type="text" 
                 placeholder='enter address to transfer to here'
-                onChange={(e) => setBuyerAccount(e.target.value)} 
+                onChange={handleChange}
                 value={buyerAccount || ''}
                 style={{width: '65%', height: '40px', fontSize: '20px', marginTop: '30px', textAlign: 'center'}} />
 
-            <div>
-              <button onClick={release}>Transfer This Token and Provenance</button>  
+
+            <div className='mt-2'>
+              <Button onClick={release}>Transfer This Token and Provenance</Button>  
             </div>    
 
-            <div>
-              <Link href={`/${mainAccount}`}>Back To Main</Link> 
-            </div>
           </div>
 
         }
-        </div>
-   
-     
+        </div>  
       )
     }
 
-    
     if (loaded) {
 
-    const{ serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = provenanceProps;   
-  
+    const { serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = provenanceProps; 
 
 
     return (
@@ -214,10 +282,14 @@ const ProvenanceProfile = (props) => {
               </tbody>
             </Table>
           <Carousel />
+
+          <ProvenanceHistory />
+          <hr />
+
           <ReleaseProvenance />
 
-          {errorMessage ?
-          <p>{errorMessage}</p> : null}
+          {successMessage ?
+          <p>{successMessage}</p> : null}
 
        
           
@@ -238,103 +310,3 @@ const ProvenanceProfile = (props) => {
 
 export default ProvenanceProfile;
 
-
-
-/*
-
-these will only with an API endpoint calling a smart contract. nothing user based.
-
-export async function getStaticPaths() {
-
-  const paths = getProvenanceAddresses();
-  console.log(paths, "paths")
-  return {
-    paths,
-    fallback: false // false or 'blocking'
-  };
-}
-
-
-async function getStaticProps(context) {
-
-  console.log(context, "context")
-
-  const results = await fetch('http://dummy.restapiexample.com/api/v1/employees').then(r => r.json())
-  return {
-    props: { results }, // will be passed to the page component as props
-  }
-}
-
-
-export async function getStaticProps() {
-    return {
-        props: {
-            lists: [
-                {dirId: '1', name: 'Directory 1'},
-                {dirId: '2', name: 'Directory 2'},
-                {dirId: '3', name: 'Directory 3'},
-                {dirId: '4', name: 'Directory 4'}
-            ],
-        }
-    }
-}
-*/
-
-
-
-/* original sale function
- function ReleaseProvenance() {
-
-      async function sell() {
-      setErrorMessage('')
-      if (ethers.utils.isAddress(buyerAccount)) {
-
-        await TokenContract.approve(provenanceAddress, instrumentDeedToken.toString())
-        .then(async(result) => {
-          provider.waitForTransaction(result.hash)
-          .then(async(mined) => {
-              if (mined) {
-                await provenanceContract.sale(buyerAccount, waitingkitten, verificationPhotoHash)
-                .then(async(result) => {
-                  provider.waitForTransaction(result.hash)
-                  .then(async(mined) => {
-                    if (mined) {
-                      //  need to fix this from react router
-                      router.push(`/${mainAccount}`)
-                    }
-                  })})
-                .catch((error)=> {
-                  console.log(error)       
-                })
-              } else {
-                setErrorMessage('Please enter a valid Ethereum address')
-              }
-              })}
-          )
-      }
-    }
-
-      return (          
-        <div>
-          <h3>sell To Address: 0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h3>
-          <input 
-              name="userAddress" 
-              type="text" 
-              placeholder='enter address to transfer to here'
-              onChange={(e) => setBuyerAccount(e.target.value)} 
-              value={buyerAccount || ''}
-              style={{width: '65%', height: '40px', fontSize: '20px', marginTop: '30px', textAlign: 'center'}} />
-
-          <div>
-            <button onClick={sell}>Transfer This Token and Provenance</button>  
-          </div>    
-
-          <div>
-            <Link href={`/${mainAccount}`}>Back To Main</Link> 
-          </div>
-        </div>
-   
-     
-      )
-    }
-    */

@@ -10,8 +10,11 @@ export function UserContextProvider({ children }) {
 
   const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
 
+  const date = new Date();
+    
+  const dateString = date.toString();
 
-  const state = { mainAccount, setMainAccount, signer, provider, ipfsGetterRootURL }
+  const state = { mainAccount, setMainAccount, signer, provider, ipfsGetterRootURL, dateString }
 
   return (
     <UserContext.Provider value={state}>

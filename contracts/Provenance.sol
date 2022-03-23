@@ -30,9 +30,8 @@ contract Provenance is Ownable {
     struct Owner {
         uint16 ownerCount;
         address ownerAddress;
-        string name;
         string verificationPhotoHash;
-        //date acquired;
+        string date;
     }
 
     mapping(uint16 => Owner) public ownerProvenance;
@@ -67,8 +66,8 @@ contract Provenance is Ownable {
         string memory _model, 
         uint16 _year, 
         uint _instrumentDeedToken,
+        string memory _date,
         string memory _verificationPhotoHash,
-        string memory _firstOwner, 
         string[] memory _instrumentPhotoHashes,
         address _mothershipAddress,
         address _deedTokenAddress)
@@ -90,7 +89,11 @@ contract Provenance is Ownable {
             //set Owner Info
       
             ownerCount = 1;
-            ownerProvenance[ownerCount] = Owner(ownerCount, instrumentDeedTokenContract.ownerOf(_instrumentDeedToken), _firstOwner, _verificationPhotoHash);    
+            ownerProvenance[ownerCount] = Owner(
+                ownerCount, 
+                instrumentDeedTokenContract.ownerOf(_instrumentDeedToken), 
+                _verificationPhotoHash,
+                _date);    
   
 
     }
@@ -108,20 +111,19 @@ contract Provenance is Ownable {
     }
 
     //newOwner claims new Token on proof of ownership and updates all state
-    function claimOwnership(address _seller, string memory _verificationPhotoHash) public  {
-
-        //transfer deed token
-        // require(msg.sender == instrumentDeedTokenContract.ownerOf(instrument.instrumentDeedToken), "You are not the owner of the Deed Token for this instrument and therefore cannot sell it");
+    function claimOwnership(address _seller, string memory _verificationPhotoHash, string memory date) public  {
         require(msg.sender == pendingOwner, "You are not the pendingOwner of this item and therefore cannot claim it");
 
         // mothership updates
-        mothershipContract.updateOnProvenanceSale(_seller, msg.sender, this);
+        mothershipContract.updateOnProvenanceSale(_seller, msg.sender, this, date);
         mothershipContract.removePendingTransfer(msg.sender, address(this));
 
+        //remove pending owner
         pendingOwner = address(0);
+
         //set new owner
         ++ownerCount;
-        ownerProvenance[ownerCount] = Owner(ownerCount, msg.sender, 'placeholder name', _verificationPhotoHash);
+        ownerProvenance[ownerCount] = Owner(ownerCount, msg.sender, _verificationPhotoHash, date);
 
         //transfer token
         instrumentDeedTokenContract.safeTransferFrom(_seller, msg.sender, instrument.instrumentDeedToken);

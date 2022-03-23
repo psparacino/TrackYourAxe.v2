@@ -6,7 +6,7 @@ const ProvenanceABI = require('../artifacts/contracts/Provenance.sol/Provenance.
 //const provider = new ethers.providers.Web3Provider(window.ethereum);
 //const signer = provider.getSigner(0);
 
-describe("Provenance Tests", function () {
+describe("Transfer Tests", function () {
     
     let TokenContract;
     let MothershipContract;
@@ -24,7 +24,7 @@ describe("Provenance Tests", function () {
         MothershipContract = await MSC.deploy(TokenContract.address);
 
         await TokenContract.safeMint(addr1.address, "www.google.com");
-        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, 'ipfs', 'John', ["ipfs"])
+        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, "12/31/1999", 'ipfs', ["ipfs"])
         let receipt = await result.wait()
         let event = await receipt.events?.filter((x) => {return x.event == "ProvenanceCreated"});
         let ProvenanceAddress = event[0].args.childAddress;
@@ -47,7 +47,7 @@ describe("Provenance Tests", function () {
         let provenanceOwner = (await ProvenanceContractTest.ownerProvenance(1)).ownerAddress;
         //need to break this into other tests and also make sure that old provenance is removed from the old owner
         const ProvenanceContractTestSecondSigner = await ProvenanceContractTest.connect(addr2);  
-        await ProvenanceContractTestSecondSigner.connect(addr2).claimOwnership(provenanceOwner, 'verificationPhoto2');  
+        await ProvenanceContractTestSecondSigner.connect(addr2).claimOwnership(provenanceOwner, 'verificationPhoto2', '12/31/1999');  
         
 
         // console.log(await ProvenanceContractTest.ownerProvenance(1), "owner1 in Provenance");

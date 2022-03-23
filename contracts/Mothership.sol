@@ -41,14 +41,15 @@ contract Mothership is Ownable {
         string model, 
         uint16 year, 
         uint instrumentDeedToken,
+        string date,
         string verificationPhotoHash,
-        string firstOwner, 
         string[] instrumentPhotoHashes);
     
     event ProvenanceSale(
         address seller,
         address buyer,
-        address provenanaceAddress
+        address provenanaceAddress,
+        string date
     );
 
     // SETTERS 
@@ -61,8 +62,8 @@ contract Mothership is Ownable {
         string memory _model, 
         uint16 _year, 
         uint _instrumentDeedToken,
+        string memory _date,
         string memory _verificationPhotoHash,
-        string memory _firstOwner, 
         string[] memory _instrumentPhotoHashes
     ) external returns(address) {
         //might need to check for dupes on frontend
@@ -74,8 +75,8 @@ contract Mothership is Ownable {
             _model, 
             _year, 
             _instrumentDeedToken, 
+            _date,
             _verificationPhotoHash, 
-            _firstOwner, 
             _instrumentPhotoHashes,
             address(this),
             address(instrumentDeedTokenContract));
@@ -93,8 +94,8 @@ contract Mothership is Ownable {
             _model, 
             _year, 
             _instrumentDeedToken, 
+            _date,
             _verificationPhotoHash, 
-            _firstOwner, 
             _instrumentPhotoHashes);
 
         return(address(provenance));
@@ -161,7 +162,7 @@ contract Mothership is Ownable {
 
 
     //called from Provenance to update mothership state. needs tokenOwner modifier for security
-    function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold) external {
+    function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold, string memory date) external {
         //update ownership
         ownersToAxes[buyer].push(provenanceSold);
 
@@ -169,7 +170,7 @@ contract Mothership is Ownable {
 
         _burnSoldProvenance(seller, index);
 
-        emit ProvenanceSale(msg.sender, buyer, address(provenanceSold));
+        emit ProvenanceSale(msg.sender, buyer, address(provenanceSold), date);
          
     }
 

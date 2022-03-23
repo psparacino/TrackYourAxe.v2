@@ -30,24 +30,25 @@ const ProvenanceMain = () => {
 
   const { MothershipContract, TokenContract } = useContractContext();
 
-  const {tokens, setTokens, items, setItems, itemAdded, provenanceObjects, ipfsGetterRootURL, setProvenanceObjects} = useItemContext();
+  const {tokens, setTokens, items, setItems, itemAdded,setItemAdded, provenanceObjects, ipfsGetterRootURL, setProvenanceObjects} = useItemContext();
 
   const router = useRouter();
 
-
   // to rebuild page and add new item. can probably be optimized.
-  useEffect(() => {
-    if (itemAdded){
+  useEffect(async() => {
+    const confirmAddition = await itemAdded;
+    if (confirmAddition){
       router.reload();
-    }
-    
-  },[itemAdded])
+      setItemAdded(false)  
+    }  
+  },[])
+
 
 
   const ItemTable = () => {
 
     
-    if (provenanceObjects){
+    if (provenanceObjects && provenanceObjects.length > 0){
       return (
         <>
           <nav>
@@ -56,19 +57,16 @@ const ProvenanceMain = () => {
           const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } = array;
           const provenanceAddress = ProvenanceContract.address;
           const{ serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = ProvenanceProps;   
-          const { ownerAddress, name, verificationPhotoHash} = ProvenanceOwnerInfo;
-
-
+          const { ownerAddress, name, verificationPhotoHash, date} = ProvenanceOwnerInfo;
 
          
             return (
 
               <div className={styles.container} key={provenanceAddress}>
                 <Container>
-                  <Link href={`/provenances/${provenanceAddress}`}>
+                  <Link href={`provenances/${provenanceAddress}`}>
                   
-                    <a>  
-                        {console.log(`/provenances/${provenanceAddress}`, "tracking url")}     
+                    <a>    
                         <Card key={provenanceAddress + 'card'} className="mx-auto mt-5 pt-2" style={{width: '75%'}}>
                           <h2>{brand} {model}</h2>
                             <Card.Body>
@@ -111,18 +109,16 @@ const ProvenanceMain = () => {
                     </Link>
                 </Container>                 
               </div>
-                    
-
-            )
-          })
-        }
+              )
+            })
+          }
              
-     
+  
           </nav>
         </>
        )} else {
         return (
-          <p>nothing to show here</p>
+          <h1 style={{paddingTop: '20vh'}}>You have no registered provenances.</h1>
         )}
 }
 
@@ -138,18 +134,8 @@ const ProvenanceMain = () => {
           <button onClick={async ()=> {console.log(items)}}>Get Items in State</button>
           */}
           {/*<TokensOwned />*/}
-          
-
- 
           <ItemTable />
-
-          <nav>
-                <Link href="/register-item">RegisterItem</Link>
-                <div></div>
-                
-                <div></div>
-                <Link href='/'>Home</Link>
-          </nav>     
+    
         </div>
     )
 }

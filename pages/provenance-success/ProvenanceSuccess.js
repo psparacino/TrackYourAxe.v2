@@ -56,8 +56,8 @@ const ProvenanceSuccess = () => {
                     </nav> 
                     <nav>
                         {/*<Link href={`/${mainAccount}`}>{mainAccount} Provenances</Link>*/}
-                        <Link href='/provenances'>
-                            <a>{`/${mainAccount}`} Provenances</a>
+                        <Link href='provenances'>
+                            <a>{`${mainAccount}`} Provenances</a>
                         </Link>
                     </nav>  
                 </div>

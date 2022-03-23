@@ -46,10 +46,10 @@ const formReducer = (state, event) => {
 const TransferProfile = () => {
 
   // contexts
-  const { ipfsGetterRootURL } = useItemContext();
+  const { ipfsGetterRootURL, setItemAdded } = useItemContext();
   const { TokenContract, MothershipContract } = useContractContext();
   const { pendingTransferContracts, setPendingTransferContracts } = useTransferContext();
-  const { mainAccount, provider } = useUserContext();
+  const { mainAccount, provider, dateString } = useUserContext();
 
   const router = useRouter();
   const { transfer } = router.query;
@@ -100,22 +100,22 @@ const TransferProfile = () => {
 
     async function claim() {
 
-    await provenanceContract.claimOwnership(provenanceOwnerInfo.ownerAddress, formData.verificationphotohash)
+    await provenanceContract.claimOwnership(provenanceOwnerInfo.ownerAddress, formData.verificationphotohash, dateString)
       .then(async(result) => {
         provider.waitForTransaction(result.hash)
         .then(async(mined) => {
             if (mined) {
-                    router.push(`/provenances`)
-                  }
-         
-            }
-            )}
-        )
-    
-  }
-
+              //need to autopush on transaction mine, and make sure new data is pulled to delete pending and add to provObjects
+                  setItemAdded(true);
+                  router.push(`provenances`);
+                  }   
+              }
+            )
+          }
+        )   
+      }
     return (          
-      <div>
+      <div style={{paddingTop: '10px'}}>
         <Button onClick={claim} disabled={formData.verificationphotohash.length === 0}>CLAIM THIS PROVENANCE</Button>
       </div>
  
@@ -133,6 +133,7 @@ const TransferProfile = () => {
     return (
       <Container>
         <div className={styles.container}>   
+        <h1>Claim Provenance</h1>
           <DragAndDrop 
                 photoLimit={1} 
                 formDataImport={formData} 
@@ -144,7 +145,8 @@ const TransferProfile = () => {
             : null
             }
           
-          <ClaimProvenance />      
+          <ClaimProvenance /> 
+          <hr />    
 
           <h2>{brand} {model}: {serial}</h2>
           <p></p>
@@ -189,13 +191,9 @@ const TransferProfile = () => {
               </tbody>
             </Table>
           <Carousel />
-          
 
           {errorMessage ?
-          <p>{errorMessage}</p> : null}
-
-       
-          
+          <p>{errorMessage}</p> : null}  
           
         </div>
         </Container>

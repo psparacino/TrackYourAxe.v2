@@ -47,7 +47,7 @@ describe("Provenance Tests", function () {
         //console.log(MothershipContract.address, "MothershipContract address")
 
 
-        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, 'ipfs', 'John', ["ipfs"])
+        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, "12/31/2000", 'ipfs', ["ipfs"])
         let receipt = await result.wait()
         let event = await receipt.events?.filter((x) => {return x.event == "ProvenanceCreated"});
         let ProvenanceAddress = event[0].args.childAddress;
@@ -67,7 +67,7 @@ describe("Provenance Tests", function () {
         let ProvenanceContractTest;
         
 
-        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, 'ipfs', 'John', ["ipfs"])
+        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, "12/31/2000", 'ipfs', ["ipfs"])
         let receipt = await result.wait()
         let event = await receipt.events?.filter((x) => {return x.event == "ProvenanceCreated"});
         let ProvenanceAddress = event[0].args.childAddress;
@@ -90,7 +90,7 @@ describe("Provenance Tests", function () {
         const ProvenanceContractTestSecondSigner = await ProvenanceContractTest.connect(addr2);  
 
 
-        await ProvenanceContractTestSecondSigner.connect(addr2).claimOwnership(provenanceOwner, 'verificationPhoto2');    
+        await ProvenanceContractTestSecondSigner.connect(addr2).claimOwnership(provenanceOwner, 'verificationPhoto2','12/31/1999');    
 
 
         const updatedAddr1Provs = await MothershipContract.connect(addr1).getOwnersInstruments();

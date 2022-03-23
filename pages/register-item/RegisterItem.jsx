@@ -38,6 +38,7 @@ const formReducer = (state, event) => {
       brand: '',
       year: 0,
       token: 0,
+      date: 0,
       verificationphotohash: [],
       instrumentphotohashes: [],
     }
@@ -52,7 +53,7 @@ const formReducer = (state, event) => {
 
 const RegisterItem = () => {
 
-    //console.log(TokenContract, "MothershipContract on RI page test")
+
     const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useReducer(formReducer, {instrumentphotohashes : [], verificationphotohash : []});
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -65,9 +66,11 @@ const RegisterItem = () => {
     const [readyToMint, setReadyToMint] = useState(false);
     const [enableForm, setEnableForm] = useState(false);
 
-    const {mainAccount, provider, signer} = useUserContext();
 
+    //context
+    const {mainAccount, provider, signer, dateString} = useUserContext();
     const { MothershipContract, TokenContract } = useContractContext();
+
 
     const {items, 
           setItems, 
@@ -79,7 +82,7 @@ const RegisterItem = () => {
           newProvenanceAddress, 
           setNewProvenanceAddress,
           ipfsGetterRootURL } = useItemContext();
-    
+
 
     const router = useRouter();
 
@@ -123,18 +126,10 @@ const RegisterItem = () => {
       event.preventDefault();
       setModalShow(true)
       setSubmitting(formData, true);
-      //createProvenance();
-
-      /*
-      setTimeout(() => {
-        setSubmitting(false);
-        setFormData({
-          reset: true
-        })
-      }, 3000)
-      */
       
   }
+
+
       const handleChange = event => {
       const isCheckbox = event.target.type === 'checkbox';
       setFormData({
@@ -143,23 +138,8 @@ const RegisterItem = () => {
       })
     }
     
+  // functions  
 
-
-  //MothershipContract Interaction Functions
-
-  /*        Provenance.Types _enumType,
-        string memory _serial, 
-        string memory _brand, 
-        string memory _model, 
-        uint16 _year, 
-        uint _instrumentDeedToken,
-        string memory _verificationPhotoHash,
-        string memory _firstOwner, 
-        string[] memory _instrumentPhotoHashes
-  */
-
-
-  //will need to sign two Txns. one creating provenance. the other approving the token to be be bound to this provenance. Need to fix function.
   const createProvenance = () => {
     MothershipContract.createNewProvenance(
       formData.type, 
@@ -168,17 +148,16 @@ const RegisterItem = () => {
       formData.model, 
       formData.year, 
       unusedTokenID, 
+      dateString,
       formData.verificationphotohash, 
-      'j.doe', 
       formData.instrumentphotohashes)
       .then(async(result) => {
         provider.waitForTransaction(result.hash)
         .then(mined => {
-            if (mined) {
-              setItemAdded(true)
+            if (mined) {        
               MothershipContract.once("ProvenanceCreated", (type, newAddress) => {
                 setNewProvenanceAddress(newAddress)
-                
+                setItemAdded(true)
                 router.push('/provenance-success')
             })}
         })
@@ -186,56 +165,6 @@ const RegisterItem = () => {
     }
   
 
-
-//just placehlder so i dont have to repopulate values for testing
-// need to fix sign up flow to creation of new page. Event is firing too early if its on same block
-
-
-
-const createPracticeProvenance = async() => {
-  
- 
-    await MothershipContract.createNewProvenance(
-      1, 
-      Math.random().toString(), 
-      'selmer', 
-      'sba', 
-      1967, 
-      unusedTokenID, 
-      'ipfs', 
-      'j.doe', 
-      ['ipfs', 'ipfs'])
-      .then(async(result) => {
-        provider.waitForTransaction(result.hash)
-        .then(mined => {
-            if (mined) {
-              MothershipContract.once("ProvenanceCreated", (type, newAddress) => {
-                console.log(result, "event result")  
-                setNewProvenanceAddress(newAddress)
-                router.push('/provenance-success')
-            })}
-        })
-    })
-  
-}
-
-//need to fool-proof this
-/*
-
-*/
-
-
-
-  const getMothershipOwner = () => {
-
-    MothershipContract.owner()
-    .then(result => {
-      console.log(result, "Mothership Owner")
-    })
-    .catch((error) => console.log(error))
-
-  }
-  
 
   //TokenContract Interaction Functions
 
@@ -274,42 +203,42 @@ const createPracticeProvenance = async() => {
 
   //check if token has been used in a Provenance
   const UserTokens= () => {
-    let provenanceTokens = [];
-    let unusedTokens = [];
+      let provenanceTokens = [];
+      let unusedTokens = [];
 
-    for (let i = 0; i < provenanceObjects.length; i++) {
+      for (let i = 0; i < provenanceObjects.length; i++) {
 
-      provenanceTokens.push(provenanceObjects[i].ProvenanceProps.instrumentDeedToken.toNumber())
-    }
-    
-    tokens.forEach((token) => {
-      const result = provenanceTokens.includes(token);
-      if (!result) {
-        unusedTokens.push(token)
+        provenanceTokens.push(provenanceObjects[i].ProvenanceProps.instrumentDeedToken.toNumber())
       }
       
-    })
-    
-    async function getTokenProps(unusedToken) {
-      const uri = await TokenContract.tokenURI(unusedToken);
-      setFormData({
-        name: 'verificationphotohash',
-        value: uri})
-      setUnusedTokenID(unusedToken)  
-      setMintErrorMessage('') 
-      setReadyToMint(false)
-    }
+      tokens.forEach((token) => {
+        const result = provenanceTokens.includes(token);
+        if (!result) {
+          unusedTokens.push(token)
+        }
+        
+      })
+      
+      async function getTokenProps(unusedToken) {
+        const uri = await TokenContract.tokenURI(unusedToken);
+        setFormData({
+          name: 'verificationphotohash',
+          value: uri})
+        setUnusedTokenID(unusedToken)  
+        setMintErrorMessage('') 
+        setReadyToMint(false)
+      }
 
-    //helper functions
+      //helper functions
 
-    function resetTokenDetails() {
-          {/*setTokenToMint(tokens.slice(-1))*/}
-          setFormData({
-            name: "verificationphotohash",
-            value: [],
-          })
-          setReadyToMint(false)
-    } 
+      function resetTokenDetails() {
+            {/*setTokenToMint(tokens.slice(-1))*/}
+            setFormData({
+              name: "verificationphotohash",
+              value: [],
+            })
+            setReadyToMint(false)
+      } 
     
 
     return (
@@ -538,8 +467,9 @@ const createPracticeProvenance = async() => {
         </Container>
 
           
-          {/*
+
           <button onClick={() => console.log(formData, "formData")}>FormData</button>
+                    {/*
           <button onClick={getMothershipOwner}>Get Mothership Owner</button>
           <button onClick={() => console.log(MothershipContract, "MothershipContract")}>Mothership Contract</button>
           <button onClick={async() => console.log(await MothershipContract.getOwnersInstruments(), "Instruments to Owners")}>Instruments to Owners</button>
@@ -550,7 +480,6 @@ const createPracticeProvenance = async() => {
             setShowConfirmationModal={setShowConfirmationModal} 
             formData={formData} 
             createProvenance={createProvenance}
-            createPracticeProvenance={createPracticeProvenance}
             tokenId={tokenId}
             unusedTokenID={unusedTokenID}
             setSubmitting={setSubmitting}
@@ -562,7 +491,6 @@ const createPracticeProvenance = async() => {
           <ConfirmationModal style={{zindex: '1'}} show={modalShow} onHide={() => setModalShow(false)}
             formdata={formData} 
             createprovenance={createProvenance}
-            createpracticeprovenance={createPracticeProvenance}
             tokenid={tokenId}
             unusedtokenid={unusedTokenID}
             setsubmitting={setSubmitting}

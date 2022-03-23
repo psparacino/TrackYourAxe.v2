@@ -9,7 +9,6 @@ import '../src/components/DragAndDrop.css';
 import '../src/components/Modal.css';
 
 
-
 import { useEffect } from 'react';
 
 
@@ -45,7 +44,7 @@ function TrackYourAxe({ Component, pageProps }) {
         <ContractContextProvider>
           <ItemContextProvider>
             <TransferContextProvider>
-              <NavBar mainAccount={mainAccount} setMainAccount={setMainAccount}/>
+              <NavBar />
               <Component {...pageProps} />
             </TransferContextProvider>         
           </ItemContextProvider>       

@@ -30,6 +30,7 @@ export function ItemContextProvider({ children }) {
 
   const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
 
+
 //load user tokens. need the for loop to convert to #.
   useEffect(() => {  
     getTokens()
@@ -73,10 +74,11 @@ export function ItemContextProvider({ children }) {
     //Loads all users provenance contract instances
   
     useEffect(() => {
-      if (items || newProvenanceAddress) {
+      if (items || newProvenanceAddress || itemAdded) {
         populateProvenances()
-        .then(setItemAdded(false)
-        )
+        /*
+        .then(setItemAdded(false))
+        */
         .catch(error => console.log(error, 'populate error'));
       }
       async function populateProvenances() {
@@ -103,6 +105,7 @@ export function ItemContextProvider({ children }) {
   const state = { 
       items, 
       setItems, 
+      itemAdded,
       setItemAdded,
       tokens, 
       setTokens, 
