@@ -64,8 +64,6 @@ describe("Provenance Tests", function () {
     });
 
     it("sale of from one owner to another", async function() { 
-        //console.log(addr1.address,"addr1.address")
-        //console.log(MothershipContract.address, "MothershipContract address")
         let ProvenanceContractTest;
         
 
@@ -105,14 +103,9 @@ describe("Provenance Tests", function () {
 
         expect((await ProvenanceContractTestSecondSigner.ownerProvenance(2)).ownerAddress).to.equal(addr2.address);
         expect((await ProvenanceContractTestSecondSigner.ownerProvenance(1)).ownerAddress).to.equal(addr1.address);
-        
-        //expect((await MothershipContract.ownersToAxes(addr2.address)).to.equal(addr2.address)
+    
 
         
     });
 
   });
-
-  /*
-    
-        expect(await ProvenanceContract.owner()).to.equal(owner);*/

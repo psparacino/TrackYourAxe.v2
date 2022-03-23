@@ -32,6 +32,7 @@ contract Provenance is Ownable {
         address ownerAddress;
         string name;
         string verificationPhotoHash;
+        //date acquired;
     }
 
     mapping(uint16 => Owner) public ownerProvenance;
@@ -127,7 +128,17 @@ contract Provenance is Ownable {
     }
 
     //might be able to do by looping over mapping and ownercount in the front end
-    function getPreviousOwners() public view {
+    function getOwnershipHistory() public view returns(Owner[] memory) {
+        
+        Owner[] memory ownershipHistory = new Owner[](ownerCount+1);
+
+        for (uint16 i = 1; i <= ownerCount; i++) {
+            console.log("hitting");
+            ownershipHistory[i] = ownerProvenance[i];
+            console.log(i);
+        }
+        return ownershipHistory;
+         
     }
 
     //publish new Instrument photo to Ipfs. Needs to replace old
