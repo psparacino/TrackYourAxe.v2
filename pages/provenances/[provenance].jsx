@@ -49,6 +49,7 @@ const ProvenanceProfile = () => {
     // would be faster search with an object not a for loop. not sure how that would work with the map though.
     async function loadProvenance() { 
       for (let contract of provenanceObjects) {
+        console.log(contract)
         if (contract.ProvenanceContract.address == provenance) {
           const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } = contract;
 
@@ -97,23 +98,31 @@ const ProvenanceProfile = () => {
 
               <Container key={ownerAddress}>
                 <Card>
+                  
                   <Card.Header>Owner {ownerCount}</Card.Header>
                     <Card.Body>
+                      <div className={styles.cardContainer}>
+                        <div className={styles.cardPhotoContainer}>
+                          <Image src={ipfsGetterRootURL+verificationPhotoHash} className={styles.cardPhoto} alt={'verification photo'} />
+                        </div>
+                        <div className={styles.cardInfoContainer}>
+                          <Card.Title>Owner Address</Card.Title>             
+                          <Card.Text style={{color: 'black'}}>
+                            {ownerAddress}
+                          </Card.Text>
+                          <Card.Title>Date Acquired</Card.Title>
+                          <Card.Text style={{color: 'black'}}>
+                            {date}
+                          </Card.Text>
 
-                      <Card.Title>Owner Address</Card.Title>
-                      <Card.Text style={{color: 'black'}}>
-                        {ownerAddress}
-                      </Card.Text>
-
-                      <Card.Title>Date Acquired</Card.Title>
-                      <Card.Text style={{color: 'black'}}>
-                        {date}
-                      </Card.Text>
-
-                      <Card.Title>Notes</Card.Title>
-                      <Card.Text style={{color: 'black'}}>
-                        Additional data can maybe stored off-chain?
-                      </Card.Text>
+                          <Card.Title>Notes</Card.Title>
+                          <Card.Text style={{color: 'black'}}>
+                            Additional data can maybe stored off-chain?
+                          </Card.Text>
+                        </div>
+                        
+                        
+                      </div>         
 
                     </Card.Body>
                   </Card>    
@@ -232,6 +241,7 @@ const ProvenanceProfile = () => {
     if (loaded) {
 
     const { serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = provenanceProps; 
+    
 
 
     return (
@@ -281,7 +291,28 @@ const ProvenanceProfile = () => {
 
               </tbody>
             </Table>
-          <Carousel />
+            {/*itemPhotoArray.length > 0 ?      
+              <Carousel>
+                {itemPhotoArray.map((photo, index)=> {
+                  return (       
+                      <Carousel.Item key={index}>
+                        <img 
+                          key={photo} 
+                          src={photo} 
+                          alt="item photos not yet loaded"
+                          className={styles.itemPhotoCarousel} />  
+                      </Carousel.Item>
+                      )
+                })} 
+              </Carousel>
+              
+          :
+            <div>
+              <h2>Item Photos Loading</h2>
+              <Spinner animation="border" className='mx-auto' />
+            </div>
+            */
+          }
 
           <ProvenanceHistory />
           <hr />
@@ -301,7 +332,7 @@ const ProvenanceProfile = () => {
   
     } else {
       return(
-        <p>you do not have any current provenances.</p>
+        <h1 style={{paddingTop: '20vh'}}>You do not own this Provenance.</h1>
       )
     }
     

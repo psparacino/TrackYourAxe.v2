@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, forwardRef } from 'react';
 import axios from 'axios';
-import { Spinner} from 'react-bootstrap';
+import { Spinner, Button } from 'react-bootstrap';
 
 import Image from 'next/image';
 
@@ -24,6 +24,8 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
     const [unsupportedFiles, setUnsupportedFiles] = useState([]);
 
     const [loading, setLoading] = useState('');
+
+    const [ itemPhotosUploaded, setItemPhotosUploaded ] = useState(false);
 
     /*
     const [tokenMinted, setTokenMinted] = useState(false);
@@ -299,7 +301,8 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
     */
 
     const uploadFiles = async() => {
-        setLoading(true);
+        event.preventDefault();
+        setLoading(true);     
         let instrumentPhotoHashesArray = [];
         const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
@@ -315,13 +318,13 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                     headers: {
                         pinata_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_KEY}`,
                         pinata_secret_api_key: `${process.env.NEXT_PUBLIC_PINATA_SECRET_API_KEY}`
-                        }
-                    })})
-                )
+                    }})})
+            )
             .then((response) => {
                 
                 //uploadRef.current.innerHTML = 'File(s) Uploaded'
                 setLoading(false)
+
                 validFiles.length = 0;
                 setValidFiles([...validFiles]);
                 setSelectedFiles([...validFiles]);
@@ -344,6 +347,7 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                         name: 'instrumentphotohashes',
                         value: instrumentPhotoHashesArray})
                     }
+                    setItemPhotosUploaded(true)
                    
                 }                                    
             })
@@ -375,7 +379,7 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
         }
 
         if (photoLimit === 20) {
-            const msg = formDataImport && formDataImport.instrumentphotohashes.length >= 1 ? 'Item Photos Successfully Uploaded' : 'Upload Your Item Photos';
+            const msg = formDataImport && formDataImport.instrumentphotohashes.length >= 1 ? 'Please include all photos in your reupload' : 'Upload Your Item Photos';
             photoMsg = msg;
         }
 
@@ -393,9 +397,14 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
 
     return (
         <>
+         
             <div className="container">
                 {unsupportedFiles.length === 0 && validFiles.length ? <button className="file-upload-btn" onClick={() => uploadFiles()}>Upload to IPFS</button> : ''} 
                 {unsupportedFiles.length ? <p>Please remove all unsupported files.</p> : ''}
+                {itemPhotosUploaded ?
+
+                <Button variant="warning" style={{marginBottom: '10px'}} onClick={() => setItemPhotosUploaded(false)}>Re-Upload Image(s)</Button>
+                :
                 <div className="drop-container"
                     onDragOver={dragOver}
                     onDragEnter={dragEnter}
@@ -415,6 +424,8 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                         onChange={filesSelected}
                     />
                 </div>
+                }
+                
             
                 <div className="file-display-container">
                     {

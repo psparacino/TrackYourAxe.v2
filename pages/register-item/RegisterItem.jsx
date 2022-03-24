@@ -310,7 +310,7 @@ const RegisterItem = () => {
           <Container>
             <h1 className="pt-5 mx-auto">Create A Deed of Provenance</h1>
 
-            {/*Verfication Photo Upload*/} 
+            {/* Verfication Photo Upload */} 
             {readyToMint === false && formData.verificationphotohash.length > 0 ?
             
             null 
@@ -326,15 +326,13 @@ const RegisterItem = () => {
                 />
             </Row>}
             
-            {/*Verication Photo Preview */}
+          {/* Verication Photo Preview */}
+          { formData.verificationphotohash ?
+          <PhotoPreviews photoLimit={1} formData={formData} readyToMint={readyToMint} unusedTokenID={unusedTokenID} tokenToMint={tokenToMint} />
+          : null
+          }
 
-            { formData.verificationphotohash ?
-            <PhotoPreviews photoLimit={1} formData={formData} readyToMint={readyToMint} unusedTokenID={unusedTokenID} tokenToMint={tokenToMint} />
-            : null
-            }
-
-          {/*Token Updates*/}
-          {/*readyToMint ? null : <p>You are currently creating a provenance for this token: {tokenToMint}</p>*/}
+          {/* Token Updates */}
           <Row className="pt-4">
             <UserTokens />
           </Row>
@@ -347,6 +345,7 @@ const RegisterItem = () => {
           */}
             <Form onSubmit={handleSubmit} className="border mt-5 pt-4">
               <fieldset disabled={!enableForm}> 
+
                 {enableForm ?
                   <h1>Create Provenance with token # {unusedTokenID}</h1>
                     :
@@ -354,16 +353,16 @@ const RegisterItem = () => {
                   
                 }
             
-                  <Form.Group className="mb-3 mt-5 px-3">
-                      <Form.Label>Input Type of Item</Form.Label>
-                        <Form.Select name="type" onChange={handleChange} value={formData.type || ''}>
-                            <option value=""> Instrument/Accessory/Gear </option>
-                            <option value="0">Instrument</option>
-                            <option value="1">Accessory</option>
-                            <option value="2">Gear</option>
-                        </Form.Select> 
-                        
-                  </Form.Group>
+                <Form.Group className="mb-3 mt-5 px-3">
+                    <Form.Label>Input Type of Item</Form.Label>
+                      <Form.Select name="type" onChange={handleChange} value={formData.type || ''}>
+                          <option value=""> Instrument/Accessory/Gear </option>
+                          <option value="0">Instrument</option>
+                          <option value="1">Accessory</option>
+                          <option value="2">Gear</option>
+                      </Form.Select> 
+                      
+                </Form.Group>
 
 
                 <Row>
@@ -439,42 +438,45 @@ const RegisterItem = () => {
                   </Form.Group>
                 </Row>
 
-              <div className="mt-3">
-                <Button  type="submit" onClick={handleSubmit} disabled={submitting}>Create Provenance</Button>
+                {/* Item Photos Upload */}
 
-              </div>           
+                <Row>
+                  <Form.Group className="mb-3 mt-5">  
+                    
+                    {enableForm ?
+                      <Row>                       
+                        <DragAndDrop photoLimit={20} formDataImport={formData} setReadyToMint={setReadyToMint} setFormData={setFormData} />
+                      </Row>  : null }
+
+                    { formData.instrumentphotohashes.length >= 1 ?
+                    <PhotoPreviews photoLimit={20} formData={formData} ipfsGetterRootURL={ipfsGetterRootURL} />
+                    : null
+                    }
+                  </Form.Group> 
+                </Row>         
             </fieldset>
+
+            <div className="mt-3">
+              <Button type="submit" onClick={handleSubmit} disabled={submitting}>Create Provenance</Button>
+            </div>  
 
 
             
 
 
           </Form>
-
-          <Form.Group className="mb-3 mt-5">  
-            {/*Item Photo Upload*/}
-            {enableForm ?
-            <Row>                       
-              <DragAndDrop photoLimit={20} formDataImport={formData} setReadyToMint={setReadyToMint} setFormData={setFormData} />
-            </Row>  :
-            null}
-
-            { formData.instrumentphotohashes.length >= 1 ?
-            <PhotoPreviews photoLimit={20} formData={formData} ipfsGetterRootURL={ipfsGetterRootURL} />
-            : null
-            }
-          </Form.Group> 
         </Container>
 
-          
+             {/*
 
           <button onClick={() => console.log(formData, "formData")}>FormData</button>
-                    {/*
+                 
           <button onClick={getMothershipOwner}>Get Mothership Owner</button>
           <button onClick={() => console.log(MothershipContract, "MothershipContract")}>Mothership Contract</button>
           <button onClick={async() => console.log(await MothershipContract.getOwnersInstruments(), "Instruments to Owners")}>Instruments to Owners</button>
-          */}
+          
           <button onClick={() => setModalShow(true)}>activate modal for UI</button>
+          */}
 
           {showConfirmationModal ? <Modal 
             setShowConfirmationModal={setShowConfirmationModal} 

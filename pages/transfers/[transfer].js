@@ -107,7 +107,7 @@ const TransferProfile = () => {
             if (mined) {
               //need to autopush on transaction mine, and make sure new data is pulled to delete pending and add to provObjects
                   setItemAdded(true);
-                  router.push(`provenances`);
+                  router.push(`/provenances`);
                   }   
               }
             )
@@ -147,11 +147,11 @@ const TransferProfile = () => {
           
           <ClaimProvenance /> 
           <hr />    
-
+          <h1 style={{paddingTop: '30px'}}>Provenance Information</h1>  
           <h2>{brand} {model}: {serial}</h2>
           <p></p>
           <img src={ipfsGetterRootURL + provenanceOwnerInfo.verificationPhotoHash} style={{width: '50%'}} />
-          <h2 style={{paddingTop: '30px'}}>Provenance Information</h2>         
+          <hr />       
           <Table  bordered>
             <tbody>
               <tr>

@@ -65,6 +65,7 @@ const Transfers = () => {
                     <a>    
                         <Card key={provenanceAddress + 'card'} className="mx-auto mt-5 pt-2" style={{width: '75%'}}>
                           <h2 style={{color: 'red'}}>PENDING TRANSFER</h2>
+                          <p>click to begin claim</p>
                           <h4>{brand} {model}</h4>
                             <Card.Body>
                               <Row>
