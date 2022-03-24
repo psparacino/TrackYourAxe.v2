@@ -87,12 +87,12 @@ export function ItemContextProvider({ children }) {
             for (let address of items) {
                 const ProvenanceContract = new ethers.Contract(address, Provenance.abi, signer);
 
-                const ProvenanceProps = await ProvenanceContract.instrument()
+                const ProvenanceDetails = await ProvenanceContract.instrument()
                 const itemPhotos = await ProvenanceContract.getItemPics();
+                const ProvenanceProps = {...ProvenanceDetails, itemPhotos}
 
-                const ProvenanceFullProps = {...ProvenanceProps, itemPhotos}
 
-                console.log(ProvenanceFullProps, "props in context")
+                console.log(ProvenanceProps, "props in context")
                 
                 const index = ProvenanceContract.ownerCount();
                 const ProvenanceOwnerInfo = await ProvenanceContract.ownerProvenance(index);
