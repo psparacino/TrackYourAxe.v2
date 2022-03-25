@@ -23,10 +23,10 @@ export function ItemContextProvider({ children }) {
   // 
 
   const [ itemAdded, setItemAdded ] = useState(false);
-  const [newProvenanceAddress, setNewProvenanceAddress] = useState('');
-  const [tokens, setTokens] = useState([]);
-  const [items, setItems] = useState([]);
-  const [provenanceObjects, setProvenanceObjects] = useState([]);
+  const [ newProvenanceAddress, setNewProvenanceAddress] = useState('');
+  const [ tokens, setTokens ] = useState([]);
+  const [ items, setItems ] = useState([]);
+  const [ provenanceObjects, setProvenanceObjects] = useState([]);
 
   const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
 
@@ -59,17 +59,20 @@ export function ItemContextProvider({ children }) {
   
     //load addresses of user provenances
     useEffect(() => {
+      console.log(MothershipContract, "contract in UE")
+
+      
+      getItems();
+      
   
-      (async function getItems() {
+      async function getItems() {
         if (MothershipContract) {
         let contractItems = await MothershipContract.getOwnersInstruments();
         setItems(contractItems);
           }
-        })();
+        };
   
-  
-  
-    },[MothershipContract])
+    },[])
   
     //Loads all users provenance contract instances
   

@@ -30,22 +30,26 @@ const useContractObjectRepo = () => {
     const [MothershipContract, setMothershipContract] = useState('');
     const [TokenContract, setTokenContract] = useState('');
 
-    const { provider, signer } = useUserContext();
+    const { provider, modalProvider, signer } = useUserContext();
 
     //need to adjust this hook for non-Ethereum
     useEffect(async()=> {
-          if (window.ethereum) {
+          const contextSigner = await signer;
+
+          console.log(signer, "signer check")
+
+          if (signer && contextSigner !== undefined) {
             contractObjects();
           } else {
             alert("please install Metamask")
           }
           async function contractObjects() {
 
-            //const provider = new ethers.providers.Web3Provider(window.ethereum);
-            //const signer = provider.getSigner(0);
-            const contextSigner = await signer;
+            console.log(contextSigner, "contextSigner")
             
-            if (signer) {
+            if (signer && contextSigner !== undefined) {
+              console.log("hitting")
+
             //MothershipContract
             const MothershipContractAddress = deployedMothershipAddress.address;
             const MothershipContractObject = new ethers.Contract(MothershipContractAddress, Mothership.abi, contextSigner);
@@ -60,6 +64,7 @@ const useContractObjectRepo = () => {
         }
 
     },[signer]) 
+
 
     return { MothershipContract, TokenContract};
 }
