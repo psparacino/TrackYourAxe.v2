@@ -3,7 +3,7 @@ import "../../node_modules/slick-carousel/slick/slick.css";
 import "../../node_modules/slick-carousel/slick/slick-theme.css";
 //carousel component import
 
-import MetaMaskButton from "./MetaMaskButton";
+import ConnectWalletButton from "./ConnectWalletButton";
 
 import { useState, useEffect } from "react";
 
@@ -39,7 +39,7 @@ const NavBar = () => {
         <Container>
             <Row>
               <Col>
-                <MetaMaskButton mainAccount={mainAccount} setMainAccount={setMainAccount} />
+                <ConnectWalletButton />
               </Col>
             </Row>       
         </Container>

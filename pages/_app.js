@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 
 //temp style imports
-import '../src/components/MetaMaskButton.css';
 import '../src/components/ConfirmationModal.css';
 import '../src/components/DragAndDrop.css';
 import '../src/components/Modal.css';
@@ -24,13 +23,13 @@ import { ItemContextProvider } from '../src/context/ItemContext';
 import { TransferContextProvider } from '../src/context/TransferContext';
 
 //hook imports
-import useHandleEthereum from "../src/hooks/useHandleEthereum.js";
+// import useHandleEthereum from "../src/hooks/useHandleEthereum.js";
 
 
 
 function TrackYourAxe({ Component, pageProps }) {
 
-  const {mainAccount, setMainAccount, signer, provider} = useHandleEthereum();
+  // const {mainAccount, setMainAccount, signer, provider} = useHandleEthereum();
 
   
   useEffect(() => {

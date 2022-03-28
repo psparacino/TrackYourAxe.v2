@@ -19,7 +19,7 @@ import { useUserContext } from '../../src/context/UserContext';
 
 //style imports
 import styles from './ProvenanceHub.module.css';
-import { Container, Table, Row, Col, Card, } from 'react-bootstrap';
+import { Container, Table, Row, Col, Card, Spinner } from 'react-bootstrap';
 
 
 
@@ -46,7 +46,6 @@ const ProvenanceMain = () => {
 
 
   const ItemTable = () => {
-
     
     if (provenanceObjects && provenanceObjects.length > 0){
       return (
@@ -118,7 +117,12 @@ const ProvenanceMain = () => {
         </>
        )} else {
         return (
-          <h1 style={{paddingTop: '20vh'}}>You have no registered provenances.</h1>
+          <>
+            Need to fix this loading vs no objects area
+            <h1 style={{paddingTop: '20vh'}}>You have no registered provenances.</h1>
+          </>
+
+
         )}
 }
 
@@ -126,8 +130,8 @@ const ProvenanceMain = () => {
 
     return(
         <div className={styles.container}>
-        
           <h3>Registered Provenances for <br/> {mainAccount}</h3>
+          {console.log(provenanceObjects, "probObjs")}
           {/*
           <button onClick={async ()=> {console.log(await MothershipContract.getOwnersInstruments())}}>Get Instruments via Contract</button>
           <button onClick={()=> {console.log((provenanceObjects))}}>Provenance Objects</button>

@@ -32,17 +32,19 @@ export function ItemContextProvider({ children }) {
 
 
 //load user tokens. need the for loop to convert to #.
-  useEffect(() => {  
-    getTokens()
-    .then(tokenIDs => {
-      let tokenArray = [];
-      if (tokenIDs) {
-      for (let i = 0; i < tokenIDs.length; i++) {
-        const tokenIndex = tokenIDs[i].toNumber();
-        tokenArray.push(tokenIndex)
-      }}
-      setTokens(tokenArray)
-    })
+  useEffect(() => { 
+    if (mainAccount) { 
+      getTokens()
+      .then(tokenIDs => {
+        let tokenArray = [];
+        if (tokenIDs) {
+        for (let i = 0; i < tokenIDs.length; i++) {
+          const tokenIndex = tokenIDs[i].toNumber();
+          tokenArray.push(tokenIndex)
+        }}
+        setTokens(tokenArray)
+      })
+  }
 
     async function getTokens() {  
 
@@ -59,10 +61,12 @@ export function ItemContextProvider({ children }) {
   
     //load addresses of user provenances
     useEffect(() => {
-      console.log(MothershipContract, "contract in UE")
-
       
-      getItems();
+
+      if (mainAccount && MothershipContract) {
+        // console.log(mainAccount, "mainAccount in getItems UseEffect")
+        getItems();
+      }
       
   
       async function getItems() {
@@ -72,12 +76,13 @@ export function ItemContextProvider({ children }) {
           }
         };
   
-    },[])
+    },[mainAccount, MothershipContract])
   
     //Loads all users provenance contract instances
-  
+    
     useEffect(() => {
-      if (items || newProvenanceAddress || itemAdded) {
+      if (items || newProvenanceAddress || itemAdded || mainAccount) {
+        // console.log(mainAccount, "mainAccount in items UE")
         populateProvenances()
         /*
         .then(setItemAdded(false))
@@ -95,7 +100,7 @@ export function ItemContextProvider({ children }) {
                 const ProvenanceProps = {...ProvenanceDetails, itemPhotos}
 
 
-                console.log(ProvenanceProps, "props in context")
+                // console.log(ProvenanceProps, "props in context")
                 
                 const index = ProvenanceContract.ownerCount();
                 const ProvenanceOwnerInfo = await ProvenanceContract.ownerProvenance(index);
@@ -105,7 +110,7 @@ export function ItemContextProvider({ children }) {
          setProvenanceObjects(provenanceArray);          
       }   
         
-    },[items, newProvenanceAddress, itemAdded])
+    },[items, newProvenanceAddress, itemAdded, mainAccount])
 
     
 

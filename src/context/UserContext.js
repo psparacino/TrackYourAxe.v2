@@ -1,14 +1,13 @@
 // src/context/state.js
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 // import { networkParams } from "./networks";
-import { toHex, truncateAddress } from "./utils";
+import { toHex, truncateAddress } from '../hooks/utils';
 import { ethers } from "ethers";
+
+
 import Web3Modal from "web3modal";
+import { providerOptions } from '../components/web3Modal/providerOptions';
 
-
-const providerOptions = {
-  /* See Provider Options Section */
-};
 
 
 
@@ -56,33 +55,41 @@ const UserContext = createContext();
         //connect page on reload
         useEffect(async() => {
             if (web3Modal && web3Modal.cachedProvider) {
+                console.log(web3Modal.cachedProvider)
                 connectWallet();
                 }
 
             }, [web3Modal])
+            
+            
   
 
         const connectWallet = async () => {
-            try {
-                const modalProvider= await web3Modal.connect();
+                try {
+                    const modalProvider= await web3Modal.connect();
+                    const provider = new ethers.providers.Web3Provider(modalProvider);
+                    const mainAccount = await provider.listAccounts();
+                    const network = await provider.getNetwork();    
+                    setModalProvider(modalProvider);
+            
+                    setProvider(provider);
+                    console.log(provider, "rpvider")
+    
+                    const txnSigner = provider.getSigner()
+                    setSigner(txnSigner)
+                    console.log(txnSigner, "txnSigner")
+               
+                    if (mainAccount) setMainAccount(mainAccount[0]);
+    
+                    
+                                    
+                    setChainId(network.chainId);
 
-                const provider = new ethers.providers.Web3Provider(modalProvider);
+                } catch (error) {
+                    console.error(error, "connect error");
+                  }
 
-                const txnSigner = provider.getSigner()
-                setSigner(txnSigner)
-                console.log(txnSigner, "txnSigner")
-
-                const mainAccount = await provider.listAccounts();
-
-                const network = await provider.getNetwork();
-                setModalProvider(modalProvider);
-                setProvider(provider);
-
-                if (mainAccount) setMainAccount(mainAccount[0]);
-                setChainId(network.chainId);
-            } catch (error) {
-                setError(error);
-            }
+          
         };
 
 
@@ -119,6 +126,8 @@ const UserContext = createContext();
 
         //maybe dont need these
 
+        /*
+
         const signMessage = async () => {
         if (!provider) return;
         try {
@@ -146,10 +155,13 @@ const UserContext = createContext();
         }
         };
 
+        */
+
         // connect/disconnect
 
         const refreshState = () => {
-        setAccount();
+        setMainAccount();
+        setSigner();
         setChainId();
         setNetwork("");
         setMessage("");
@@ -160,8 +172,9 @@ const UserContext = createContext();
 
 
         const disconnect = async () => {
-        await web3Modal.clearCachedProvider();
-        refreshState();
+            await web3Modal.clearCachedProvider();
+            refreshState();
+            console.log("disconnect")
         };
 
 
@@ -169,13 +182,15 @@ const UserContext = createContext();
 
         useEffect(() => {
         if (modalProvider?.on) {
+
             const handleMainAccountChanged = (mainAccount) => {
-            console.log("mainAccountChanged", mainAccount);
-            if (mainAccount) setAccount(mainAccount[0]);
+            console.log("accountsChanged", mainAccount);
+            if (mainAccount) setMainAccount(mainAccount[0]);
             };
 
             const handleChainChanged = (_hexChainId) => {
             setChainId(_hexChainId);
+            console.log(`Chain changed to:${_hexChainId}`)
             };
 
             const handleDisconnect = () => {
@@ -183,13 +198,13 @@ const UserContext = createContext();
             disconnect();
             };
 
-            modalProvider.on("mainAccountChanged", handleMainAccountChanged);
+            modalProvider.on("accountsChanged", handleMainAccountChanged);
             modalProvider.on("chainChanged", handleChainChanged);
             modalProvider.on("disconnect", handleDisconnect);
 
             return () => {
             if (modalProvider.removeListener) {
-                modalProvider.removeListener("mainAccountChanged", handleMainAccountChanged);
+                modalProvider.removeListener("accountsChanged", handleMainAccountChanged);
                 modalProvider.removeListener("chainChanged", handleChainChanged);
                 modalProvider.removeListener("disconnect", handleDisconnect);
             }
@@ -204,9 +219,9 @@ const UserContext = createContext();
 
 
 
-        const state = { mainAccount, setMainAccount, signer, dateString, ipfsGetterRootURL, modalProvider, provider, connectWallet, disconnect, switchNetwork}
+        const state = { mainAccount, setMainAccount, chainId, modalProvider, provider, signer, connectWallet, disconnect, switchNetwork, dateString, ipfsGetterRootURL }
 
-        console.log(signer, "signer in UserContext", state, "state in UC")
+        // console.log(signer, "signer in UserContext", state, "state in UC")
 
         return (
             <UserContext.Provider value={state}>
