@@ -15,29 +15,36 @@ import { useContractContext} from './ContractContext.js'
 const ItemContext= createContext();
 
 export function ItemContextProvider({ children }) {
+  // use hooks to handle these
 
   const { mainAccount, signer } = useUserContext();  
   const { MothershipContract, TokenContract } = useContractContext();
 
+  // 
 
-  const [newProvenanceAddress, setNewProvenanceAddress] = useState('');
-  const [tokens, setTokens] = useState([]);
-  const [items, setItems] = useState([]);
-  //const [tokens, setTokens] = useState([]);
-  const [provenanceObjects, setProvenanceObjects] = useState([]);
+  const [ itemAdded, setItemAdded ] = useState(false);
+  const [ newProvenanceAddress, setNewProvenanceAddress] = useState('');
+  const [ tokens, setTokens ] = useState([]);
+  const [ items, setItems ] = useState([]);
+  const [ provenanceObjects, setProvenanceObjects] = useState([]);
 
-//load user tokens
-  useEffect(() => {  
-    getTokens()
-    .then(tokenIDs => {
-      let tokenArray = [];
-      if (tokenIDs) {
-      for (let i = 0; i < tokenIDs.length; i++) {
-        const tokenIndex = tokenIDs[i].toNumber();
-        tokenArray.push(tokenIndex)
-      }}
-      setTokens(tokenArray)
-    })
+  const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
+
+
+//load user tokens. need the for loop to convert to #.
+  useEffect(() => { 
+    if (mainAccount) { 
+      getTokens()
+      .then(tokenIDs => {
+        let tokenArray = [];
+        if (tokenIDs) {
+        for (let i = 0; i < tokenIDs.length; i++) {
+          const tokenIndex = tokenIDs[i].toNumber();
+          tokenArray.push(tokenIndex)
+        }}
+        setTokens(tokenArray)
+      })
+  }
 
     async function getTokens() {  
 
@@ -52,47 +59,58 @@ export function ItemContextProvider({ children }) {
   }, [mainAccount, TokenContract])
    
   
-    //load addresses of user items
+    //load addresses of user provenances
     useEffect(() => {
+      
+
+      if (mainAccount && MothershipContract) {
+        // console.log(mainAccount, "mainAccount in getItems UseEffect")
+        getItems();
+      }
+      
   
-      (async function getItems() {
+      async function getItems() {
         if (MothershipContract) {
         let contractItems = await MothershipContract.getOwnersInstruments();
         setItems(contractItems);
           }
-        })();
+        };
   
+    },[mainAccount, MothershipContract])
   
-  
-    },[MothershipContract])
-  
-    //Loads all users provenance objects
-  
+    //Loads all users provenance contract instances
+    
     useEffect(() => {
-  
-      if (items || newProvenanceAddress) {
+      if (items || newProvenanceAddress || itemAdded || mainAccount) {
+        // console.log(mainAccount, "mainAccount in items UE")
         populateProvenances()
-        .then((result) => console.log(result, 'populate result'))
+        /*
+        .then(setItemAdded(false))
+        */
         .catch(error => console.log(error, 'populate error'));
       }
       async function populateProvenances() {
         let provenanceArray = [];
         
             for (let address of items) {
-                //TokenContract (need to put this in here Mothership and Provenance)
-                
-                //const ProvenanceAddress = address;
                 const ProvenanceContract = new ethers.Contract(address, Provenance.abi, signer);
-                const ProvenanceProps = await ProvenanceContract.instrument()
+
+                const ProvenanceDetails = await ProvenanceContract.instrument()
+                const itemPhotos = await ProvenanceContract.getItemPics();
+                const ProvenanceProps = {...ProvenanceDetails, itemPhotos}
+
+
+                // console.log(ProvenanceProps, "props in context")
+                
                 const index = ProvenanceContract.ownerCount();
                 const ProvenanceOwnerInfo = await ProvenanceContract.ownerProvenance(index);
-
+                
                 provenanceArray.push({'ProvenanceContract': ProvenanceContract, 'ProvenanceProps': ProvenanceProps, 'ProvenanceOwnerInfo': ProvenanceOwnerInfo})
               }
          setProvenanceObjects(provenanceArray);          
       }   
         
-    },[items, newProvenanceAddress])
+    },[items, newProvenanceAddress, itemAdded, mainAccount])
 
     
 
@@ -102,12 +120,15 @@ export function ItemContextProvider({ children }) {
   const state = { 
       items, 
       setItems, 
+      itemAdded,
+      setItemAdded,
       tokens, 
       setTokens, 
       provenanceObjects, 
       setProvenanceObjects, 
       newProvenanceAddress, 
-      setNewProvenanceAddress 
+      setNewProvenanceAddress,
+      ipfsGetterRootURL
     };
 
   return (

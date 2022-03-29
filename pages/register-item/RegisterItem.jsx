@@ -38,6 +38,7 @@ const formReducer = (state, event) => {
       brand: '',
       year: 0,
       token: 0,
+      date: 0,
       verificationphotohash: [],
       instrumentphotohashes: [],
     }
@@ -52,7 +53,7 @@ const formReducer = (state, event) => {
 
 const RegisterItem = () => {
 
-    //console.log(TokenContract, "MothershipContract on RI page test")
+
     const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useReducer(formReducer, {instrumentphotohashes : [], verificationphotohash : []});
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -65,26 +66,28 @@ const RegisterItem = () => {
     const [readyToMint, setReadyToMint] = useState(false);
     const [enableForm, setEnableForm] = useState(false);
 
-    const {mainAccount, provider, signer} = useUserContext();
 
+    //context
+    const {mainAccount, provider, signer, dateString} = useUserContext();
     const { MothershipContract, TokenContract } = useContractContext();
+
 
     const {items, 
           setItems, 
+          setItemAdded,
           tokens, 
           setTokens, 
           provenanceObjects, 
           setProvenanceObjects, 
           newProvenanceAddress, 
-          setNewProvenanceAddress } = useItemContext();
-    
+          setNewProvenanceAddress,
+          ipfsGetterRootURL } = useItemContext();
+
 
     const router = useRouter();
 
       // low priority but keep this lifted, and fixed undefined on child components
     //const [ipfsGetterRootURL] = useState("https://gateway.pinata.cloud/ipfs/");
-
-    const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
 
     //let navigate = useNavigate();
 
@@ -123,18 +126,10 @@ const RegisterItem = () => {
       event.preventDefault();
       setModalShow(true)
       setSubmitting(formData, true);
-      //createProvenance();
-
-      /*
-      setTimeout(() => {
-        setSubmitting(false);
-        setFormData({
-          reset: true
-        })
-      }, 3000)
-      */
       
   }
+
+
       const handleChange = event => {
       const isCheckbox = event.target.type === 'checkbox';
       setFormData({
@@ -143,23 +138,8 @@ const RegisterItem = () => {
       })
     }
     
+  // functions  
 
-
-  //MothershipContract Interaction Functions
-
-  /*        Provenance.Types _enumType,
-        string memory _serial, 
-        string memory _brand, 
-        string memory _model, 
-        uint16 _year, 
-        uint _instrumentDeedToken,
-        string memory _verificationPhotoHash,
-        string memory _firstOwner, 
-        string[] memory _instrumentPhotoHashes
-  */
-
-
-  //will need to sign two Txns. one creating provenance. the other approving the token to be be bound to this provenance. Need to fix function.
   const createProvenance = () => {
     MothershipContract.createNewProvenance(
       formData.type, 
@@ -168,16 +148,16 @@ const RegisterItem = () => {
       formData.model, 
       formData.year, 
       unusedTokenID, 
+      dateString,
       formData.verificationphotohash, 
-      'j.doe', 
       formData.instrumentphotohashes)
       .then(async(result) => {
         provider.waitForTransaction(result.hash)
         .then(mined => {
-            if (mined) {
-              
+            if (mined) {        
               MothershipContract.once("ProvenanceCreated", (type, newAddress) => {
                 setNewProvenanceAddress(newAddress)
+                setItemAdded(true)
                 router.push('/provenance-success')
             })}
         })
@@ -185,56 +165,6 @@ const RegisterItem = () => {
     }
   
 
-
-//just placehlder so i dont have to repopulate values for testing
-// need to fix sign up flow to creation of new page. Event is firing too early if its on same block
-
-
-
-const createPracticeProvenance = async() => {
-  
- 
-    await MothershipContract.createNewProvenance(
-      1, 
-      Math.random().toString(), 
-      'selmer', 
-      'sba', 
-      1967, 
-      unusedTokenID, 
-      'ipfs', 
-      'j.doe', 
-      ['ipfs', 'ipfs'])
-      .then(async(result) => {
-        provider.waitForTransaction(result.hash)
-        .then(mined => {
-            if (mined) {
-              MothershipContract.once("ProvenanceCreated", (type, newAddress) => {
-                console.log(result, "event result")  
-                setNewProvenanceAddress(newAddress)
-                router.push('/provenance-success')
-            })}
-        })
-    })
-  
-}
-
-//need to fool-proof this
-/*
-
-*/
-
-
-
-  const getMothershipOwner = () => {
-
-    MothershipContract.owner()
-    .then(result => {
-      console.log(result, "Mothership Owner")
-    })
-    .catch((error) => console.log(error))
-
-  }
-  
 
   //TokenContract Interaction Functions
 
@@ -269,53 +199,46 @@ const createPracticeProvenance = async() => {
 
 
 
-
-
-
-  const getMintedTokens = () => {
-    console.log(tokens)
-  };
-
   //Page Components
 
   //check if token has been used in a Provenance
   const UserTokens= () => {
-    let provenanceTokens = [];
-    let unusedTokens = [];
+      let provenanceTokens = [];
+      let unusedTokens = [];
 
-    for (let i = 0; i < provenanceObjects.length; i++) {
+      for (let i = 0; i < provenanceObjects.length; i++) {
 
-      provenanceTokens.push(provenanceObjects[i].ProvenanceProps.instrumentDeedToken.toNumber())
-    }
-    
-    tokens.forEach((token) => {
-      const result = provenanceTokens.includes(token);
-      if (!result) {
-        unusedTokens.push(token)
+        provenanceTokens.push(provenanceObjects[i].ProvenanceProps.instrumentDeedToken.toNumber())
       }
       
-    })
-    
-    async function getTokenProps(unusedToken) {
-      const uri = await TokenContract.tokenURI(unusedToken);
-      setFormData({
-        name: 'verificationphotohash',
-        value: uri})
-      setUnusedTokenID(unusedToken)  
-      setMintErrorMessage('') 
-      setReadyToMint(false)
-    }
+      tokens.forEach((token) => {
+        const result = provenanceTokens.includes(token);
+        if (!result) {
+          unusedTokens.push(token)
+        }
+        
+      })
+      
+      async function getTokenProps(unusedToken) {
+        const uri = await TokenContract.tokenURI(unusedToken);
+        setFormData({
+          name: 'verificationphotohash',
+          value: uri})
+        setUnusedTokenID(unusedToken)  
+        setMintErrorMessage('') 
+        setReadyToMint(false)
+      }
 
-    //helper functions
+      //helper functions
 
-    function resetTokenDetails() {
-          {/*setTokenToMint(tokens.slice(-1))*/}
-          setFormData({
-            name: "verificationphotohash",
-            value: [],
-          })
-          setReadyToMint(false)
-    } 
+      function resetTokenDetails() {
+            {/*setTokenToMint(tokens.slice(-1))*/}
+            setFormData({
+              name: "verificationphotohash",
+              value: [],
+            })
+            setReadyToMint(false)
+      } 
     
 
     return (
@@ -336,8 +259,8 @@ const createPracticeProvenance = async() => {
             </>
             :null
             }
-            //clean up the layout in this element
-            <Col style={{textAlign: 'center'}}>
+          
+            <Col className={styles.buttonContainer}>
               <div className={styles.Dropdown}>
                 <Button className={styles.button-6} onClick={resetTokenDetails}>Mint a New Token</Button>              
               </div>
@@ -349,7 +272,7 @@ const createPracticeProvenance = async() => {
             </Col>  :
             null }
 
-            <Col>
+            <Col className={styles.buttonContainer}>
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="unused-token-dropdown">
                   Unused Tokens
@@ -378,17 +301,16 @@ const createPracticeProvenance = async() => {
     )
   }
 
-
-    console.log(formData, "formData")
+  
+  // console.log(formData, "formData")
 
 
     return(
         <div className={styles.NewProvenance}>
           <Container>
-            <Link href="/provenances">Back to User Main</Link>
             <h1 className="pt-5 mx-auto">Create A Deed of Provenance</h1>
 
-            {/*Verfication Photo Upload*/} 
+            {/* Verfication Photo Upload */} 
             {readyToMint === false && formData.verificationphotohash.length > 0 ?
             
             null 
@@ -404,15 +326,13 @@ const createPracticeProvenance = async() => {
                 />
             </Row>}
             
-            {/*Verication Photo Preview */}
+          {/* Verication Photo Preview */}
+          { formData.verificationphotohash ?
+          <PhotoPreviews photoLimit={1} formData={formData} readyToMint={readyToMint} unusedTokenID={unusedTokenID} tokenToMint={tokenToMint} />
+          : null
+          }
 
-            { formData.verificationphotohash ?
-            <PhotoPreviews photoLimit={1} formData={formData} readyToMint={readyToMint} unusedTokenID={unusedTokenID} tokenToMint={tokenToMint} />
-            : null
-            }
-
-          {/*Token Updates*/}
-          {/*readyToMint ? null : <p>You are currently creating a provenance for this token: {tokenToMint}</p>*/}
+          {/* Token Updates */}
           <Row className="pt-4">
             <UserTokens />
           </Row>
@@ -425,23 +345,24 @@ const createPracticeProvenance = async() => {
           */}
             <Form onSubmit={handleSubmit} className="border mt-5 pt-4">
               <fieldset disabled={!enableForm}> 
+
                 {enableForm ?
                   <h1>Create Provenance with token # {unusedTokenID}</h1>
                     :
-                  <h4 style={enableForm ? {} : {color: 'gray'}}> Mint a New Token or Select an Unused Token to Create a Provenance </h4>
+                  <h2 style={enableForm ? {} : {color: 'gray'}}> Mint a New Token or Select an Unused Token to Create a Provenance </h2>
                   
                 }
             
-                  <Form.Group className="mb-3 mt-5 px-3">
-                      <Form.Label>Input Type of Item</Form.Label>
-                        <Form.Select name="type" onChange={handleChange} value={formData.type || ''}>
-                            <option value=""> Instrument/Accessory/Gear </option>
-                            <option value="0">Instrument</option>
-                            <option value="1">Accessory</option>
-                            <option value="2">Gear</option>
-                        </Form.Select> 
-                        
-                  </Form.Group>
+                <Form.Group className="mb-3 mt-5 px-3">
+                    <Form.Label>Input Type of Item</Form.Label>
+                      <Form.Select name="type" onChange={handleChange} value={formData.type || ''}>
+                          <option value=""> Instrument/Accessory/Gear </option>
+                          <option value="0">Instrument</option>
+                          <option value="1">Accessory</option>
+                          <option value="2">Gear</option>
+                      </Form.Select> 
+                      
+                </Form.Group>
 
 
                 <Row>
@@ -517,47 +438,50 @@ const createPracticeProvenance = async() => {
                   </Form.Group>
                 </Row>
 
-              <div className="mt-3">
-                <Button  type="submit" onClick={handleSubmit} disabled={submitting}>Create Provenance</Button>
+                {/* Item Photos Upload */}
 
-              </div>           
+                <Row>
+                  <Form.Group className="mb-3 mt-5">  
+                    
+                    {enableForm ?
+                      <Row>                       
+                        <DragAndDrop photoLimit={20} formDataImport={formData} setReadyToMint={setReadyToMint} setFormData={setFormData} />
+                      </Row>  : null }
+
+                    { formData.instrumentphotohashes.length >= 1 ?
+                    <PhotoPreviews photoLimit={20} formData={formData} ipfsGetterRootURL={ipfsGetterRootURL} />
+                    : null
+                    }
+                  </Form.Group> 
+                </Row>         
             </fieldset>
+
+            <div className="mt-3">
+              <Button type="submit" onClick={handleSubmit} disabled={submitting}>Create Provenance</Button>
+            </div>  
 
 
             
 
 
           </Form>
-
-          <Form.Group className="mb-3 mt-5">  
-            {/*Item Photo Upload*/}
-            {enableForm ?
-            <Row>                       
-              <DragAndDrop photoLimit={20} formDataImport={formData} setReadyToMint={setReadyToMint} setFormData={setFormData} />
-            </Row>  :
-            null}
-
-            { formData.instrumentphotohashes.length >= 1 ?
-            <PhotoPreviews photoLimit={20} formData={formData} ipfsGetterRootURL={ipfsGetterRootURL} />
-            : null
-            }
-          </Form.Group> 
         </Container>
 
-          
-          {/*
+             {/*
+
           <button onClick={() => console.log(formData, "formData")}>FormData</button>
+                 
           <button onClick={getMothershipOwner}>Get Mothership Owner</button>
           <button onClick={() => console.log(MothershipContract, "MothershipContract")}>Mothership Contract</button>
           <button onClick={async() => console.log(await MothershipContract.getOwnersInstruments(), "Instruments to Owners")}>Instruments to Owners</button>
-          */}
+          
           <button onClick={() => setModalShow(true)}>activate modal for UI</button>
+          */}
 
           {showConfirmationModal ? <Modal 
             setShowConfirmationModal={setShowConfirmationModal} 
             formData={formData} 
             createProvenance={createProvenance}
-            createPracticeProvenance={createPracticeProvenance}
             tokenId={tokenId}
             unusedTokenID={unusedTokenID}
             setSubmitting={setSubmitting}
@@ -569,7 +493,6 @@ const createPracticeProvenance = async() => {
           <ConfirmationModal style={{zindex: '1'}} show={modalShow} onHide={() => setModalShow(false)}
             formdata={formData} 
             createprovenance={createProvenance}
-            createpracticeprovenance={createPracticeProvenance}
             tokenid={tokenId}
             unusedtokenid={unusedTokenID}
             setsubmitting={setSubmitting}

@@ -30,8 +30,8 @@ contract Provenance is Ownable {
     struct Owner {
         uint16 ownerCount;
         address ownerAddress;
-        string name;
         string verificationPhotoHash;
+        string date;
     }
 
     mapping(uint16 => Owner) public ownerProvenance;
@@ -45,6 +45,8 @@ contract Provenance is Ownable {
     //updatable state, will change on ownership
     Owner public instrumentOwner;
 
+    address public pendingOwner;
+
     uint8 public ownerCount;
 
     //hardcode this address for less gas
@@ -52,7 +54,7 @@ contract Provenance is Ownable {
     Mothership public mothershipContract;
 
     modifier onlyAuthorized() {
-        require(ownerProvenance[ownerCount].ownerAddress == msg.sender || owner() == msg.sender);
+        require(ownerProvenance[ownerCount].ownerAddress == msg.sender || owner() == msg.sender, "onlyAuthorized fail");
         _;
     }
 
@@ -64,8 +66,8 @@ contract Provenance is Ownable {
         string memory _model, 
         uint16 _year, 
         uint _instrumentDeedToken,
+        string memory _date,
         string memory _verificationPhotoHash,
-        string memory _firstOwner, 
         string[] memory _instrumentPhotoHashes,
         address _mothershipAddress,
         address _deedTokenAddress)
@@ -87,7 +89,11 @@ contract Provenance is Ownable {
             //set Owner Info
       
             ownerCount = 1;
-            ownerProvenance[ownerCount] = Owner(ownerCount, instrumentDeedTokenContract.ownerOf(_instrumentDeedToken), _firstOwner, _verificationPhotoHash);    
+            ownerProvenance[ownerCount] = Owner(
+                ownerCount, 
+                instrumentDeedTokenContract.ownerOf(_instrumentDeedToken), 
+                _verificationPhotoHash,
+                _date);    
   
 
     }
@@ -97,25 +103,44 @@ contract Provenance is Ownable {
     function getItemPics() public view returns(string[] memory) {
         return instrument.photoHashes;
     }
+    //called on first step of transfer to new owner
+    function setPendingOwner(address buyer) public onlyAuthorized {
+        pendingOwner = buyer;
 
-    //setNewOwner on transfer of Deed/721
-    function sale(address _to, string memory _name, string memory _verificationPhotoHash) public onlyAuthorized {
+        mothershipContract.setPendingTransfer(buyer, address(this));
+    }
 
-        //transfer deed token
-        require(msg.sender == instrumentDeedTokenContract.ownerOf(instrument.instrumentDeedToken), "You are not the owner of the Deed Token for this instrument and therefore cannot sell it");
-        
-        mothershipContract.updateOnProvenanceSale(msg.sender, _to, this);
+    //newOwner claims new Token on proof of ownership and updates all state
+    function claimOwnership(address _seller, string memory _verificationPhotoHash, string memory date) public  {
+        require(msg.sender == pendingOwner, "You are not the pendingOwner of this item and therefore cannot claim it");
+
+        // mothership updates
+        mothershipContract.updateOnProvenanceSale(_seller, msg.sender, this, date);
+        mothershipContract.removePendingTransfer(msg.sender, address(this));
+
+        //remove pending owner
+        pendingOwner = address(0);
+
         //set new owner
         ++ownerCount;
-        ownerProvenance[ownerCount] = Owner(ownerCount, _to, _name, _verificationPhotoHash); 
+        ownerProvenance[ownerCount] = Owner(ownerCount, msg.sender, _verificationPhotoHash, date);
 
-        //transfer ownership of token
- 
-       instrumentDeedTokenContract.safeTransferFrom(msg.sender, _to, instrument.instrumentDeedToken);
+        //transfer token
+        instrumentDeedTokenContract.safeTransferFrom(_seller, msg.sender, instrument.instrumentDeedToken);
     }
 
     //might be able to do by looping over mapping and ownercount in the front end
-    function getPreviousOwners() public view {
+    function getOwnershipHistory() public view returns(Owner[] memory) {
+        
+        Owner[] memory ownershipHistory = new Owner[](ownerCount+1);
+
+        for (uint16 i = 1; i <= ownerCount; i++) {
+            console.log("hitting");
+            ownershipHistory[i] = ownerProvenance[i];
+            console.log(i);
+        }
+        return ownershipHistory;
+         
     }
 
     //publish new Instrument photo to Ipfs. Needs to replace old

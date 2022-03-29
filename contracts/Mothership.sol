@@ -10,11 +10,12 @@ import "./InstrumentDeedToken.sol";
 
 
 contract Mothership is Ownable {
-
-    //cuurent owners only. Provenance History is on on Provenance. Not sure array is best here.  Can back full date up on trad. database if needed
+    //current owners only. Provenance History is on on Provenance. Not sure array is best here.  Can back full date up on trad. database if needed
     mapping(address => Provenance[]) public ownersToAxes;
 
     mapping(address => bool) public provenanceVerify;
+
+    mapping(address => address[]) public pendingTransfers;
 
     //to loop and get all provenances on frontend
     address[] public ownerArray;
@@ -40,17 +41,19 @@ contract Mothership is Ownable {
         string model, 
         uint16 year, 
         uint instrumentDeedToken,
+        string date,
         string verificationPhotoHash,
-        string firstOwner, 
         string[] instrumentPhotoHashes);
     
     event ProvenanceSale(
         address seller,
         address buyer,
-        address provenanaceAddress
+        address provenanaceAddress,
+        string date
     );
 
-    
+    // SETTERS 
+
     //this function needs to check that an existing provenance doesn't already exist for this instrument
     function createNewProvenance(
         Provenance.Types _enumType,
@@ -59,8 +62,8 @@ contract Mothership is Ownable {
         string memory _model, 
         uint16 _year, 
         uint _instrumentDeedToken,
+        string memory _date,
         string memory _verificationPhotoHash,
-        string memory _firstOwner, 
         string[] memory _instrumentPhotoHashes
     ) external returns(address) {
         //might need to check for dupes on frontend
@@ -72,8 +75,8 @@ contract Mothership is Ownable {
             _model, 
             _year, 
             _instrumentDeedToken, 
+            _date,
             _verificationPhotoHash, 
-            _firstOwner, 
             _instrumentPhotoHashes,
             address(this),
             address(instrumentDeedTokenContract));
@@ -91,8 +94,8 @@ contract Mothership is Ownable {
             _model, 
             _year, 
             _instrumentDeedToken, 
+            _date,
             _verificationPhotoHash, 
-            _firstOwner, 
             _instrumentPhotoHashes);
 
         return(address(provenance));
@@ -100,7 +103,45 @@ contract Mothership is Ownable {
         
     }
 
-    //GETTERS
+    function setPendingTransfer(address buyer, address provenanceAddress) external {
+        pendingTransfers[buyer].push(provenanceAddress);
+    }
+
+    // these functions should be combined with the other ones below. the differing arrays can go in the arguments
+
+
+    function _findArrayIndex(address[] memory array, address provenance) pure internal returns(uint) {
+        uint index;
+        for (uint i = 0; i < array.length; i++) {
+            if (array[i] == provenance) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+
+
+    function _burnTransferIndex(address buyer, uint index) internal {
+        require(index < pendingTransfers[buyer].length, "burn failed in require");
+        pendingTransfers[buyer][index] = pendingTransfers[buyer][pendingTransfers[buyer].length-1];
+        pendingTransfers[buyer].pop();
+    }
+
+    function removePendingTransfer(address buyer, address provenance)  external {
+        uint index = _findArrayIndex(pendingTransfers[buyer], provenance);
+
+       _burnTransferIndex(buyer, index);
+
+    }
+
+    // GETTERS
+
+    function getPendingTransfersOfBuyer(address buyer) public view returns(address[] memory){
+        return pendingTransfers[buyer];
+    }
+
+    // INTERNAL FUNCTIONS FOR updateOnProvenanceSale 
 
     function _findProvenanceIndex(address seller, Provenance provenanceForIndex) view internal returns(uint) {
         uint index;
@@ -120,20 +161,21 @@ contract Mothership is Ownable {
     }
 
 
-    //called from Provenance to update mothership state. this needs to have tokenOwner modifier on it
-    function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold) external {
+    //called from Provenance to update mothership state. needs tokenOwner modifier for security
+    function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold, string memory date) external {
         //update ownership
         ownersToAxes[buyer].push(provenanceSold);
 
-        uint index = _findProvenanceIndex(msg.sender, provenanceSold);
+        uint index = _findProvenanceIndex(seller, provenanceSold);
 
         _burnSoldProvenance(seller, index);
 
-        emit ProvenanceSale(msg.sender, buyer, address(provenanceSold));
+        emit ProvenanceSale(msg.sender, buyer, address(provenanceSold), date);
          
     }
 
     
+    //owner info
 
     function getOwners() external view returns(address[] memory){
        return ownerArray;
@@ -144,12 +186,6 @@ contract Mothership is Ownable {
         return ownersToAxes[msg.sender];
     }
 
-    /*
-    //returning contracts inside array inside owner Map
-    function getAllProvenances() external view returns(address[] memory){     
-     return provenanceArray;
-    }  
-    */ 
 
     /*
      function disable(Provenance provenance) external {

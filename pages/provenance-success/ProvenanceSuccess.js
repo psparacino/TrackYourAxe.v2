@@ -1,7 +1,9 @@
 import { ethers } from 'ethers';
 import { useState } from 'react';
 
-//import './pagesStyling/ProvenanceSuccess.css';
+
+// style
+import styles from './ProvenanceSuccess.module.css';
 
 //next imports
 import Link from 'next/link';
@@ -23,32 +25,39 @@ const ProvenanceSuccess = () => {
     const { newProvenanceAddress } = useItemContext();
     const { mainAccount } = useUserContext();
 
-    const account = mainAccount;
-    //console.log(newProvenanceAddress, "newAddress in Success")
+
     return(
-        <div>
-            <nav className="mt-4 mb-4">
-                <Link href={"/"}>Back to Home</Link>
-            </nav> 
+        <div className={styles.container}>
             <div className="border border-4 mx-4 rounded" style={{height: '80vw'}}>
                 
-            
-                <h1 className='mt-4'> Provenance Successully Created!</h1>
-                <Image src={greenCheckmark} style={{width:'70px'}} alt="checkmark"/>
+                
+                <h1 className='mt-4'> Provenance Successfully Created!</h1>
+                <Image src={greenCheckmark} 
+                layout='fixed'
+                height='100%'
+                width='100%'
+                alt="checkmark"/>
 
                 <h2>{newProvenanceAddress ? <p>Your New Provenance is created at: {newProvenanceAddress}</p> : "newAddress not here"}</h2>
                 <p>View this transaction on Etherscan: (link will be here)</p>
                 <p style={{fontSize: '10px'}}>not that provenance contracts need to automatically verified on deployment so they are human readable</p>
+
+                <div className={styles.imageWrapper}>
+                    <Image src={yes} 
+                    layout='fill'
+                    objectFit='contain'
+                    alt={"loading..."} />
+                </div>
                 
-                <Image src={yes} style={{width: '30%'}} alt={"loading..."} />
+
                 <div className="mt-4">
                     <nav>
                         <Link href="/register-item">Register Another Item</Link>
                     </nav> 
                     <nav>
                         {/*<Link href={`/${mainAccount}`}>{mainAccount} Provenances</Link>*/}
-                        <Link href='/provenances'>
-                            <a>{`/${mainAccount}`} Provenances</a>
+                        <Link href='provenances'>
+                            <a>{`${mainAccount}`} Provenances</a>
                         </Link>
                     </nav>  
                 </div>

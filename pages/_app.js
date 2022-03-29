@@ -3,11 +3,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 
 //temp style imports
-import '../src/components/MetaMaskButton.css';
 import '../src/components/ConfirmationModal.css';
 import '../src/components/DragAndDrop.css';
 import '../src/components/Modal.css';
-
 
 
 import { useEffect } from 'react';
@@ -22,17 +20,18 @@ import NavBar from '../src/components/NavBar';
 import { UserContextProvider} from '../src/context/UserContext';
 import { ContractContextProvider } from '../src/context/ContractContext';
 import { ItemContextProvider } from '../src/context/ItemContext';
+import { TransferContextProvider } from '../src/context/TransferContext';
 
 //hook imports
-import useHandleEthereum from "../src/hooks/useHandleEthereum.js";
+// import useHandleEthereum from "../src/hooks/useHandleEthereum.js";
 
 
 
 function TrackYourAxe({ Component, pageProps }) {
 
-  const {mainAccount, setMainAccount, signer, provider} = useHandleEthereum();
+  // const {mainAccount, setMainAccount, signer, provider} = useHandleEthereum();
 
-
+  
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap");
   }, []);
@@ -43,8 +42,10 @@ function TrackYourAxe({ Component, pageProps }) {
       <UserContextProvider>
         <ContractContextProvider>
           <ItemContextProvider>
-            <NavBar mainAccount={mainAccount} setMainAccount={setMainAccount}/>
-            <Component {...pageProps} />
+            <TransferContextProvider>
+              <NavBar />
+              <Component {...pageProps} />
+            </TransferContextProvider>         
           </ItemContextProvider>       
         </ContractContextProvider>     
       </UserContextProvider>    

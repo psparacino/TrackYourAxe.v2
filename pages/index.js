@@ -118,8 +118,11 @@ function App() {
         <main>
           <h2>The Last Gear Registration Solution You'll Ever Need</h2>
         </main>
-
-        <Image src={coverphoto}/>
+    
+        <Image 
+        src={coverphoto}
+        alt="cover image"
+        /> 
       </>
     );
   }
@@ -127,56 +130,8 @@ function App() {
   return (
  
         <div className="App" id="bootstrap-overrides">
-
-          <Home />
-          
-            {/*
-            <Route path="about" element={<About />}/>
-            <Route path={`${mainAccount}`} 
-              element={
-              <UserMain 
-              MothershipContract={MothershipContract} 
-              TokenContract={TokenContract}
-              items={items}
-              setItems={setItems}
-              tokens={tokens}
-              provenanceObjects={provenanceObjects}
-              setProvenanceObjects={setProvenanceObjects}
-              ipfsGetterRootURL={ipfsGetterRootURL}
-              setTokens={setTokens}
-              mainAccount={mainAccount} 
-              signer={signer} />} />
          
-            
-            <Route path={`${mainAccount}/owneditem/`}>
-              <Route path=":serialID" element={<OwnedItem mainAccount={mainAccount} provider={provider} signer={signer} TokenContract={TokenContract}/>} />  
-            </Route>
-            
-          
-           
-            <Route path="registeritem/" 
-              element={<RegisterItem 
-              MothershipContract={MothershipContract} 
-              TokenContract={TokenContract} 
-              setNewProvenanceAddress={setNewProvenanceAddress}
-              provenanceObjects={provenanceObjects}
-              mainAccount={mainAccount} 
-              tokens={tokens}
-              setTokens={setTokens}
-              signer={signer} 
-              provider={provider}/>} />
-    
-            <Route path="provenancesuccess" element={<ProvenanceSuccess signer={signer} provide={provider} mainAccount={mainAccount} newProvenanceAddress={newProvenanceAddress}/>} />  
-          
-     */}
-       
-          
-          <div>   
-          
-          </div>
-
-
-          
+          <Home />           
          
         </div>
    

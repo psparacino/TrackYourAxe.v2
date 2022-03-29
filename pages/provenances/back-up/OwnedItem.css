@@ -1,0 +1,3 @@
+#bootstrap-overrides td { /* 100+1=101 priority score, yay! */
+    font-weight: bold;
+  }
