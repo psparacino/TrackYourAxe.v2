@@ -43,7 +43,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1646771540241,
+      "lastModificationDate": 1648485480184,
       "contentHash": "49295810dc45f300e5f84b4b50d88a59",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
@@ -86,7 +86,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
-      "lastModificationDate": 1646771544929,
+      "lastModificationDate": 1648485486389,
       "contentHash": "580a443491d9d70eb064b0130fc3cd01",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
       "solcConfig": {
@@ -123,7 +123,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1646771531969,
+      "lastModificationDate": 1648485466664,
       "contentHash": "8398972af73b4e9e5ff3b31cad86234f",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -160,7 +160,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/utils/Counters.sol": {
-      "lastModificationDate": 1646771531977,
+      "lastModificationDate": 1648485466682,
       "contentHash": "74654e3ae5d7f39555055dfe244dab7a",
       "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
       "solcConfig": {
@@ -195,7 +195,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol": {
-      "lastModificationDate": 1646771544929,
+      "lastModificationDate": 1648485486389,
       "contentHash": "88095889e59d16821879a8083f906503",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
       "solcConfig": {
@@ -233,7 +233,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1646771540241,
+      "lastModificationDate": 1648485480184,
       "contentHash": "27d219ec6f69478d065fdbfa7931da68",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
@@ -270,7 +270,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1646771540240,
+      "lastModificationDate": 1648485480186,
       "contentHash": "592df588492d45fdcf46b3cb608c0fbf",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
@@ -305,7 +305,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
-      "lastModificationDate": 1646771544930,
+      "lastModificationDate": 1648485486391,
       "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
       "solcConfig": {
@@ -342,7 +342,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1646771531975,
+      "lastModificationDate": 1648485466679,
       "contentHash": "ad714a6368ee7d43cded6bbe8af0b155",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
@@ -377,7 +377,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1646771531976,
+      "lastModificationDate": 1648485466682,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -412,7 +412,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1646771531975,
+      "lastModificationDate": 1648485466682,
       "contentHash": "9c54c6c065d9e590fdcdd72c451425b9",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
@@ -447,7 +447,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
-      "lastModificationDate": 1646771540140,
+      "lastModificationDate": 1648485480035,
       "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
       "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
       "solcConfig": {
@@ -484,7 +484,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
-      "lastModificationDate": 1646771540140,
+      "lastModificationDate": 1648485480036,
       "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
       "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
       "solcConfig": {
@@ -519,7 +519,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
-      "lastModificationDate": 1646771544929,
+      "lastModificationDate": 1648485486390,
       "contentHash": "f4dd06783f321aa26179bc2b6e361c29",
       "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol",
       "solcConfig": {
@@ -556,7 +556,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/contracts/Provenance.sol": {
-      "lastModificationDate": 1648049634070,
+      "lastModificationDate": 1648560298604,
       "contentHash": "bd12c49d8c701d9fbc096ebe7e7fdc55",
       "sourceName": "contracts/Provenance.sol",
       "solcConfig": {
@@ -596,7 +596,7 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1646771526318,
+      "lastModificationDate": 1648485460815,
       "contentHash": "cc4777addd464ea56fa35b1c45df0591",
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
@@ -631,8 +631,8 @@
       ]
     },
     "/Users/peter/Development/trackyouraxe.v2/contracts/Mothership.sol": {
-      "lastModificationDate": 1648049826239,
-      "contentHash": "72f5370fa77405c14055d28b09ce6ba6",
+      "lastModificationDate": 1648570177280,
+      "contentHash": "9f160078be86130e048855c49bbee57e",
       "sourceName": "contracts/Mothership.sol",
       "solcConfig": {
         "version": "0.8.10",
@@ -668,6 +668,86 @@
       ],
       "artifacts": [
         "Mothership"
+      ]
+    },
+    "/Users/peter/Development/trackyouraxe.v2/contracts/ProvenanceOptimization.sol": {
+      "lastModificationDate": 1648571129194,
+      "contentHash": "46401bfbbb3f513e6cfecd630af9bdff",
+      "sourceName": "contracts/ProvenanceOptimization.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "hardhat/console.sol",
+        "./MothershipOptimization.sol",
+        "./InstrumentDeedToken.sol"
+      ],
+      "versionPragmas": [
+        "0.8.10"
+      ],
+      "artifacts": [
+        "ProvenanceOptimization"
+      ]
+    },
+    "/Users/peter/Development/trackyouraxe.v2/contracts/MothershipOptimization.sol": {
+      "lastModificationDate": 1648571066741,
+      "contentHash": "c6ce3351e4322a10eb970b83f84646a5",
+      "sourceName": "contracts/MothershipOptimization.sol",
+      "solcConfig": {
+        "version": "0.8.10",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "hardhat/console.sol",
+        "./ProvenanceOptimization.sol",
+        "./InstrumentDeedToken.sol"
+      ],
+      "versionPragmas": [
+        "0.8.10"
+      ],
+      "artifacts": [
+        "MothershipOptimization"
       ]
     }
   }

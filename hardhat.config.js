@@ -13,7 +13,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 module.exports = {
   gasReporter: {
-    enabled: false,
+    enabled: true,
     currency: 'USD'
   },
   paths: {
@@ -48,6 +48,6 @@ module.exports = {
       }
     }
     */
-  }
+  } 
 };
   
