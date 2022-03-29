@@ -18,7 +18,7 @@ import { ethers } from 'ethers';
 
 
 //hooks imports
-import useContractObjectRepo from '../src/hooks/useContractRepo.js';
+// import useContractObjectRepo from '../src/hooks/useContractRepo.js';
 
 //style imports
 import { Container, Row, Col, Navbar, Nav } from 'react-bootstrap/'

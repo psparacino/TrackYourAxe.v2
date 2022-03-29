@@ -1,4 +1,4 @@
-import { useState , React } from 'react';
+import { useState , React, useEffect } from 'react';
 
 
 import { ethers } from 'ethers';
@@ -11,9 +11,12 @@ import { truncateAddress } from '../hooks/utils';
 
 const ConnectWalletButton = () => {
 
-  const { mainAccount, setMainAccount, chainId, disconnect, connectWallet } = useUserContext();
-  
-  
+  const { mainAccount, setMainAccount, connectionErrorMessage, setConnectionErrorMessage, chainId, disconnect, connectWallet } = useUserContext();
+
+    useEffect(()=> {
+      if (mainAccount) setConnectionErrorMessage('');
+    },[mainAccount])
+    
 
     return (
         <div>
@@ -38,6 +41,7 @@ const ConnectWalletButton = () => {
               <p className={styles.buttonText}>Connect Wallet</p>
             </Button>
               }
+          {connectionErrorMessage ? <p style={{color: 'red', marginLeft: '200px'}}>{connectionErrorMessage}</p> : null}    
  
             
         </div>

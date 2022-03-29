@@ -67,7 +67,7 @@ const PhotoPreviews = ({
         <div className="previewPhoto"> 
 
           {itemPhotoArray.length > 0 ?      
-              <Carousel>
+              <Carousel variant="dark">
                 {itemPhotoArray.map((photo, index)=> {
                   return (       
                       <Carousel.Item key={index}>
@@ -100,14 +100,16 @@ const PhotoPreviews = ({
       
         <div className="previewContainer">
           
+          {/* need to fix this flow and correct token #s */}
           { photoLimit == 1 ?
-
+            
           <div className="previewPhoto" >
             { claimPhoto ?
               <h2>New Verification Photo for Provenance</h2> :
                 readyToMint ?
                   <h2>Verification Photo for Token {tokenToMint}</h2> :
-                  formData.verificationphotohash.length == 0 ? null : <h2>Verification Photo for Token {unusedTokenID} </h2>
+                  formData.verificationphotohash.length == 0 
+                    ? null : <h2>Verification Photo for Token {unusedTokenID} </h2>
             }
             {formData.verificationphotohash.length == 0 ?
             null : <img src={verificationHashURL} alt="verification photo not yet uploaded" /> }
@@ -128,59 +130,4 @@ const PhotoPreviews = ({
 
   export default PhotoPreviews;
 
-  /*
-
-          <div className="previewPhoto">     
-          {photoLimit == 20 ?
-            <Slider {...settings}>
-            {console.log(itemPhotoArray, "itemPhotoArray")}
-            {itemPhotoArray.map((photo)=> {
-              return  <div>
-                        <img key={photo} src={photo} alt="item photos not yet loaded" />  
-                      </div>
-              })}
-            </Slider>
-          :
-            <div>
-              <h2>Item Photos</h2>
-              <img key={itemPhotoArray} src={itemPhotoArray} alt="item photos not yet loaded" /> 
-            </div>
-
-          }      
-        </div>
-
-
-        <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="https://www.thephoblographer.com/wp-content/uploads/2020/04/WTFStockPhotos26.jpg?width=1200&enable=upscale"
-                  alt="First slide"
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100"
-                  src="holder.js/800x400?text=Second slide&bg=282c34"
-                  alt="Second slide"
-                />
-
-                <Carousel.Caption>
-                    <h3>Second slide label</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100"
-                    src="holder.js/800x400?text=Third slide&bg=20232a"
-                    alt="Third slide"
-                  />
-
-                  <Carousel.Caption>
-                    <h3>Third slide label</h3>
-                    <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              </Carousel>
-
-        */
+  

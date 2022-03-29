@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 //component imports
 import DragAndDrop from '../../src/components/DragAndDrop.js';
 import PhotoPreviews from '../../src/components/PhotoPreviews.js';
-import { Modal } from '../../src/components/Modal.js';
+// import { Modal } from '../../src/components/Modal.js';
 import { ConfirmationModal } from '../../src/components/ConfirmationModal.js';
 
 //context imports
@@ -23,10 +23,7 @@ import ProvenanceSuccess from '../provenance-success/ProvenanceSuccess.js';
 
 //styling imports
 import styles from "./RegisterItem.module.css"
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
-import { Container, Row, Col, Dropdown, Accordion } from 'react-bootstrap/'
+import { Form, InputGroup, Container, Button, Row, Col, Dropdown, Accordion } from 'react-bootstrap/'
 
 
 
@@ -65,6 +62,8 @@ const RegisterItem = () => {
     const [mintErrorMessage, setMintErrorMessage] = useState('');
     const [readyToMint, setReadyToMint] = useState(false);
     const [enableForm, setEnableForm] = useState(false);
+
+    const [mintSuccessMessage, setMintSuccessMessage] = useState('')
 
 
     //context
@@ -182,11 +181,12 @@ const RegisterItem = () => {
                   TokenContract.once("TokenCreated" , async(owner, tokenId, success) => {
                     if (success) {
                         setTokens([...tokens, tokenId.toNumber()])
-                        console.log(success, "sucessshsh")
+                        console.log(success, "success hash")
+                        setMintSuccessMessage('Token Successfully Minted!')
                     }
                     setFormData({
                       name: 'verificationphotohash',
-                      value: []
+                      value: formData.verificationphotohash
                     })
                     setReadyToMint(false)
                 })}
@@ -239,6 +239,18 @@ const RegisterItem = () => {
             })
             setReadyToMint(false)
       } 
+
+    const handleMintSuccess = () => {
+
+      if (mintSuccessMessage) setTimeout(setMintSuccessMessage(''), 1000);
+
+      if (mintSuccessMessage){
+      return(
+        <p>{mintSuccessMessage}</p>
+      )} else {
+        return null;
+      }
+      }
     
 
     return (
@@ -257,7 +269,8 @@ const RegisterItem = () => {
                 </Accordion>
               </Row>
             </>
-            :null
+              :
+              null
             }
           
             <Col className={styles.buttonContainer}>
@@ -265,35 +278,39 @@ const RegisterItem = () => {
                 <Button className={styles.button-6} onClick={resetTokenDetails}>Mint a New Token</Button>              
               </div>
             </Col>
-            { formData.verificationphotohash.length > 0 && readyToMint  ?
-            <Col>
 
-              <Button className={styles.dropbtn} style={{backgroundColor: 'red'}} onClick={mintToken} disabled={null}> Mint Token {tokenToMint}</Button>            
-            </Col>  :
-            null }
+            { formData.verificationphotohash.length > 0 && readyToMint  ?
+              
+              <Col>
+                <Button className={styles.dropbtn} style={{backgroundColor: 'red'}} onClick={mintToken} disabled={null}> Mint Token {tokenToMint}</Button>            
+              </Col>  
+              :
+              null 
+            }
 
             <Col className={styles.buttonContainer}>
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="unused-token-dropdown">
                   Unused Tokens
                 </Dropdown.Toggle>
+
                 {unusedTokens.length > 0 ?
                 <Dropdown.Menu>
                     {unusedTokens.map((unusedToken) => {
                       return <Dropdown.Item key={unusedToken} onClick={() => getTokenProps(unusedToken)}>{unusedToken}</Dropdown.Item>
-                    })}
-          
+                    })}   
                 </Dropdown.Menu> :
                 <Dropdown.Menu>
                     <Dropdown.Item>"there are no unused tokens"</Dropdown.Item>
                 </Dropdown.Menu>
-
                 }
               </Dropdown>
             </Col>
-
-
-
+            {mintSuccessMessage ? 
+              <p>{handleMintSuccess}</p> 
+              :
+              null
+            }
             <p>{readyToMint ? null : mintErrorMessage}</p>   
         </Row>
       </>
@@ -474,19 +491,11 @@ const RegisterItem = () => {
           <button onClick={getMothershipOwner}>Get Mothership Owner</button>
           <button onClick={() => console.log(MothershipContract, "MothershipContract")}>Mothership Contract</button>
           <button onClick={async() => console.log(await MothershipContract.getOwnersInstruments(), "Instruments to Owners")}>Instruments to Owners</button>
-          
           <button onClick={() => setModalShow(true)}>activate modal for UI</button>
+          
+          
           */}
-
-          {showConfirmationModal ? <Modal 
-            setShowConfirmationModal={setShowConfirmationModal} 
-            formData={formData} 
-            createProvenance={createProvenance}
-            tokenId={tokenId}
-            unusedTokenID={unusedTokenID}
-            setSubmitting={setSubmitting}
-            ipfsGetterRootURL={ipfsGetterRootURL}  
-            /> : null} 
+          
 
           {/*bootstrap modal*/}
 

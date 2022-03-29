@@ -1,11 +1,10 @@
-import '../styles/globals.css'
+
 import 'bootstrap/dist/css/bootstrap.css';
+import '../styles/global.css'
 
 
 //temp style imports
-import '../src/components/ConfirmationModal.css';
 import '../src/components/DragAndDrop.css';
-import '../src/components/Modal.css';
 
 
 import { useEffect } from 'react';
