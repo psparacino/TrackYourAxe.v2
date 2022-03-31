@@ -1,0 +1,51 @@
+.title {
+    font-family: 'Courier', serif;
+    font-size: 500%;
+    animation-timing-function: ease;
+}
+
+.title:hover {
+    /* animation: 2s ease-out wiggle 3; */
+    animation: wiggle 2s linear infinite;
+    color: gray;
+}
+
+  @keyframes wiggle {
+    0%, 7% {
+      transform: rotateZ(0);
+    }
+    15% {
+      transform: rotateZ(-15deg);
+    }
+    20% {
+      transform: rotateZ(10deg);
+    }
+    25% {
+      transform: rotateZ(-10deg);
+    }
+    30% {
+      transform: rotateZ(6deg);
+    }
+    35% {
+      transform: rotateZ(-4deg);
+    }
+    40%, 100% {
+      transform: rotateZ(0);
+    }
+  }
+
+  .introButton {
+    font-family: 'Courier New', Courier, monospace;
+    border-color: aquamarine;
+    font-size: 35px;
+    border-radius: 25px;
+    margin-top: 40px;
+  }
+
+  .stepsContainer{
+    margin-top: 30px;
+    padding-top: 15px;
+    border: 2px solid lightblue;
+    border-radius: 25px;
+  }
+

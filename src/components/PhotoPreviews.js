@@ -1,6 +1,3 @@
-//slick carousel style imports
-import "../../node_modules/slick-carousel/slick/slick.css"; 
-import "../../node_modules/slick-carousel/slick/slick-theme.css";
 
 // style imports
 import styles from './PhotoPreviews.module.css';

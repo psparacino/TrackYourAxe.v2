@@ -103,7 +103,6 @@ const RegisterItem = () => {
     },[TokenContract, tokens])
 
     useEffect(() => {
-
       if (readyToMint === false && formData.verificationphotohash.length > 0) {
         setEnableForm(true)
       } else {
@@ -275,7 +274,7 @@ const RegisterItem = () => {
           
             <Col className={styles.buttonContainer}>
               <div className={styles.Dropdown}>
-                <Button className={styles.button-6} onClick={resetTokenDetails}>Mint a New Token</Button>              
+                <Button className={styles.button-6} onClick={resetTokenDetails}>Reset Token Creation</Button>              
               </div>
             </Col>
 
@@ -291,7 +290,7 @@ const RegisterItem = () => {
             <Col className={styles.buttonContainer}>
               <Dropdown>
                 <Dropdown.Toggle variant="success" id="unused-token-dropdown">
-                  Unused Tokens
+                  Tokens Awaiting Provenance
                 </Dropdown.Toggle>
 
                 {unusedTokens.length > 0 ?
@@ -301,7 +300,7 @@ const RegisterItem = () => {
                     })}   
                 </Dropdown.Menu> :
                 <Dropdown.Menu>
-                    <Dropdown.Item>"there are no unused tokens"</Dropdown.Item>
+                    <Dropdown.Item>there are no unused tokens</Dropdown.Item>
                 </Dropdown.Menu>
                 }
               </Dropdown>
@@ -326,6 +325,8 @@ const RegisterItem = () => {
         <div className={styles.NewProvenance}>
           <Container>
             <h1 className="pt-5 mx-auto">Create A Deed of Provenance</h1>
+
+            <h2 style={{paddingTop: '40px'}}>STEP 1: MINT TOKEN (NFT)</h2>
 
             {/* Verfication Photo Upload */} 
             {readyToMint === false && formData.verificationphotohash.length > 0 ?
@@ -353,14 +354,11 @@ const RegisterItem = () => {
           <Row className="pt-4">
             <UserTokens />
           </Row>
+
+          <h2 style={{paddingTop: '40px'}}>STEP 2: CREATE PROVENANCE WITH MINTED TOKEN</h2>
           
 
-          {/*Minting Buttons*/}
-          {/*   
-          <button onClick={getMintedTokens}> getMintedTokens in console</button>
-          <button onClick={() => console.log(tokens, "tokenID in State")}> Check Token IDs in State</button>
-          */}
-            <Form onSubmit={handleSubmit} className="border mt-5 pt-4">
+            <Form onSubmit={handleSubmit} className="border mt-4 pt-1">
               <fieldset disabled={!enableForm}> 
 
                 {enableForm ?

@@ -9,7 +9,7 @@ function About() {
     return (
       <Container>
         <main className={styles.bodyText}>
-          <h1>Track Your... What?</h1>
+          <h1>Track Your...What?</h1>
           <p>
             Track Your Axe is an innovative blockchain-based solution verifying ownership of musical instruments and items by creating a verifiable history (provenance) of ownership.
           </p>
