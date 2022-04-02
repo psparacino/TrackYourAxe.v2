@@ -26,6 +26,7 @@ export function Earth(props) {
     cloudsRef.current.rotation.y = elapsedTime / 6;
   });
 
+  if (typeof window !== "undefined") {
   return (
     <>
       {/* <ambientLight intensity={1} /> */}
@@ -67,5 +68,7 @@ export function Earth(props) {
         /> */}
       </mesh>
     </>
-  );
+  );} else {
+    console.log("render failed")
+  }
 }

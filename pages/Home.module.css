@@ -49,3 +49,7 @@
     border-radius: 25px;
   }
 
+  .stepsContainer:hover {
+    background-color: azure;
+  }
+

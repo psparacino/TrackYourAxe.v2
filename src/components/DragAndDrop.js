@@ -8,7 +8,7 @@ import waitingkitten from '../../public/images/waitingkitten.jpeg'
 
 //import './DragAndDrop.css';
 
-const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMessage, setFormData, claimPhoto}) => {
+const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMessage, setFormData, itemPhotosUploaded, setItemPhotosUploaded, claimPhoto}) => {
 
     const FormData = require('form-data');
 
@@ -25,7 +25,6 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
 
     const [loading, setLoading] = useState('');
 
-    const [ itemPhotosUploaded, setItemPhotosUploaded ] = useState(false);
 
     /*
     const [tokenMinted, setTokenMinted] = useState(false);

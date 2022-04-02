@@ -10,7 +10,7 @@ import styles from './ConfirmationModal.module.css';
 
 export function ConfirmationModal(props) {
 
-    const {createpracticeprovenance, createprovenance, setsubmitting, formdata, unusedtokenid, ...restOfProps} = props;
+    const {createpracticeprovenance, createprovenance, setSubmitting, formdata, unusedtokenid, ...restOfProps} = props;
 
     const { ipfsGetterRootURL } = useUserContext();
 

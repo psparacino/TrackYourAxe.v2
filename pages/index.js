@@ -63,8 +63,6 @@ function App() {
 
   const TwoStepGraphic = () => {
 
-
-    
     return(
       <Container className={styles.stepsContainer}>
         <h2>Simple Two-Step Process to Creating a Provenance</h2>
@@ -81,6 +79,7 @@ function App() {
           <Col>
             <Image 
             src={mintNFT}
+            fluid
              />        
           </Col>
         </Row>
@@ -95,6 +94,9 @@ function App() {
           <Col>
             <Image 
             src={tablet}
+            fluid
+
+
              />        
           </Col>
         </Row>
