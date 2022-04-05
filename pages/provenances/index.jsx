@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 
 //nav imports
 import RegisterItem from '../register-item/index.js'
-import OwnedItem from '../owned-item/OwnedItem';
+// import OwnedItem from '../owned-item/OwnedItem';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -23,7 +23,7 @@ import { Container, Table, Row, Col, Card, Spinner } from 'react-bootstrap';
 
 
 
-const ProvenanceMain = () => {
+const ProvenanceHub = () => {
 
 
   const { mainAccount, signer } = useUserContext()
@@ -44,68 +44,76 @@ const ProvenanceMain = () => {
   },[])
 
 
-
   const ItemTable = () => {
     
     if (provenanceObjects && provenanceObjects.length > 0){
       return (
         <>
-          <nav>
+          
           {provenanceObjects.map((array, index) => {
           
-          const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } = array;
+          const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo, ProvenancePendingOwner } = array;
           const provenanceAddress = ProvenanceContract.address;
           const{ serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = ProvenanceProps;   
           const { ownerAddress, name, verificationPhotoHash, date} = ProvenanceOwnerInfo;
+          
+          const pendingBool = ProvenancePendingOwner === ethers.constants.AddressZero;
 
          
             return (
 
-              <div className={styles.container} key={provenanceAddress}>
+              <div key={provenanceAddress}>
+              
                 <Container>
-                  <Link href={`provenances/${provenanceAddress}`}>
-                  
-                    <a>    
-                        <Card key={provenanceAddress + 'card'} className="mx-auto mt-5 pt-2" style={{width: '75%'}}>
-                          <h2>{brand} {model}</h2>
-                            <Card.Body>
-                              <Row>
-                                <Col>
-                                  <img key={provenanceAddress+ verificationPhotoHash} src={ipfsGetterRootURL + verificationPhotoHash}  style={{objectFit: 'contain', width: '100%'}}  />
-                                </Col>
+                  <Link href={pendingBool ? `provenances/${provenanceAddress}` : "/provenances" }>
+                
+                      <Card 
+                        key={provenanceAddress + 'card'} 
+                        className={pendingBool ? styles.ownedContainer : styles.pendingContainer}>
+                        
 
-                                <Col>
-                                  <Table key={provenanceAddress+Math.random()} className="w-50 mb-5 mx-auto rounded border-3 border-dark" responsive striped bordered>
-                                    
-                                    <tbody> 
-                                      <tr key={provenanceAddress+provenanceAddress}>
-                                        <td>Provenance Address: {provenanceAddress}</td>
-                                      </tr>
-                                      <tr key={provenanceAddress+brand}>
-                                        <td>Brand: {brand}</td>
-                                      </tr>
-                                      <tr key={provenanceAddress+model}>
-                                        <td>Model: {model}</td>
-                                      </tr>
-                                      <tr key={provenanceAddress+instrumentDeedToken.toString()+ Math.random()}>
-                                        <td>Token ID: {instrumentDeedToken.toString()}</td>
-                                      </tr>
-                                      <tr key={provenanceAddress+typeOfProvenance+ Math.random()}>
-                                        <td>Type of Item: {typeOfProvenance.toString()}</td>
-                                      </tr>
-                                      <tr key={provenanceAddress+year}>
-                                        <td>Year: {year}</td>
-                                      </tr>
-                            
-                                    </tbody>
-                                  </Table>
-                                </Col>
+                        <h2 className={pendingBool ? styles.linkPlacebo : null }>{brand} {model}</h2>
 
-                              </Row>
-                            </Card.Body>
-                        </Card>
-                      </a>
-                    </Link>
+                        {pendingBool ? null : <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p> }
+                        
+                          <Card.Body>
+                            <Row>
+                              <Col>
+                                <img key={provenanceAddress+ verificationPhotoHash} src={ipfsGetterRootURL + verificationPhotoHash}  style={{objectFit: 'contain', width: '100%'}}  />
+                              </Col>
+
+                              <Col>
+                                <Table key={provenanceAddress+Math.random()} className="w-50 mb-5 mx-auto rounded border-3 border-dark" responsive striped bordered>
+                                  
+                                  <tbody> 
+                                    <tr key={provenanceAddress+provenanceAddress}>
+                                      <td>Provenance Address: {provenanceAddress}</td>
+                                    </tr>
+                                    <tr key={provenanceAddress+brand}>
+                                      <td>Brand: {brand}</td>
+                                    </tr>
+                                    <tr key={provenanceAddress+model}>
+                                      <td>Model: {model}</td>
+                                    </tr>
+                                    <tr key={provenanceAddress+instrumentDeedToken.toString()+ Math.random()}>
+                                      <td>Token ID: {instrumentDeedToken.toString()}</td>
+                                    </tr>
+                                    <tr key={provenanceAddress+typeOfProvenance+ Math.random()}>
+                                      <td>Type of Item: {typeOfProvenance.toString()}</td>
+                                    </tr>
+                                    <tr key={provenanceAddress+year}>
+                                      <td>Year: {year}</td>
+                                    </tr>
+                          
+                                  </tbody>
+                                </Table>
+                              </Col>
+
+                            </Row>
+                          </Card.Body>
+                      </Card>
+                 
+                  </Link>
                 </Container>                 
               </div>
               )
@@ -113,13 +121,12 @@ const ProvenanceMain = () => {
           }
              
   
-          </nav>
+          
         </>
        )} else {
         return (
           <>
-            Need to fix this loading vs no objects area
-            <h1 style={{paddingTop: '20vh'}}>You have no registered provenances.</h1>
+            <h1 style={{paddingTop: '20vh'}}>You have no registered Provenances.</h1>
           </>
 
 
@@ -130,8 +137,7 @@ const ProvenanceMain = () => {
 
     return(
         <div className={styles.container}>
-          <h3>Registered Provenances for <br/> {mainAccount}</h3>
-          {console.log(provenanceObjects, "probObjs")}
+          <h3>Registered Provenances for <br/> {mainAccount}</h3>     
           {/*
           <button onClick={async ()=> {console.log(await MothershipContract.getOwnersInstruments())}}>Get Instruments via Contract</button>
           <button onClick={()=> {console.log((provenanceObjects))}}>Provenance Objects</button>
@@ -139,13 +145,14 @@ const ProvenanceMain = () => {
           */}
           {/*<TokensOwned />*/}
           <ItemTable />
+
     
         </div>
     )
 }
 
 
-export default ProvenanceMain;
+export default ProvenanceHub;
 
 
 

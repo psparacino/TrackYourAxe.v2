@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 //component imports
 import DragAndDrop from '../../src/components/DragAndDrop.js';
 import PhotoPreviews from '../../src/components/PhotoPreviews.js';
+
 // import { Modal } from '../../src/components/Modal.js';
 import { ConfirmationModal } from '../../src/components/ConfirmationModal.js';
 
@@ -51,19 +52,23 @@ const formReducer = (state, event) => {
 const RegisterItem = () => {
 
 
-    const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useReducer(formReducer, {instrumentphotohashes : [], verificationphotohash : []});
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [modalShow, setModalShow] = useState(false) //bootstrapmodal
-
+    // tokens
     const [tokenId, setTokenId] = useState([]);
     const [tokenToMint, setTokenToMint] = useState(0);
     const [unusedTokenID, setUnusedTokenID] = useState(0);
-    const [mintErrorMessage, setMintErrorMessage] = useState('');
+    // form
     const [readyToMint, setReadyToMint] = useState(false);
     const [enableForm, setEnableForm] = useState(false);
-    const [ itemPhotosUploaded, setItemPhotosUploaded ] = useState(false);
+    const [validated, setValidated] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    
+    const [itemPhotosUploaded, setItemPhotosUploaded ] = useState(false);
+
+    const [mintErrorMessage, setMintErrorMessage] = useState('');
     const [mintSuccessMessage, setMintSuccessMessage] = useState('')
+
 
 
     //context
@@ -120,12 +125,26 @@ const RegisterItem = () => {
 
       //should check to make sure all formData fields are filled before allowing the user to submit
 
-    const handleSubmit = event => {
-      event.preventDefault();
-      setModalShow(true)
-      setSubmitting(formData, true);
+  //   const handleSubmit = event => {
+  //     event.preventDefault();
+  //     setModalShow(true)
+  //     setSubmitting(formData, true);
       
-  }
+  // }
+
+    const handleSubmit = (event) => {
+      const form = event.currentTarget;
+      console.log(form.checkValidity(), "checking Validity")
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+        setValidated(true)
+      } else {    
+        event.preventDefault();
+        setModalShow(true)
+        setSubmitting(true);
+      }
+    };
 
 
       const handleChange = event => {
@@ -385,59 +404,81 @@ const RegisterItem = () => {
               </Accordion.Item>
             </Accordion>
           
+            {/* Form */}
+            {/* Eventually Form and User Tokens need to be broken into separate components */}
 
-            <Form onSubmit={handleSubmit} className="border mt-4 pt-1">
+            <Form noValidate validated={validated} onSubmit={handleSubmit} className="border mt-4 pt-1">
               <fieldset disabled={!enableForm}> 
-
                 {enableForm ?
                   <h1>Create Provenance with token # {unusedTokenID}</h1>
                     :
                   <h2 style={enableForm ? {} : {color: 'gray'}}> Mint a New Token or Select an Unused Token to Create a Provenance </h2>                 
                 }
             
-                <Form.Group className="mb-3 mt-5 px-3">
-                    <Form.Label>Input Type of Item</Form.Label>
-                      <Form.Select name="type" onChange={handleChange} value={formData.type || ''}>
+                <Form.Group 
+                  className="mb-3 mt-5 px-3"
+                  required
+                  type="select">
+                    <Form.Label >Input Type of Item</Form.Label>
+                      <Form.Select required isInvalid="" name="type" onChange={handleChange} value={formData.type || ''}>
                           <option value=""> Instrument/Accessory/Gear </option>
                           <option value="0">Instrument</option>
                           <option value="1">Accessory</option>
                           <option value="2">Gear</option>
-                      </Form.Select>              
+                      </Form.Select> 
+                      <Form.Control.Feedback type="invalid">
+                        Please select an item type.
+                      </Form.Control.Feedback>         
                 </Form.Group>
 
-
+                
                 <Row>
-                  <Form.Group className="mb-3" as={Col}>
+                  <Form.Group className="mb-3" as={Col} controlId="validationCustom03">
                     <Form.Label >Item Serial Number</Form.Label>
-                      <InputGroup className="mb-3 px-3" onChange={handleChange} value={formData.serial || ''} >
-                      <Form.Control
+                      <InputGroup 
+                        hasValidation
+                        className="mb-3 px-3" 
+                        onChange={handleChange} 
+                        value={formData.serial || ''}     
+                        >
+                        <Form.Control
+                        required 
                         placeholder="Serial #"
                         aria-label="serial"
                         name="serial"
-                        type="text"                    
-                      />
-                    </InputGroup>          
+                        type="text"                            
+                        />  
+                    </InputGroup>  
+                     <Form.Control.Feedback type="invalid">
+                        Please enter a serial number for your item.
+                     </Form.Control.Feedback>     
                   </Form.Group>
 
-                  <Form.Group className="mb-3" as={Col}>
+                  <Form.Group className="mb-3" as={Col} controlId="validationCustom04">
                     <Form.Label >Year of Manufacture</Form.Label>
-                    {formData.year > 2023 ? <p>enter a real year you trump supporter</p> : null}
-                      <InputGroup className="mb-3 px-3" onChange={handleChange} value={formData.year || ''}>
-                      <Form.Control
+                      <InputGroup 
+                        hasValidation
+                        className="mb-3 px-3" 
+                        onChange={handleChange} 
+                        value={formData.year || ''}
+                        >
+                        <Form.Control
+                        required
                         placeholder="Year"
                         name="year"
                         aria-label="year"
-                        type="number"
-                        
-                      />
-                    </InputGroup>          
+                        type="number"/>      
+                      <Form.Control.Feedback type="invalid">
+                        Please enter a year of manufacture for your item.
+                      </Form.Control.Feedback>
+                    </InputGroup>   
                   </Form.Group>
                 </Row>
   
                 <Row>
                   <Form.Group className="px-4">
                     <Form.Label>Brand</Form.Label>
-                      <Form.Select name="brand" onChange={handleChange} value={formData.brand || ''}>
+                      <Form.Select required isInvalid="" name="brand" onChange={handleChange} value={formData.brand || ''}>
                           <option value=""> Select Brand/Make </option>
                           <option value="selmer">Selmer</option>
                           <option value="jupiter">Jupiter</option>
@@ -446,23 +487,20 @@ const RegisterItem = () => {
                           <option value="yanigisawa">Yanigisawa</option>
                           <option value="yamaha">Yamaha</option>
                       </Form.Select>
-                        <InputGroup className="mt-2 w-50 mx-auto" name="brand" placeholder="other" type="text" onChange={handleChange} value={formData.brand || ''}>
+                      <InputGroup className="mt-2 w-50 mx-auto" name="brand" placeholder="other" type="text" onChange={handleChange} value={formData.brand || ''}>
                         <Form.Control 
                         as="textarea" 
                         placeholder="other brand"
                         size="sm"
                         />
-                        </InputGroup>
+                      </InputGroup>
                   </Form.Group>
                 </Row>
 
-                  {/*need to account for mouthpiece or instruments brands here*/}      
-                  
-                  {/*frontend optimization, make selections here dependent on selections above*/}
                 <Row>
                   <Form.Group className="px-4">
                     <Form.Label>Select Model of Item</Form.Label>
-                      <Form.Select name="model" onChange={handleChange} value={formData.model || ''}>
+                      <Form.Select required isInvalid="" name="model" onChange={handleChange} value={formData.model || ''}>
                           <option value=""> Select Model </option>
                           <option value="ottolink">Otto Link</option>
                           <option value="morgan">Morgan</option>
@@ -479,13 +517,12 @@ const RegisterItem = () => {
                   </Form.Group>
                 </Row>
 
-                {/* Item Photos Upload */}
-
                 <Row>
                   <Form.Group className="mb-3 mt-5">  
                     
                     {enableForm ?
-                      <Row>                       
+                      <Row>  
+                        <h2>Upload Additional Images</h2>                     
                         <DragAndDrop 
                           photoLimit={20} 
                           formDataImport={formData} 
@@ -502,23 +539,15 @@ const RegisterItem = () => {
                     : null
                     }
                   </Form.Group> 
-                </Row>         
+                </Row>   
+                <div className="mt-3">
+                  <Button className={styles.submitButton} type="submit" disabled={submitting}>Create Provenance</Button>
+                </div>      
             </fieldset>
-            <div className="mt-3">
-              <Button className={styles.submitButton} type="submit" onClick={handleSubmit} disabled={submitting}>Create Provenance</Button>
-            </div>  
-          </Form>
+ 
+          </Form> 
         </Container>
 
-             {/*
-
-          <button onClick={() => console.log(formData, "formData")}>FormData</button>
-                 
-          <button onClick={getMothershipOwner}>Get Mothership Owner</button>
-          <button onClick={() => console.log(MothershipContract, "MothershipContract")}>Mothership Contract</button>
-          <button onClick={async() => console.log(await MothershipContract.getOwnersInstruments(), "Instruments to Owners")}>Instruments to Owners</button>
-          <button onClick={() => setModalShow(true)}>activate modal for UI</button>          
-          */}
           
           {/*bootstrap modal*/}
           <ConfirmationModal style={{zindex: '1'}} 
@@ -531,7 +560,7 @@ const RegisterItem = () => {
             createprovenance={createProvenance}
             tokenid={tokenId}
             unusedtokenid={unusedTokenID}
-            setsubmitting={setSubmitting}           
+            setSubmitting={setSubmitting}           
             />    
             
           

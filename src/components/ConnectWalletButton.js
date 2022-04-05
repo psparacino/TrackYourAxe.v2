@@ -4,6 +4,10 @@ import { useState , React, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { useUserContext } from '../context/UserContext';
 
+// images
+import greenCheckMark from '../../public/images/green_checkmark.png';
+
+
 // styles
 import { Button, Image, Dropdown } from 'react-bootstrap';
 import styles from './ConnectWalletButton.module.css';
@@ -17,7 +21,6 @@ const ConnectWalletButton = () => {
       if (mainAccount) setConnectionErrorMessage('');
     },[mainAccount])
     
-
     return (
         <div>
           {mainAccount ? 
@@ -25,8 +28,9 @@ const ConnectWalletButton = () => {
               <Dropdown.Toggle variant="primary" className={styles.SuccessButton} id="dropdown-basic" >
               {`Account: ${truncateAddress(mainAccount)}`}
               <Image 
+              fluid="true"
               className={styles.checkmarkImage}
-              src={'images/green_checkmark.png'} 
+              src={greenCheckMark.src} 
               alt="checkmark"/>
               </Dropdown.Toggle>
 

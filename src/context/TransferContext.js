@@ -18,6 +18,8 @@ export function TransferContextProvider({ children }) {
     const { MothershipContract } = useContractContext();
     const { mainAccount, provider, signer } = useUserContext();
 
+    const [outgoingContract, setOutgoingContract] = useState();
+
   
     const [ pendingTransferContracts, setPendingTransferContracts ] = useState();
 

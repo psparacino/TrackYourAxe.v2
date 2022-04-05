@@ -23,10 +23,6 @@ import PhotoPreviews from '../../src/components/PhotoPreviews.js';
 // styles
 import styles from './transfers.module.css'
 
-//image imports
-import greencheckmark from '../../public/images/green_checkmark.png';
-import waitingkitten from '../../public/images/waitingkitten.jpeg';
-
 const formReducer = (state, event) => {
     if(event.reset) {
       return {

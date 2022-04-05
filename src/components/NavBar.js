@@ -46,23 +46,23 @@ const NavBar = () => {
         </Container>
 
         <Container>
-          <Navbar expand="lg" variant="light" bg="light">    
+          <Navbar expand="lg" variant="light" bg="light" >    
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="m-auto">
+          <Navbar.Collapse id="basic-navbar-nav" >
+            <Nav className={styles.NavEdits}>
               <div className={styles.titleAndLogo}>
                 <img
                   src="/images/betterAxe.png"
-                  width="50"
-                  height="50"
+                  width="20"
+                  height="20"
                   className="d-inline-block align-top"
                   alt="logo"
                 />
                 <Navbar.Brand className={styles.brand} href="/">Track Your Axe</Navbar.Brand>
                 <img
                   src="/images/betterAxe.png"
-                  width="50"
-                  height="50"
+                  width="20"
+                  height="20"
                   className="d-inline-block align-top"
                   alt="logo"
                 />
@@ -70,7 +70,12 @@ const NavBar = () => {
               <Nav.Link href="/about">About</Nav.Link>
               <Nav.Link href="/register-item">Register Item</Nav.Link>
               <Nav.Link href="/provenances">{truncateAddress(mainAccount)} Items</Nav.Link>
-              <Nav.Link href="/transfers">Transfers{quantity > 0 ? `(${quantity})` : null}</Nav.Link>
+
+              <NavDropdown title="Transfers" id="nav-dropdown">
+                <NavDropdown.Item href="/outgoing-transfers" eventKey="4.2">Transfer Provenance</NavDropdown.Item>
+                <NavDropdown.Item href="/incoming-transfers" eventKey="4.1">Incoming Transfers{quantity > 0 ? `(${quantity})` : null}</NavDropdown.Item>         
+              </NavDropdown>
+
               <NavDropdown title="Guides" id="nav-dropdown">
                 <NavDropdown.Item href="/guides/wallet" eventKey="4.1">Wallet Info</NavDropdown.Item>
                 <NavDropdown.Item href="/guides/tutorial" eventKey="4.2">Tutorial</NavDropdown.Item>

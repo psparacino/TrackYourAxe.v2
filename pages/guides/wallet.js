@@ -1,26 +1,25 @@
 import { useEffect, useState } from 'react';
 
+import { Earth } from '../../src/components/Earth.js'
 function WalletGuide() {
-  const [ windowPresent, setWindowPresent ] = useState(false)
- 
-    useEffect(()=> {
-      if (typeof(window) !== "undefined") {
 
-      setWindowPresent(true)
-    
 
-      }
+    const SSR = typeof(window) === 'undefined' 
 
-    },[])
+
+
   
     return (
-   
+          <>
+
           <div className="WalletGuide" id="bootstrap-overrides">
-           TEST
-           
+            TEST 
           </div>
-     
-    );
+
+          </>
+      )
+ 
+ 
   }
   
   export default WalletGuide;

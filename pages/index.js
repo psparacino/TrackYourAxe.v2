@@ -43,8 +43,7 @@ function App() {
 
   const Home = () => {
     return (
-      <>     
-        <main>
+      <Container className={styles.homeContainer}>     
           <h3 style={{paddingTop: '20px'}}>a blockchain-powered provenance and verification solution for <br/>instruments and musical items</h3>
           {chainId && chainId != 1337 ? <h4 style={{color: 'red'}}>PLEASE CONNECT TO LOCALHOST IN YOUR WALLET TO CONTINUE</h4> : null}
 
@@ -55,9 +54,19 @@ function App() {
         >
           How Does It Work?
         </Button>
+        <br />
+        <p className={styles.fadeinText}>all set?</p>
+        <Button 
+          size='lg'
+          className={styles.introButton}
+          href='register-item'
+          variant="warning"
+        >
+          Register Item
+        </Button>
 
-        </main>
-      </>
+
+      </Container>
     );
   }
 
@@ -79,7 +88,7 @@ function App() {
           <Col>
             <Image 
             src={mintNFT}
-            fluid
+            fluid="true"
              />        
           </Col>
         </Row>

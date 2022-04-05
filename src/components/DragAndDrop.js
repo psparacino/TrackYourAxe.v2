@@ -243,62 +243,6 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
     }
 
 
-    //axios post here, should this be in a useEffect?    
-
-    /*
-
-    const uploadFiles = async() => {
-        setLoading(true);
-        let instrumentPhotoHashesArray = [];
-        const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-        uploadModalRef.current.style.display = 'block';
-        uploadRef.current.innerHTML = 'File(s) Uploading...';
-        
-        for (let i = 0; i < validFiles.length; i++) {
-            const formData = new FormData();
-            formData.append('file', validFiles[i]);
-      
-            //AXIOS.ALL MAP over validFiles
-            //https://blog.logrocket.com/using-axios-all-make-concurrent-requests/
-            axios.post( url , formData, {
-                maxBodyLength : 'Infinity',
-                headers: {
-                    pinata_api_key: `${process.env.REACT_APP_PINATA_API_KEY}`,
-                    pinata_secret_api_key: `${process.env.REACT_APP_PINATA_SECRET_API_KEY}`
-                    }
-                })
-            .then((response) => {    
-                uploadRef.current.innerHTML = 'File(s) Uploaded'
-                validFiles.length = 0;
-                setValidFiles([...validFiles]);
-                setSelectedFiles([...validFiles]);
-                setUnsupportedFiles([...validFiles]);
-                uploadModalRef.current.style.display = 'none';
-                console.log(response, "IPFS UPLOAD DATA")
-                if (photoLimit == 1) {
-                    setFormData({
-                        name: 'verificationphotohash',
-                        value: response.data.IpfsHash})
-                    setReadytoUploadImages(true);
-                    setPhotoLimitMessage('');
-                } else {
-                    //axios.all
-                    instrumentPhotoHashesArray.push(response.data.IpfsHash);
-                    //setReadytoUploadImages(true);
-                    setFormData({
-                        name: 'instrumentphotohashes',
-                        value: instrumentPhotoHashesArray})
-                }                                
-            })
-            .catch(() => {
-                uploadRef.current.innerHTML = `<span class="error">Error Uploading File(s)</span>`;
-                progressRef.current.style.backgroundColor = 'red';
-            })
-        }
-      
-    }
-    */
-
     const uploadFiles = async() => {
         event.preventDefault();
         setLoading(true);     
@@ -398,7 +342,7 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
         <>
          
             <div className="container">
-                {unsupportedFiles.length === 0 && validFiles.length ? <button className="file-upload-btn" onClick={() => uploadFiles()}>Upload to IPFS</button> : ''} 
+                {unsupportedFiles.length === 0 && validFiles.length ? <button className="file-upload-btn" onClick={() => uploadFiles()}>Upload</button> : ''} 
                 {unsupportedFiles.length ? <p>Please remove all unsupported files.</p> : ''}
                 {itemPhotosUploaded ?
 
@@ -457,7 +401,7 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                 <div className="close" onClick={(() => closeUploadModal())}>X</div>
                 <div className="progress-container">
                     <span ref={uploadRef}></span>
-                    {loading ? <h4>Uploading Files to IPFS...</h4> : null }
+                    {loading ? <h4>Uploading Files...</h4> : null }
                     <div style={{width: '35%', height:'auto', margin: '0 auto', position: 'relative'}}>
                         <Image className={{height: '50%', width: '50%', objectFit: 'contain'}} src={waitingkitten} alt={'please hang in there'} />
 

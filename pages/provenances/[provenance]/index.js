@@ -9,16 +9,19 @@ import { useRouter } from 'next/router';
 import { Container, Carousel, Table, Row, Col, Card, Image, Button, ListGroup, ListGroupItem, InputGroup, Form, FormControl} from 'react-bootstrap';
 
 // context imports
-import { useItemContext } from '../../src/context/ItemContext';
-import { useContractContext } from '../../src/context/ContractContext';
-import { useUserContext } from '../../src/context/UserContext';
+import { useItemContext } from '../../../src/context/ItemContext';
+import { useContractContext } from '../../../src/context/ContractContext';
+import { useUserContext } from '../../../src/context/UserContext';
+import { useTransferContext } from '../../../src/context/TransferContext';
 
 // styles
-import styles from './ProvenanceHub.module.css'
+import styles from '../ProvenanceHub.module.css'
 
-//image imports
-import greencheckmark from '../../public/images/green_checkmark.png';
-import waitingkitten from '../../public/images/waitingkitten.jpeg';
+// component imports
+
+import ReleaseProvenance from './release-provenance';
+
+
 
 
 const ProvenanceProfile = () => {
@@ -26,6 +29,7 @@ const ProvenanceProfile = () => {
   const { provenanceObjects, ipfsGetterRootURL } = useItemContext();
   const { TokenContract, MothershipContract } = useContractContext();
   const { mainAccount, provider } = useUserContext();
+  const { setOutgoingContract } = useTransferContext();
   const router = useRouter();
 
   const { provenance } = router.query;
@@ -63,7 +67,11 @@ const ProvenanceProfile = () => {
   },[provenanceObjects, provenance])
 
 
+  function loadTransferContrandPush() {
+      const address = provenanceContract.address;
+      router.push(`/provenances/${address}/release-provenance`)
 
+  }
 
 
 
@@ -140,103 +148,103 @@ const ProvenanceProfile = () => {
   
 
 
-  const ReleaseProvenance = () => {
+//   const ReleaseProvenance = () => {
 
-    const [ pendingTransfer, setPendingTransfer ] = useState(false)
+//     const [ pendingTransfer, setPendingTransfer ] = useState(false)
 
-    const [ pendingTransferAddress, setPendingTransferAddress ] = useState();
+//     const [ pendingTransferAddress, setPendingTransferAddress ] = useState();
 
-    const [ buyerAccount, setBuyerAccount ] = useState();
+//     const [ buyerAccount, setBuyerAccount ] = useState();
 
-    const [ addressErrorMessage, setAddressErrorMessage ] = useState('')
+//     const [ addressErrorMessage, setAddressErrorMessage ] = useState('')
 
     
 
-    useEffect(async() => {
+//     useEffect(async() => {
 
-       const pendingOwner = await provenanceContract.pendingOwner();
+//        const pendingOwner = await provenanceContract.pendingOwner();
 
-       if (pendingOwner != ethers.constants.AddressZero) {
-         setPendingTransfer(true)
-         setPendingTransferAddress(pendingOwner)
-       }
+//        if (pendingOwner != ethers.constants.AddressZero) {
+//          setPendingTransfer(true)
+//          setPendingTransferAddress(pendingOwner)
+//        }
       
-      },[])
+//       },[])
 
-    const handleChange = event => {
-      console.log(event.target.value, "value")
-      setBuyerAccount(event.target.value);
-    }
+//     const handleChange = event => {
+//       console.log(event.target.value, "value")
+//       setBuyerAccount(event.target.value);
+//     }
 
       
 
-      async function release() {
-      setSuccessMessage('')
-      setAddressErrorMessage('')
-      if (ethers.utils.isAddress(buyerAccount) && buyerAccount != mainAccount) {
+//       async function release() {
+//       setSuccessMessage('')
+//       setAddressErrorMessage('')
+//       if (ethers.utils.isAddress(buyerAccount) && buyerAccount != mainAccount) {
 
-        await TokenContract.approve(provenanceContract.address, provenanceProps.instrumentDeedToken.toString())
-        .then(async(result) => {
-          provider.waitForTransaction(result.hash)
-          .then(async(mined) => {
-              if (mined) {
-                await provenanceContract.setPendingOwner(buyerAccount)
-                .then(async(result) => {
-                  provider.waitForTransaction(result.hash)
-                  .then(async(mined) => {
-                    if (mined) {
-                      //  need to fix this from react router
-                      setSuccessMessage('Transaction Success')
-                      }}
-                    )})
-                .catch((error)=> {
-                  console.log(error)       
-                  })
-                 }
-              })
-            }
-          )
-      }  else {
-        setAddressErrorMessage('You are either attempting to transfer to your own Ethereum address or an invalid address. Please check and re-enter.')
-      }
-    }
+//         await TokenContract.approve(provenanceContract.address, provenanceProps.instrumentDeedToken.toString())
+//         .then(async(result) => {
+//           provider.waitForTransaction(result.hash)
+//           .then(async(mined) => {
+//               if (mined) {
+//                 await provenanceContract.setPendingOwner(buyerAccount)
+//                 .then(async(result) => {
+//                   provider.waitForTransaction(result.hash)
+//                   .then(async(mined) => {
+//                     if (mined) {
+//                       //  need to fix this from react router
+//                       setSuccessMessage('Transaction Success')
+//                       }}
+//                     )})
+//                 .catch((error)=> {
+//                   console.log(error)       
+//                   })
+//                  }
+//               })
+//             }
+//           )
+//       }  else {
+//         setAddressErrorMessage('You are either attempting to transfer to your own Ethereum address or an invalid address. Please check and re-enter.')
+//       }
+//     }
 
-      return (          
-        <div>
-        {pendingTransfer ? 
+//       return (          
+//         <div>
+//         {pendingTransfer ? 
 
-          <div className={styles.containerBorder}>
-            <h4>This provenance has been released and is awaiting claim & verification by: <p>{pendingTransferAddress}</p></h4>
-          </div> 
-          :
-          <div>
-            <h2>Transfer this Provenance</h2>
-            {ethers.utils.isAddress(buyerAccount) ? <h3>You are transferring this provenance to this address: {buyerAccount}</h3> : null}
+//           <div className={styles.containerBorder}>
+//             <h4>This provenance has been released and is awaiting claim & verification by: <p>{pendingTransferAddress}</p></h4>
+//           </div> 
+//           :
+//           <div>
+//             <h2>Transfer this Provenance</h2>
+//             {ethers.utils.isAddress(buyerAccount) ? <h3>You are transferring this provenance to this address: {buyerAccount}</h3> : null}
             
-            <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
-            <h6>0x14dC79964da2C08b23698B3D3cc7Ca32193d9955</h6>
-            {addressErrorMessage ?
-            <p>{addressErrorMessage}</p> : null}
+//             <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
+//             <h6>0x14dC79964da2C08b23698B3D3cc7Ca32193d9955</h6>
+//             {addressErrorMessage ?
+//             <p>{addressErrorMessage}</p> : null}
             
-            <input 
-                name="userAddress" 
-                type="text" 
-                placeholder='enter address to transfer to here'
-                onChange={handleChange}
-                value={buyerAccount || ''}
-                style={{width: '65%', height: '40px', fontSize: '20px', marginTop: '30px', textAlign: 'center'}} />
+//             <input 
+//                 name="userAddress" 
+//                 type="text" 
+//                 placeholder='enter address to transfer to here'
+//                 onChange={handleChange}
+//                 value={buyerAccount || ''}
+//                 style={{width: '65%', height: '40px', fontSize: '20px', marginTop: '30px', textAlign: 'center'}} />
 
 
-            <div className='mt-2'>
-              <Button onClick={release}>Transfer This Token and Provenance</Button>  
-            </div>    
+//             <div className='mt-2'>
+//               <Button onClick={release}>Transfer This Token and Provenance</Button>  
+//             </div>    
 
-          </div>
+//           </div>
 
-        }
-        </div>  
-      )
-    }
+//         }
+//         </div>  
+//       )
+//     }
 
     if (loaded) {
 
@@ -246,6 +254,7 @@ const ProvenanceProfile = () => {
 
     return (
       <Container>
+
     
         <div className={styles.container}>            
           <h2>{brand} {model}: {serial}</h2>
@@ -317,10 +326,10 @@ const ProvenanceProfile = () => {
           <ProvenanceHistory />
           <hr />
 
-          <ReleaseProvenance />
+          <Button onClick={loadTransferContrandPush}>Begin Transfer for this Provenance</Button>
 
-          {successMessage ?
-          <p>{successMessage}</p> : null}
+          {/* <ReleaseProvenance provenanceContract={provenanceContract} /> */}
+
 
        
           

@@ -60,14 +60,11 @@ export function ItemContextProvider({ children }) {
    
   
     //load addresses of user provenances
-    useEffect(() => {
-      
-
+    useEffect(() => {     
       if (mainAccount && MothershipContract) {
         // console.log(mainAccount, "mainAccount in getItems UseEffect")
         getItems();
-      }
-      
+      }  
   
       async function getItems() {
         if (MothershipContract) {
@@ -98,14 +95,13 @@ export function ItemContextProvider({ children }) {
                 const ProvenanceDetails = await ProvenanceContract.instrument()
                 const itemPhotos = await ProvenanceContract.getItemPics();
                 const ProvenanceProps = {...ProvenanceDetails, itemPhotos}
-
-
-                // console.log(ProvenanceProps, "props in context")
-                
+     
                 const index = ProvenanceContract.ownerCount();
                 const ProvenanceOwnerInfo = await ProvenanceContract.ownerProvenance(index);
+
+                const ProvenancePendingOwner = await ProvenanceContract.pendingOwner();
                 
-                provenanceArray.push({'ProvenanceContract': ProvenanceContract, 'ProvenanceProps': ProvenanceProps, 'ProvenanceOwnerInfo': ProvenanceOwnerInfo})
+                provenanceArray.push({'ProvenanceContract': ProvenanceContract, 'ProvenanceProps': ProvenanceProps, 'ProvenanceOwnerInfo': ProvenanceOwnerInfo, 'ProvenancePendingOwner' : ProvenancePendingOwner})
               }
          setProvenanceObjects(provenanceArray);          
       }   

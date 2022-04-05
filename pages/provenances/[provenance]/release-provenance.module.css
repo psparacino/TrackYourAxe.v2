@@ -1,3 +1,7 @@
+.transferContainer {
+    text-align: center;
+}
+
 .itemTable {
     border-collapse: collapse;
     border: 1px solid black;
@@ -16,41 +20,15 @@
 
 .container {
     text-align: center;
-    width: 75%;
-    margin: 0 auto;
-    margin-top: 10px;
-    padding-top: 10px;
-
 }
 
-.ownedContainer {
-    text-align: center;
-    width: 75%;
-    margin: 0 auto;
-    margin-top: 10px;
-    padding-top: 10px;
-}
-.ownedContainer:hover {
-    background-color: azure;
-}
-
-.pendingContainer {
-    text-align: center;
-    border: 6px solid red; 
+.containerBorder  {
+    border: 3px solid red; 
     border-radius: 25px;
-    width: 75%;
-    margin: 0 auto;
-    margin-top: 10px;
     padding-top: 10px;
+    padding-bottom: 10px;
+
 }
-
-.linkPlacebo {
-    color: #0d6efd;
-    text-decoration: underline;
-}
-
-
-
 
 .cardContainer {
     display: flex;

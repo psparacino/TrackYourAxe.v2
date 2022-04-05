@@ -23,7 +23,7 @@ import Provenance from '../../artifacts/contracts/Provenance.sol/Provenance.json
 import styles from './transfers.module.css'
 
 
-const Transfers = () => {
+const IncomingTransfers = () => {
 
   const { ipfsGetterRootURL } = useItemContext();
   const { MothershipContract } = useContractContext();
@@ -139,7 +139,7 @@ const Transfers = () => {
 }
 
 
-export default Transfers;
+export default IncomingTransfers;
 
 
 
