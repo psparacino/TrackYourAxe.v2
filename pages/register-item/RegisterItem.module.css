@@ -65,13 +65,37 @@
     object-fit: cover;
 }
 
+/* Success Message */
 
+.mintSuccess{
+  position: absolute;
+  width: 100vw;
+  top: 40%;
+  left: 50%;
+  font-size: 700%;
+  color: green;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
 
+  animation:mint-success 1s 1;
+  -webkit-animation:mint-success 0.5s 1;
+  animation-fill-mode: forwards;
 
+  animation-delay:3s;
+  -webkit-animation-delay:4s; /* Safari and Chrome 
+  -webkit-animation-fill-mode: forwards;   */
 
+} 
 
+@keyframes mint-success{
+  from {opacity :1;}
+  to {opacity :0;}
+}
 
-
+@-webkit-keyframes mint-success{
+  from {opacity :1;}
+  to {opacity :0;}
+}
 
 
 

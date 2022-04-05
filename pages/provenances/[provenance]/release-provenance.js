@@ -33,6 +33,7 @@ const ReleaseProvenance = () => {
     const { mainAccount, provider } = useUserContext();
 
     const [ pendingTransfer, setPendingTransfer ] = useState(false);
+    const [ transferInitiated, setTransferInitiated ] = useState(false)
     const [ loaded, setLoaded] = useState(false)
     const [ pendingTransferAddress, setPendingTransferAddress ] = useState();
     const [ buyerAccount, setBuyerAccount ] = useState();
@@ -47,14 +48,11 @@ const ReleaseProvenance = () => {
     const [ outgoingProvenanceProps, setOutgoingProvenanceProps ] = useState()
     const [ outgoingProvenanceOwnerInfo, setOutgoingProvenanceOwnerInfo ] = useState()
 
-    
-
 
     const router = useRouter();
     const { provenance } = router.query;
 
 
-    // could outsource this to the utils folder since it happens several times
     useEffect(async() => {
         if (provenanceObjects && provenance) {
         loadProvenance()
@@ -90,7 +88,7 @@ const ReleaseProvenance = () => {
 
      useEffect(async() => {
 
-        if (outgoingContract) {
+        if (outgoingContract || transferInitiated) {
           const pendingOwner = await outgoingContract.pendingOwner()
 
           if (pendingOwner != ethers.constants.AddressZero) {
@@ -100,7 +98,7 @@ const ReleaseProvenance = () => {
               console.log("No Pending Owner")
           }
       
-         },[outgoingContract])
+         },[outgoingContract, transferInitiated])
     
 
     const handleChange = event => {
@@ -122,28 +120,41 @@ const ReleaseProvenance = () => {
             }})
         .catch((error)=> {
                 console.log(error)       
-                })
-                
-            })
-            
-          
+                })               
+            })        
+          }
+
+    async function revokeTransferApproval() {
+      await TokenContract.approve(ethers.constants.AddressZero, outgoingProvenanceProps.instrumentDeedToken.toString())
+      .then(async(result) => {
+          provider.waitForTransaction(result.hash)
+          .then(async(mined) => {
+          if (mined) {
+              setSuccessMessage('Transaction Success')
+              setTokenApproved(false)
+              }})
+          .catch((error)=> {
+                  console.log(error)       
+                  })               
+              })   
 
     }
 
     // approve zero address for revoke approval for transfer
     //   break this into--> approve and then set pending owner
 
-      async function release() {
+    async function release() {
       setSuccessMessage('')
       setAddressErrorMessage('')
+      setTransferInitiated(false)
       if (ethers.utils.isAddress(buyerAccount) && buyerAccount != mainAccount) {
         await outgoingContract.setPendingOwner(buyerAccount)
         .then(async(result) => {
           provider.waitForTransaction(result.hash)
           .then(async(mined) => {
             if (mined) {
-              //  need to fix this from react router
               setSuccessMessage('Transaction Success')
+              setTransferInitiated(true)
               }}
             )})
         .catch((error)=> {
@@ -158,8 +169,6 @@ const ReleaseProvenance = () => {
       return (          
         <Container className={styles.transferContainer}>
             <h1>Transfer Provenance {outgoingContract.address}</h1>
-            <h2>Token Approval</h2>
-            {tokenApproved ? <Button>Made a mistake?  Revoke Token Approval</Button> : <Button onClick={approveTransfer}>Approve Token Transfer</Button>}
             
             {pendingTransfer ? 
 
@@ -172,7 +181,10 @@ const ReleaseProvenance = () => {
             :
                 
                 <div>
-                <h2>Release this Provenance for Claim</h2>
+                <h2>Step 1: Approve This Token For Transfer {tokenApproved ? <Image src={greenCheckMark.src} height="20px"/> : null}</h2>
+                {tokenApproved ? <Button variant="danger" onClick={revokeTransferApproval}>Made a mistake?  Revoke Token Approval</Button> : <Button onClick={approveTransfer}>Approve Token Transfer</Button>}
+                <h2>Step 2: Release this Provenance for Claim</h2>
+                <h4>This step ***cannot*** be undone. Please be sure and double-check everything.</h4>
                 {ethers.utils.isAddress(buyerAccount) ? <h3>You are transferring this provenance to this address: {buyerAccount}</h3> : null}
 
                 <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
@@ -186,13 +198,13 @@ const ReleaseProvenance = () => {
                     placeholder='enter address to transfer to here'
                     onChange={handleChange}
                     value={buyerAccount || ''}
-                    style={{width: '65%', height: '40px', fontSize: '20px', marginTop: '30px', textAlign: 'center'}} />
+                    style={{width: '65%', height: '40px', fontSize: '20px', textAlign: 'center'}} />
                               {successMessage ?
                     <p>{successMessage}</p> : null}
 
 
                 <div className='mt-2'>
-                    <Button onClick={release}>Release this Provenance</Button>  
+                    <Button style={{fontSize: '40px', borderRadius: '20px'}} onClick={release}>Release this Provenance</Button>  
                 </div>    
 
                 </div>

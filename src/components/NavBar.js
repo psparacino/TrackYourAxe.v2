@@ -46,7 +46,7 @@ const NavBar = () => {
         </Container>
 
         <Container>
-          <Navbar expand="lg" variant="light" bg="light" >    
+          <Navbar expand="lg" variant="light" bg="light">    
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" >
             <Nav className={styles.NavEdits}>
@@ -71,10 +71,13 @@ const NavBar = () => {
               <Nav.Link href="/register-item">Register Item</Nav.Link>
               <Nav.Link href="/provenances">{truncateAddress(mainAccount)} Items</Nav.Link>
 
-              <NavDropdown title="Transfers" id="nav-dropdown">
+              <Nav.Link href="/incoming-transfers" 
+              style={quantity > 0 ? {color: 'red'} : null}>Transfers{quantity > 0 ? `(${quantity})` : null}</Nav.Link>
+
+              {/* <NavDropdown title="Transfers" id="nav-dropdown" style={{fontSize: '20px'}}>
                 <NavDropdown.Item href="/outgoing-transfers" eventKey="4.2">Transfer Provenance</NavDropdown.Item>
-                <NavDropdown.Item href="/incoming-transfers" eventKey="4.1">Incoming Transfers{quantity > 0 ? `(${quantity})` : null}</NavDropdown.Item>         
-              </NavDropdown>
+                <NavDropdown.Item href="/incoming-transfers" eventKey="4.1" className={quantity > 0 ? styles.incoming : null}>Incoming Transfers{quantity > 0 ? `(${quantity})` : null}</NavDropdown.Item>         
+              </NavDropdown> */}
 
               <NavDropdown title="Guides" id="nav-dropdown">
                 <NavDropdown.Item href="/guides/wallet" eventKey="4.1">Wallet Info</NavDropdown.Item>

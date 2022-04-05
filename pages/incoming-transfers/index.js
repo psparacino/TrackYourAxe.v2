@@ -17,8 +17,6 @@ import { useTransferContext } from '../../src/context/TransferContext';
 //abi
 import Provenance from '../../artifacts/contracts/Provenance.sol/Provenance.json';
 
-
-
 // styles
 import styles from './transfers.module.css'
 
@@ -45,6 +43,7 @@ const IncomingTransfers = () => {
     if (pendingTransferContracts){
       return (
         <>
+          <h4 style={{textAlign: 'center'}}>this page is for incoming transfers only. Transferring provenances is only allowed from the individual item pages.  Visit your <Link href="/provenances">items</Link> page to transfer provenances or <Link href="/guides/tutorial">here</Link> to learn how.</h4>
           <nav>
           {pendingTransferContracts.map((array, index) => {
           

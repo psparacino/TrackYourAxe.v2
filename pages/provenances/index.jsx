@@ -71,7 +71,6 @@ const ProvenanceHub = () => {
                         key={provenanceAddress + 'card'} 
                         className={pendingBool ? styles.ownedContainer : styles.pendingContainer}>
                         
-
                         <h2 className={pendingBool ? styles.linkPlacebo : null }>{brand} {model}</h2>
 
                         {pendingBool ? null : <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p> }

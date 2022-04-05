@@ -109,7 +109,9 @@ const PhotoPreviews = ({
                     ? null : <h2>Verification Photo for Token {unusedTokenID} </h2>
             }
             {formData.verificationphotohash.length == 0 ?
-            null : <img src={verificationHashURL} alt="verification photo not yet uploaded" /> }
+            null : 
+              <img src={verificationHashURL} alt="verification photo not yet uploaded" />
+             }
            </div>
 
           :          

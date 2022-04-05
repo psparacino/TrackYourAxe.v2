@@ -118,20 +118,6 @@ const RegisterItem = () => {
     },[readyToMint, formData.verificationphotohash])
 
 
-    //from admin page should check if photos are verified and then re-release rest of
-    //push to contract then check con track
-
-    //form functions
-
-      //should check to make sure all formData fields are filled before allowing the user to submit
-
-  //   const handleSubmit = event => {
-  //     event.preventDefault();
-  //     setModalShow(true)
-  //     setSubmitting(formData, true);
-      
-  // }
-
     const handleSubmit = (event) => {
       const form = event.currentTarget;
       console.log(form.checkValidity(), "checking Validity")
@@ -191,6 +177,7 @@ const RegisterItem = () => {
       console.log(readyToMint)
     } else {
     //mint token, need to include image URI
+    setMintSuccessMessage('')
     await TokenContract.safeMint(mainAccount, formData.verificationphotohash)
           .then(async(result) => {
             provider.waitForTransaction(result.hash)
@@ -214,8 +201,6 @@ const RegisterItem = () => {
       }
     }
 
-
-
   //Page Components
 
   //check if token has been used in a Provenance
@@ -224,7 +209,6 @@ const RegisterItem = () => {
       let unusedTokens = [];
 
       for (let i = 0; i < provenanceObjects.length; i++) {
-
         provenanceTokens.push(provenanceObjects[i].ProvenanceProps.instrumentDeedToken.toNumber())
       }
       
@@ -232,8 +216,7 @@ const RegisterItem = () => {
         const result = provenanceTokens.includes(token);
         if (!result) {
           unusedTokens.push(token)
-        }
-        
+        }       
       })
       
       async function getTokenProps(unusedToken) {
@@ -258,19 +241,6 @@ const RegisterItem = () => {
             setItemPhotosUploaded(false)
       } 
 
-    const handleMintSuccess = () => {
-
-      if (mintSuccessMessage) setTimeout(setMintSuccessMessage(''), 1000);
-
-      if (mintSuccessMessage){
-      return(
-        <p>{mintSuccessMessage}</p>
-      )} else {
-        return null;
-      }
-      }
-    
-
     return (
       <>
         <Row className={styles.buttonContainer}>
@@ -282,31 +252,13 @@ const RegisterItem = () => {
         </Row>
 
         <Row className={styles.buttonContainer}>
-            {provenanceTokens.length > 0 ?
-            <>
-              <Col>
-                <Accordion className="w-50 mx-auto pb-4">
-                  <Accordion.Item eventKey="0">
-                    <Accordion.Header>Tokens already attached to Provenance</Accordion.Header>
-                    <Accordion.Body>
-                      {provenanceTokens}
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </Accordion>
-              </Col>
-            </>
-              :
-              null
-            }
           
-            { formData.verificationphotohash.length > 0 && readyToMint  ?
-              
+            {formData.verificationphotohash.length > 0 && readyToMint  ?             
               <Col>
                 <Button style={{backgroundColor: 'red', fontSize: '23px'}} onClick={mintToken} disabled={null}> Mint Token {tokenToMint}</Button>            
               </Col>  
               :
-              null 
-            }
+              null }
 
             <Col>
               <Dropdown>
@@ -325,13 +277,21 @@ const RegisterItem = () => {
                 </Dropdown.Menu>
                 }
               </Dropdown>
-            </Col>
-            {mintSuccessMessage ? 
-              <p>{handleMintSuccess}</p> 
-              :
-              null
-            }
-            <p>{readyToMint ? null : mintErrorMessage}</p>   
+              {provenanceTokens.length > 0 ?
+                <Col>
+                  <Accordion className="mx-auto mt-3" style={{width: '364px'}}>
+                    <Accordion.Item eventKey="0">
+                      <Accordion.Header>Tokens already attached to Provenance</Accordion.Header>
+                      <Accordion.Body>
+                        {provenanceTokens}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </Accordion>
+                </Col>
+                :
+                null
+                }
+            </Col>      
         </Row>
       </>
 
@@ -359,7 +319,6 @@ const RegisterItem = () => {
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>
-
             {/* Verfication Photo Upload */} 
             {readyToMint === false && formData.verificationphotohash.length > 0 ?
             
@@ -376,13 +335,14 @@ const RegisterItem = () => {
                 itemPhotosUploaded={itemPhotosUploaded}
                 setItemPhotosUploaded={setItemPhotosUploaded}
                 />
-            </Row>}
-            
+            </Row>}   
           {/* Verication Photo Preview */}
           { formData.verificationphotohash ?
-          <PhotoPreviews photoLimit={1} formData={formData} readyToMint={readyToMint} unusedTokenID={unusedTokenID} tokenToMint={tokenToMint} />
-          : null
-          }
+            <div style={{position: 'relative', textAlign: 'center'}}>
+              <PhotoPreviews photoLimit={1} formData={formData} readyToMint={readyToMint} unusedTokenID={unusedTokenID} tokenToMint={tokenToMint} />         
+              {mintSuccessMessage ? <h2 className={styles.mintSuccess}>Mint Success!</h2> : null}
+            </div>
+            : null}
 
           {/* Token Updates */}
           <Row className="pt-4">

@@ -55,7 +55,6 @@ function App() {
           How Does It Work?
         </Button>
         <br />
-        <p className={styles.fadeinText}>all set?</p>
         <Button 
           size='lg'
           className={styles.introButton}
@@ -75,7 +74,7 @@ function App() {
     return(
       <Container className={styles.stepsContainer}>
         <h2>Simple Two-Step Process to Creating a Provenance</h2>
-        <p>Prerequisite: Create a <Link href="guides/wallet">Wallet</Link> (if you don't have one already)</p>
+        <p>Prerequisite: Create a <Link href="/guides/wallet">Wallet</Link> (if you don't have one already)</p>
         
 
         <Row>
@@ -103,8 +102,7 @@ function App() {
           <Col>
             <Image 
             src={tablet}
-            fluid
-
+            fluid="true"
 
              />        
           </Col>

@@ -17,13 +17,8 @@ const TransferContext= createContext();
 export function TransferContextProvider({ children }) {
     const { MothershipContract } = useContractContext();
     const { mainAccount, provider, signer } = useUserContext();
-
-    const [outgoingContract, setOutgoingContract] = useState();
-
-  
     const [ pendingTransferContracts, setPendingTransferContracts ] = useState();
 
-   
     //load all pending transfers
     useEffect(async() => {
       if (MothershipContract) {
@@ -48,7 +43,8 @@ export function TransferContextProvider({ children }) {
               transferArray.push({'ProvenanceContract': ProvenanceTransferContract, 'ProvenanceProps': ProvenanceTransferProps, 'ProvenanceOwnerInfo': ProvenanceOwnerInfo})
             }
           }
-          setPendingTransferContracts(transferArray);          
+          setPendingTransferContracts(transferArray); 
+          setTransferInitiated(false)        
       }   
         
     },[MothershipContract, mainAccount])
