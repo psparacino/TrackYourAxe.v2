@@ -186,6 +186,7 @@ const RegisterItem = () => {
                   TokenContract.once("TokenCreated" , async(owner, tokenId, success) => {
                     if (success) {
                         setTokens([...tokens, tokenId.toNumber()])
+                        setUnusedTokenID(tokenId.toNumber())
                         setMintSuccessMessage('Token Successfully Minted!')
                     }
                     setFormData({
@@ -490,8 +491,7 @@ const RegisterItem = () => {
                           setFormData={setFormData}
                           itemPhotosUploaded={itemPhotosUploaded}
                           setItemPhotosUploaded={setItemPhotosUploaded}                       
-                           />
-                          
+                           />                   
                       </Row>  : null }
 
                     { formData.instrumentphotohashes.length >= 1 ?

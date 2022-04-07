@@ -17,9 +17,6 @@ import { useTransferContext } from '../../../src/context/TransferContext';
 // styles
 import styles from '../ProvenanceHub.module.css'
 
-// component imports
-
-import ReleaseProvenance from './release-provenance';
 
 
 
@@ -41,8 +38,7 @@ const ProvenanceProfile = () => {
   const [ provenanceProps, setProvenanceProps ] = useState();
   const [ provenanceOwnerInfo, setProvenanceOwnerInfo ] = useState();
 
-  
-  const [ successMessage, setSuccessMessage ] = useState('');
+
 
  
   //load all info 
@@ -53,7 +49,6 @@ const ProvenanceProfile = () => {
     // would be faster search with an object not a for loop. not sure how that would work with the map though.
     async function loadProvenance() { 
       for (let contract of provenanceObjects) {
-        console.log(contract)
         if (contract.ProvenanceContract.address == provenance) {
           const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } = contract;
 
@@ -67,10 +62,43 @@ const ProvenanceProfile = () => {
   },[provenanceObjects, provenance])
 
 
-  function loadTransferContrandPush() {
+  function loadAndPush() {
       const address = provenanceContract.address;
       router.push(`/provenances/${address}/release-provenance`)
 
+  }
+console.log(provenanceProps)
+  const ItemPhotoCarousel = () => {
+    const itemPhotoArray = provenanceProps.itemPhotos;
+
+    return (
+      <div className="previewPhoto"> 
+        <hr />
+        <h2>Item Photos</h2>
+        {itemPhotoArray.length > 0 ?      
+            <Carousel variant="dark">
+              {itemPhotoArray.map((photo, index)=> {
+                return (       
+                    <Carousel.Item key={index}>
+                      <img 
+                        key={photo} 
+                        src={ipfsGetterRootURL + photo} 
+                        alt="item photos not yet loaded"
+                        className={styles.itemPhotoCarousel} />  
+                    </Carousel.Item>
+                    )
+              })} 
+            </Carousel>
+            
+        :
+          <div>
+            <h2>Item Photos Loading</h2>
+            <Spinner animation="border" className='mx-auto' />
+          </div>
+        }
+        
+        </div>
+    )
   }
 
 
@@ -148,104 +176,6 @@ const ProvenanceProfile = () => {
   
 
 
-//   const ReleaseProvenance = () => {
-
-//     const [ pendingTransfer, setPendingTransfer ] = useState(false)
-
-//     const [ pendingTransferAddress, setPendingTransferAddress ] = useState();
-
-//     const [ buyerAccount, setBuyerAccount ] = useState();
-
-//     const [ addressErrorMessage, setAddressErrorMessage ] = useState('')
-
-    
-
-//     useEffect(async() => {
-
-//        const pendingOwner = await provenanceContract.pendingOwner();
-
-//        if (pendingOwner != ethers.constants.AddressZero) {
-//          setPendingTransfer(true)
-//          setPendingTransferAddress(pendingOwner)
-//        }
-      
-//       },[])
-
-//     const handleChange = event => {
-//       console.log(event.target.value, "value")
-//       setBuyerAccount(event.target.value);
-//     }
-
-      
-
-//       async function release() {
-//       setSuccessMessage('')
-//       setAddressErrorMessage('')
-//       if (ethers.utils.isAddress(buyerAccount) && buyerAccount != mainAccount) {
-
-//         await TokenContract.approve(provenanceContract.address, provenanceProps.instrumentDeedToken.toString())
-//         .then(async(result) => {
-//           provider.waitForTransaction(result.hash)
-//           .then(async(mined) => {
-//               if (mined) {
-//                 await provenanceContract.setPendingOwner(buyerAccount)
-//                 .then(async(result) => {
-//                   provider.waitForTransaction(result.hash)
-//                   .then(async(mined) => {
-//                     if (mined) {
-//                       //  need to fix this from react router
-//                       setSuccessMessage('Transaction Success')
-//                       }}
-//                     )})
-//                 .catch((error)=> {
-//                   console.log(error)       
-//                   })
-//                  }
-//               })
-//             }
-//           )
-//       }  else {
-//         setAddressErrorMessage('You are either attempting to transfer to your own Ethereum address or an invalid address. Please check and re-enter.')
-//       }
-//     }
-
-//       return (          
-//         <div>
-//         {pendingTransfer ? 
-
-//           <div className={styles.containerBorder}>
-//             <h4>This provenance has been released and is awaiting claim & verification by: <p>{pendingTransferAddress}</p></h4>
-//           </div> 
-//           :
-//           <div>
-//             <h2>Transfer this Provenance</h2>
-//             {ethers.utils.isAddress(buyerAccount) ? <h3>You are transferring this provenance to this address: {buyerAccount}</h3> : null}
-            
-//             <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
-//             <h6>0x14dC79964da2C08b23698B3D3cc7Ca32193d9955</h6>
-//             {addressErrorMessage ?
-//             <p>{addressErrorMessage}</p> : null}
-            
-//             <input 
-//                 name="userAddress" 
-//                 type="text" 
-//                 placeholder='enter address to transfer to here'
-//                 onChange={handleChange}
-//                 value={buyerAccount || ''}
-//                 style={{width: '65%', height: '40px', fontSize: '20px', marginTop: '30px', textAlign: 'center'}} />
-
-
-//             <div className='mt-2'>
-//               <Button onClick={release}>Transfer This Token and Provenance</Button>  
-//             </div>    
-
-//           </div>
-
-//         }
-//         </div>  
-//       )
-//     }
-
     if (loaded) {
 
     const { serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = provenanceProps; 
@@ -254,8 +184,6 @@ const ProvenanceProfile = () => {
 
     return (
       <Container>
-
-    
         <div className={styles.container}>            
           <h2>{brand} {model}: {serial}</h2>
           <p></p>
@@ -300,40 +228,12 @@ const ProvenanceProfile = () => {
 
               </tbody>
             </Table>
-            {/*itemPhotoArray.length > 0 ?      
-              <Carousel>
-                {itemPhotoArray.map((photo, index)=> {
-                  return (       
-                      <Carousel.Item key={index}>
-                        <img 
-                          key={photo} 
-                          src={photo} 
-                          alt="item photos not yet loaded"
-                          className={styles.itemPhotoCarousel} />  
-                      </Carousel.Item>
-                      )
-                })} 
-              </Carousel>
-              
-          :
-            <div>
-              <h2>Item Photos Loading</h2>
-              <Spinner animation="border" className='mx-auto' />
-            </div>
-            */
-          }
 
-          <ProvenanceHistory />
-          <hr />
+            <ItemPhotoCarousel />
+            <ProvenanceHistory />
+            <hr />
 
-          <Button onClick={loadTransferContrandPush}>Begin Transfer for this Provenance</Button>
-
-          {/* <ReleaseProvenance provenanceContract={provenanceContract} /> */}
-
-
-       
-          
-          
+          <Button onClick={loadAndPush}>Begin Transfer for this Provenance</Button> 
         </div>
         </Container>
         

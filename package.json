@@ -11,6 +11,7 @@
     "deploymothership": "hh run --network localhost scripts/deployMothership.js"
   },
   "dependencies": {
+    "3d-earth": "^1.0.8",
     "@coinbase/wallet-sdk": "^3.0.5",
     "@openzeppelin/contracts": "^4.4.2",
     "@portis/web3": "^4.0.7",

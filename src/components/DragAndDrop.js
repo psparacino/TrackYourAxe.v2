@@ -8,7 +8,15 @@ import waitingkitten from '../../public/images/waitingkitten.jpeg'
 
 //import './DragAndDrop.css';
 
-const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMessage, setFormData, itemPhotosUploaded, setItemPhotosUploaded, claimPhoto}) => {
+const DragAndDrop = ({
+        photoLimit, 
+        formDataImport, 
+        setReadyToMint, 
+        setMintErrorMessage, 
+        setFormData, 
+        itemPhotosUploaded,
+        setItemPhotosUploaded,
+        claimPhoto}) => {
 
     const FormData = require('form-data');
 
@@ -289,8 +297,9 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                     setFormData({
                         name: 'instrumentphotohashes',
                         value: instrumentPhotoHashesArray})
-                    }
                     setItemPhotosUploaded(true)
+                    }
+                    
                    
                 }                                    
             })
@@ -345,8 +354,13 @@ const DragAndDrop = ({photoLimit, formDataImport, setReadyToMint, setMintErrorMe
                 {unsupportedFiles.length === 0 && validFiles.length ? <button className="file-upload-btn" onClick={() => uploadFiles()}>Upload</button> : ''} 
                 {unsupportedFiles.length ? <p>Please remove all unsupported files.</p> : ''}
                 {itemPhotosUploaded ?
+                <>
+                {console.log(itemPhotosUploaded, "item phtos?")}
 
-                <Button variant="warning" style={{marginBottom: '10px'}} onClick={() => setItemPhotosUploaded(false)}>Re-Upload Image(s)</Button>
+<Button variant="warning" style={{marginBottom: '10px'}} onClick={() => setItemPhotosUploaded(false)}>Re-Upload Image(s)</Button>
+
+                </>
+
                 :
                 <div className="drop-container"
                     onDragOver={dragOver}

@@ -49,6 +49,14 @@
     text-decoration: underline;
 }
 
+.itemPhotoCarousel {
+    flex: 1;
+    object-fit: cover;
+    height: 300px;
+
+}
+
+
 
 
 

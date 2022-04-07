@@ -44,7 +44,7 @@ export function TransferContextProvider({ children }) {
             }
           }
           setPendingTransferContracts(transferArray); 
-          setTransferInitiated(false)        
+          // setTransferInitiated(false)        
       }   
         
     },[MothershipContract, mainAccount])
