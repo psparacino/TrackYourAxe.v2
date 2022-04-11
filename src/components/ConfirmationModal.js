@@ -129,7 +129,7 @@ export function ConfirmationModal(props) {
           </Container>
         </Modal.Body>   
         <Button 
-        width={"50%"}
+        className={styles.createProvenanceButton}
         onClick={createprovenance}>Create Provenance</Button>
       </Modal>
     );

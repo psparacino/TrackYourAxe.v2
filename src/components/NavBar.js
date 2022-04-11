@@ -36,16 +36,16 @@ const NavBar = () => {
     return (
         <>
         
-        <Container>
+        <div>
         
             <Row>           
               <Col>
                 <ConnectWalletButton />
               </Col>
             </Row>       
-        </Container>
+        </div>
 
-        <Container>
+        <div>
           <Navbar expand="lg" variant="light" bg="light">    
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav" >
@@ -78,7 +78,7 @@ const NavBar = () => {
                 <NavDropdown.Item href="/outgoing-transfers" eventKey="4.2">Transfer Provenance</NavDropdown.Item>
                 <NavDropdown.Item href="/incoming-transfers" eventKey="4.1" className={quantity > 0 ? styles.incoming : null}>Incoming Transfers{quantity > 0 ? `(${quantity})` : null}</NavDropdown.Item>         
               </NavDropdown> */}
-
+              
               <NavDropdown title="Guides" id="nav-dropdown">
                 <NavDropdown.Item href="/guides/wallet" eventKey="4.1">Wallet Info</NavDropdown.Item>
                 <NavDropdown.Item href="/guides/tutorial" eventKey="4.2">Tutorial</NavDropdown.Item>
@@ -90,7 +90,7 @@ const NavBar = () => {
             </Nav>
             </Navbar.Collapse>
           </Navbar>
-        </Container>
+        </div>
 
       </>
 

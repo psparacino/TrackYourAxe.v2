@@ -252,15 +252,13 @@ const RegisterItem = () => {
           </Col>
         </Row>
 
-        <Row className={styles.buttonContainer}>
-          
+        <Row className={styles.buttonContainer}>      
             {formData.verificationphotohash.length > 0 && readyToMint  ?             
               <Col>
                 <Button style={{backgroundColor: 'red', fontSize: '23px'}} onClick={mintToken} disabled={null}> Mint Token {tokenToMint}</Button>            
               </Col>  
               :
               null }
-
             <Col>
               <Dropdown>
                 <Dropdown.Toggle style={{fontSize: '25px'}} variant="success" id="unused-token-dropdown">
@@ -305,7 +303,7 @@ const RegisterItem = () => {
         <div className={styles.NewProvenance}>
           <Container>
             <h1 className="pt-5 mx-auto">Create A Deed of Provenance</h1>
-
+            <h4>First time minting? Follow the <Link href="guides/tutorial">tutorial</Link></h4>
             <h2 style={{paddingTop: '40px'}}>STEP 1: MINT TOKEN (NFT)</h2>
             <Accordion className={styles.bodyText}>
               <Accordion.Item eventKey="0">
@@ -375,7 +373,14 @@ const RegisterItem = () => {
                     :
                   <h2 style={enableForm ? {} : {color: 'gray'}}> Mint a New Token or Select an Unused Token to Create a Provenance </h2>                 
                 }
-            
+                
+                {enableForm ?
+                  <h4 style={{paddingTop: '10px'}}> Step 1: Input Item Details </h4>  
+                    :
+                  null                 
+                }
+
+                
                 <Form.Group 
                   className="mb-3 mt-5 px-3"
                   required
@@ -501,7 +506,7 @@ const RegisterItem = () => {
                   </Form.Group> 
                 </Row>   
                 <div className="mt-3">
-                  <Button className={styles.submitButton} type="submit" disabled={submitting}>Create Provenance</Button>
+                  <Button className={styles.submitButton} type="submit" disabled={submitting}>Confirm Provenance Details</Button>
                 </div>      
             </fieldset>
  

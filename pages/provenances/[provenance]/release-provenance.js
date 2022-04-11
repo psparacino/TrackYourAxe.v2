@@ -48,11 +48,12 @@ const ReleaseProvenance = () => {
     const [ outgoingProvenanceProps, setOutgoingProvenanceProps ] = useState()
     const [ outgoingProvenanceOwnerInfo, setOutgoingProvenanceOwnerInfo ] = useState()
 
+    const [ escrowActive, setEscowActive] = useState();
 
     const router = useRouter();
     const { provenance } = router.query;
 
-
+    // this will change is prov objects is an object with address key instead of array
     useEffect(async() => {
         if (provenanceObjects && provenance) {
         loadProvenance()
@@ -121,7 +122,10 @@ const ReleaseProvenance = () => {
         .catch((error)=> {
                 console.log(error)       
                 })               
-            })        
+            })
+      .catch((error)=> {
+        console.log(error.message, "User denied approval txn")
+      })
           }
 
     async function revokeTransferApproval() {
@@ -167,8 +171,9 @@ const ReleaseProvenance = () => {
     
     if (loaded){
       return (          
-        <Container className={styles.transferContainer}>
+        <Container>
             <h1>Transfer Provenance {outgoingContract.address}</h1>
+            <p>include etherscan link maybe? also need it for approval txn and release txn</p>
             
             {pendingTransfer ? 
 
@@ -180,32 +185,42 @@ const ReleaseProvenance = () => {
                 
             :
                 
-                <div>
-                <h2>Step 1: Approve This Token For Transfer {tokenApproved ? <Image src={greenCheckMark.src} height="20px"/> : null}</h2>
-                {tokenApproved ? <Button variant="danger" onClick={revokeTransferApproval}>Made a mistake?  Revoke Token Approval</Button> : <Button onClick={approveTransfer}>Approve Token Transfer</Button>}
-                <h2>Step 2: Release this Provenance for Claim</h2>
-                <h4>This step ***cannot*** be undone. Please be sure and double-check everything.</h4>
-                {ethers.utils.isAddress(buyerAccount) ? <h3>You are transferring this provenance to this address: {buyerAccount}</h3> : null}
+                <div className={styles.transferContainer}>
+                  <Row>
+                    <h2>Step 1: Approve This Token For Transfer {tokenApproved ? <Image src={greenCheckMark.src} height="20px"/> : null}</h2>
+                  </Row>
+                  <Row>
+                    <Col>
+                      {tokenApproved ? <Button variant="danger" onClick={revokeTransferApproval}>Made a mistake?  Revoke Token Approval</Button> : <Button onClick={approveTransfer}>Approve Token Transfer</Button>}          
+                    </Col>                    
+                  </Row>
+                  <hr/>
+                  <Row>
+                    <h2 >Step 2: Release this Provenance for Claim</h2>
+                    <h4 style={{color:'red'}}>This step ***cannot*** be undone. Please be sure and double-check everything.</h4>
+                  </Row>
+                  
+                  {ethers.utils.isAddress(buyerAccount) ? <h3>You are transferring this provenance to this address: {buyerAccount}</h3> : null}
 
-                <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
-                <h6>0x14dC79964da2C08b23698B3D3cc7Ca32193d9955</h6>
-                {addressErrorMessage ?
-                <p>{addressErrorMessage}</p> : null}
+                  <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
+                  <h6>0x14dC79964da2C08b23698B3D3cc7Ca32193d9955</h6>
+                  {addressErrorMessage ?
+                  <p>{addressErrorMessage}</p> : null}
+                  <h2>Enter Eth Address to Transfer To:</h2>
+                  <input 
+                      name="userAddress" 
+                      type="text" 
+                      placeholder='enter address to transfer to here'
+                      onChange={handleChange}
+                      value={buyerAccount || ''}
+                      style={{width: '65%', height: '40px', fontSize: '20px', textAlign: 'center'}} />
+                                {successMessage ?
+                      <p>{successMessage}</p> : null}
 
-                <input 
-                    name="userAddress" 
-                    type="text" 
-                    placeholder='enter address to transfer to here'
-                    onChange={handleChange}
-                    value={buyerAccount || ''}
-                    style={{width: '65%', height: '40px', fontSize: '20px', textAlign: 'center'}} />
-                              {successMessage ?
-                    <p>{successMessage}</p> : null}
 
-
-                <div className='mt-2'>
-                    <Button style={{fontSize: '40px', borderRadius: '20px'}} onClick={release}>Release this Provenance</Button>  
-                </div>    
+                  <div className='mt-2'>
+                      <Button style={{fontSize: '40px', borderRadius: '20px'}} onClick={release} disabled={!tokenApproved}>Release this Provenance</Button>  
+                  </div>    
 
                 </div>
 

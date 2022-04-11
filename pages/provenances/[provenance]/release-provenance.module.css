@@ -1,5 +1,9 @@
 .transferContainer {
     text-align: center;
+    border: 2px solid lightgray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 25px;
 }
 
 .itemTable {
