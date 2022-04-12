@@ -59,7 +59,7 @@ const IncomingTransfers = () => {
 
               <div className={styles.container} key={provenanceAddress}>
                 <Container>
-                  <Link href={`/transfers/${provenanceAddress}`}>
+                  <Link href={`/incoming-transfers/${provenanceAddress}`}>
                   
                     <a>    
                         <Card key={provenanceAddress + 'card'} className="mx-auto mt-5 pt-2" style={{width: '75%'}}>
