@@ -18,21 +18,26 @@ const UserContext = createContext();
 
     export function UserContextProvider({ children }) {
  
-
+        const [web3Modal, setWeb3Modal]= useState();
         const [modalProvider, setModalProvider] = useState();
         const [provider, setProvider] = useState();
         const [mainAccount, setMainAccount] = useState();
-        const [ signer, setSigner ] = useState();
+        const [signer, setSigner] = useState();
+        const [connectionErrorMessage, setConnectionErrorMessage] = useState('')
 
-        const [signature, setSignature] = useState("");
+        
         const [error, setError] = useState("");
         const [chainId, setChainId] = useState();
         const [network, setNetwork] = useState();
+
+
+        //  potential unused
         const [message, setMessage] = useState("");
         const [signedMessage, setSignedMessage] = useState("");
         const [verified, setVerified] = useState();
+        const [signature, setSignature] = useState("");
 
-        const [ web3Modal, setWeb3Modal ]= useState();
+        
 
         //set web3Modal instance
 
@@ -70,23 +75,21 @@ const UserContext = createContext();
                     const provider = new ethers.providers.Web3Provider(modalProvider);
                     const mainAccount = await provider.listAccounts();
                     const network = await provider.getNetwork();    
-                    setModalProvider(modalProvider);
-            
+                    setModalProvider(modalProvider);            
                     setProvider(provider);
-                    console.log(provider, "rpvider")
-    
+
                     const txnSigner = provider.getSigner()
                     setSigner(txnSigner)
-                    console.log(txnSigner, "txnSigner")
-               
+
                     if (mainAccount) setMainAccount(mainAccount[0]);
-    
-                    
-                                    
                     setChainId(network.chainId);
 
+                    setConnectionErrorMessage('');
+
                 } catch (error) {
+                    setConnectionErrorMessage("User denied connection.  Please check your wallet provider and try again.")
                     console.error(error, "connect error");
+
                   }
 
           
@@ -219,7 +222,20 @@ const UserContext = createContext();
 
 
 
-        const state = { mainAccount, setMainAccount, chainId, modalProvider, provider, signer, connectWallet, disconnect, switchNetwork, dateString, ipfsGetterRootURL }
+        const state = { 
+            mainAccount, 
+            setMainAccount, 
+            chainId, 
+            modalProvider, 
+            provider, 
+            signer, 
+            connectWallet, 
+            connectionErrorMessage, 
+            setConnectionErrorMessage,
+            disconnect, 
+            switchNetwork, 
+            dateString, 
+            ipfsGetterRootURL }
 
         // console.log(signer, "signer in UserContext", state, "state in UC")
 

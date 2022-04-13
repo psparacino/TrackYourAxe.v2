@@ -13,8 +13,14 @@
 
 
 
-  .imageWrapper{
-    position: relative;
-    height: 300px;
-     
-  }
+.imageWrapper{
+  position: relative;
+  height: 300px;
+    
+}
+
+.CTAButton {
+  font-size: 250%;
+  border-radius: 25px;
+  margin-bottom: 20px;
+}

@@ -1,8 +1,12 @@
-import { useState , React } from 'react';
+import { useState , React, useEffect } from 'react';
 
 
 import { ethers } from 'ethers';
 import { useUserContext } from '../context/UserContext';
+
+// images
+import greenCheckMark from '../../public/images/green_checkmark.png';
+
 
 // styles
 import { Button, Image, Dropdown } from 'react-bootstrap';
@@ -11,10 +15,12 @@ import { truncateAddress } from '../hooks/utils';
 
 const ConnectWalletButton = () => {
 
-  const { mainAccount, setMainAccount, chainId, disconnect, connectWallet } = useUserContext();
-  
-  
+  const { mainAccount, setMainAccount, connectionErrorMessage, setConnectionErrorMessage, chainId, disconnect, connectWallet } = useUserContext();
 
+    useEffect(()=> {
+      if (mainAccount) setConnectionErrorMessage('');
+    },[mainAccount])
+    
     return (
         <div>
           {mainAccount ? 
@@ -22,8 +28,9 @@ const ConnectWalletButton = () => {
               <Dropdown.Toggle variant="primary" className={styles.SuccessButton} id="dropdown-basic" >
               {`Account: ${truncateAddress(mainAccount)}`}
               <Image 
+              fluid="true"
               className={styles.checkmarkImage}
-              src={'images/green_checkmark.png'} 
+              src={greenCheckMark.src} 
               alt="checkmark"/>
               </Dropdown.Toggle>
 
@@ -38,6 +45,7 @@ const ConnectWalletButton = () => {
               <p className={styles.buttonText}>Connect Wallet</p>
             </Button>
               }
+          {connectionErrorMessage ? <p style={{color: 'red', marginLeft: '200px'}}>{connectionErrorMessage}</p> : null}    
  
             
         </div>

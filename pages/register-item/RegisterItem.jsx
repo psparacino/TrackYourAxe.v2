@@ -9,7 +9,8 @@ import { useRouter } from 'next/router';
 //component imports
 import DragAndDrop from '../../src/components/DragAndDrop.js';
 import PhotoPreviews from '../../src/components/PhotoPreviews.js';
-import { Modal } from '../../src/components/Modal.js';
+
+// import { Modal } from '../../src/components/Modal.js';
 import { ConfirmationModal } from '../../src/components/ConfirmationModal.js';
 
 //context imports
@@ -23,10 +24,7 @@ import ProvenanceSuccess from '../provenance-success/ProvenanceSuccess.js';
 
 //styling imports
 import styles from "./RegisterItem.module.css"
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
-import { Container, Row, Col, Dropdown, Accordion } from 'react-bootstrap/'
+import { Form, InputGroup, Container, Button, Row, Col, Dropdown, Accordion } from 'react-bootstrap/'
 
 
 
@@ -54,17 +52,23 @@ const formReducer = (state, event) => {
 const RegisterItem = () => {
 
 
-    const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useReducer(formReducer, {instrumentphotohashes : [], verificationphotohash : []});
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [modalShow, setModalShow] = useState(false) //bootstrapmodal
-
+    // tokens
     const [tokenId, setTokenId] = useState([]);
     const [tokenToMint, setTokenToMint] = useState(0);
     const [unusedTokenID, setUnusedTokenID] = useState(0);
-    const [mintErrorMessage, setMintErrorMessage] = useState('');
+    // form
     const [readyToMint, setReadyToMint] = useState(false);
     const [enableForm, setEnableForm] = useState(false);
+    const [validated, setValidated] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    
+    const [itemPhotosUploaded, setItemPhotosUploaded ] = useState(false);
+
+    const [mintErrorMessage, setMintErrorMessage] = useState('');
+    const [mintSuccessMessage, setMintSuccessMessage] = useState('')
+
 
 
     //context
@@ -104,7 +108,6 @@ const RegisterItem = () => {
     },[TokenContract, tokens])
 
     useEffect(() => {
-
       if (readyToMint === false && formData.verificationphotohash.length > 0) {
         setEnableForm(true)
       } else {
@@ -115,19 +118,19 @@ const RegisterItem = () => {
     },[readyToMint, formData.verificationphotohash])
 
 
-    //from admin page should check if photos are verified and then re-release rest of
-    //push to contract then check con track
-
-    //form functions
-
-      //should check to make sure all formData fields are filled before allowing the user to submit
-
-    const handleSubmit = event => {
-      event.preventDefault();
-      setModalShow(true)
-      setSubmitting(formData, true);
-      
-  }
+    const handleSubmit = (event) => {
+      const form = event.currentTarget;
+      console.log(form.checkValidity(), "checking Validity")
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+        setValidated(true)
+      } else {    
+        event.preventDefault();
+        setModalShow(true)
+        setSubmitting(true);
+      }
+    };
 
 
       const handleChange = event => {
@@ -174,6 +177,7 @@ const RegisterItem = () => {
       console.log(readyToMint)
     } else {
     //mint token, need to include image URI
+    setMintSuccessMessage('')
     await TokenContract.safeMint(mainAccount, formData.verificationphotohash)
           .then(async(result) => {
             provider.waitForTransaction(result.hash)
@@ -182,11 +186,12 @@ const RegisterItem = () => {
                   TokenContract.once("TokenCreated" , async(owner, tokenId, success) => {
                     if (success) {
                         setTokens([...tokens, tokenId.toNumber()])
-                        console.log(success, "sucessshsh")
+                        setUnusedTokenID(tokenId.toNumber())
+                        setMintSuccessMessage('Token Successfully Minted!')
                     }
                     setFormData({
                       name: 'verificationphotohash',
-                      value: []
+                      value: formData.verificationphotohash
                     })
                     setReadyToMint(false)
                 })}
@@ -197,8 +202,6 @@ const RegisterItem = () => {
       }
     }
 
-
-
   //Page Components
 
   //check if token has been used in a Provenance
@@ -207,7 +210,6 @@ const RegisterItem = () => {
       let unusedTokens = [];
 
       for (let i = 0; i < provenanceObjects.length; i++) {
-
         provenanceTokens.push(provenanceObjects[i].ProvenanceProps.instrumentDeedToken.toNumber())
       }
       
@@ -215,8 +217,7 @@ const RegisterItem = () => {
         const result = provenanceTokens.includes(token);
         if (!result) {
           unusedTokens.push(token)
-        }
-        
+        }       
       })
       
       async function getTokenProps(unusedToken) {
@@ -238,78 +239,85 @@ const RegisterItem = () => {
               value: [],
             })
             setReadyToMint(false)
+            setItemPhotosUploaded(false)
       } 
-    
 
     return (
       <>
-        <Row>
-            {provenanceTokens.length > 0 ?
-            <>
-              <Row>
-                <Accordion className="w-50 mx-auto pb-4">
-                  <Accordion.Item eventKey="0">
-                    <Accordion.Header>Tokens already attached to Provenance</Accordion.Header>
-                    <Accordion.Body>
-                      {provenanceTokens}
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </Accordion>
-              </Row>
-            </>
-            :null
-            }
-          
-            <Col className={styles.buttonContainer}>
-              <div className={styles.Dropdown}>
-                <Button className={styles.button-6} onClick={resetTokenDetails}>Mint a New Token</Button>              
-              </div>
-            </Col>
-            { formData.verificationphotohash.length > 0 && readyToMint  ?
+        <Row className={styles.buttonContainer}>
+          <Col >
+            <div className={styles.Dropdown}>
+              <Button className={styles.resetButton} variant="danger" onClick={resetTokenDetails}>Reset Token Creation</Button>              
+            </div>
+          </Col>
+        </Row>
+
+        <Row className={styles.buttonContainer}>      
+            {formData.verificationphotohash.length > 0 && readyToMint  ?             
+              <Col>
+                <Button style={{backgroundColor: 'red', fontSize: '23px'}} onClick={mintToken} disabled={null}> Mint Token {tokenToMint}</Button>            
+              </Col>  
+              :
+              null }
             <Col>
-
-              <Button className={styles.dropbtn} style={{backgroundColor: 'red'}} onClick={mintToken} disabled={null}> Mint Token {tokenToMint}</Button>            
-            </Col>  :
-            null }
-
-            <Col className={styles.buttonContainer}>
               <Dropdown>
-                <Dropdown.Toggle variant="success" id="unused-token-dropdown">
-                  Unused Tokens
+                <Dropdown.Toggle style={{fontSize: '25px'}} variant="success" id="unused-token-dropdown">
+                  Tokens Awaiting Provenance
                 </Dropdown.Toggle>
+
                 {unusedTokens.length > 0 ?
                 <Dropdown.Menu>
                     {unusedTokens.map((unusedToken) => {
                       return <Dropdown.Item key={unusedToken} onClick={() => getTokenProps(unusedToken)}>{unusedToken}</Dropdown.Item>
-                    })}
-          
+                    })}   
                 </Dropdown.Menu> :
                 <Dropdown.Menu>
-                    <Dropdown.Item>"there are no unused tokens"</Dropdown.Item>
+                    <Dropdown.Item style={{fontSize: '30px'}}>there are no unused tokens</Dropdown.Item>
                 </Dropdown.Menu>
-
                 }
               </Dropdown>
-            </Col>
-
-
-
-            <p>{readyToMint ? null : mintErrorMessage}</p>   
+              {provenanceTokens.length > 0 ?
+                <Col>
+                  <Accordion className="mx-auto mt-3" style={{width: '364px'}}>
+                    <Accordion.Item eventKey="0">
+                      <Accordion.Header>Tokens already attached to Provenance</Accordion.Header>
+                      <Accordion.Body>
+                        {provenanceTokens}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </Accordion>
+                </Col>
+                :
+                null
+                }
+            </Col>      
         </Row>
       </>
 
     )
   }
 
-  
-  // console.log(formData, "formData")
 
 
     return(
         <div className={styles.NewProvenance}>
           <Container>
             <h1 className="pt-5 mx-auto">Create A Deed of Provenance</h1>
-
+            <h4>First time minting? Follow the <Link href="guides/tutorial">tutorial</Link></h4>
+            <h2 style={{paddingTop: '40px'}}>STEP 1: MINT TOKEN (NFT)</h2>
+            <Accordion className={styles.bodyText}>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header><strong>What happens in Step 1?</strong></Accordion.Header>
+                <Accordion.Body>
+                  Creation of a Provenance is a two part process. The NFT (also referred to as the token) acts as the proof of ownership for the Provenance itself.  
+                  The behind-the-scenes mechanism to ensure your ownership of this token is industry-standard and audited by third party auditing experts, ensuring 
+                  security.  
+                  <br />
+                  <br />
+                  This token also requires a verification photo prove your ownership of the item.  This photo needs to include your face and a picture of the item, preferably with serial number visible.    
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
             {/* Verfication Photo Upload */} 
             {readyToMint === false && formData.verificationphotohash.length > 0 ?
             
@@ -323,80 +331,120 @@ const RegisterItem = () => {
                 setMintErrorMessage={setMintErrorMessage} 
                 setReadyToMint={setReadyToMint} 
                 setFormData={setFormData} 
+                itemPhotosUploaded={itemPhotosUploaded}
+                setItemPhotosUploaded={setItemPhotosUploaded}
                 />
-            </Row>}
-            
+            </Row>}   
           {/* Verication Photo Preview */}
           { formData.verificationphotohash ?
-          <PhotoPreviews photoLimit={1} formData={formData} readyToMint={readyToMint} unusedTokenID={unusedTokenID} tokenToMint={tokenToMint} />
-          : null
-          }
+            <div style={{position: 'relative', textAlign: 'center'}}>
+              <PhotoPreviews photoLimit={1} formData={formData} readyToMint={readyToMint} unusedTokenID={unusedTokenID} tokenToMint={tokenToMint} />         
+              {mintSuccessMessage ? <h2 className={styles.mintSuccess}>Mint Success!</h2> : null}
+            </div>
+            : null}
 
           {/* Token Updates */}
           <Row className="pt-4">
             <UserTokens />
           </Row>
+
+          <h2 style={{paddingTop: '40px'}}>STEP 2: CREATE PROVENANCE WITH MINTED TOKEN</h2>
+
+          <Accordion className={styles.bodyText}>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header><strong>What happens in Step 2?</strong></Accordion.Header>
+                <Accordion.Body>
+                  In this step you enter all the identifying information about your item. All of this info will be stored on a blockchain in it's own unique smart contract forever and is publicy verifiable at any time (the link to view
+                  the contract on-chain is in the individual item page).
+                  <br />
+                  <br />
+                  You also have the option upload additional photos of the item (20 max).         
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
           
+            {/* Form */}
+            {/* Eventually Form and User Tokens need to be broken into separate components */}
 
-          {/*Minting Buttons*/}
-          {/*   
-          <button onClick={getMintedTokens}> getMintedTokens in console</button>
-          <button onClick={() => console.log(tokens, "tokenID in State")}> Check Token IDs in State</button>
-          */}
-            <Form onSubmit={handleSubmit} className="border mt-5 pt-4">
+            <Form noValidate validated={validated} onSubmit={handleSubmit} className="border mt-4 pt-1">
               <fieldset disabled={!enableForm}> 
-
                 {enableForm ?
                   <h1>Create Provenance with token # {unusedTokenID}</h1>
                     :
-                  <h2 style={enableForm ? {} : {color: 'gray'}}> Mint a New Token or Select an Unused Token to Create a Provenance </h2>
-                  
+                  <h2 style={enableForm ? {} : {color: 'gray'}}> Mint a New Token or Select an Unused Token to Create a Provenance </h2>                 
                 }
-            
-                <Form.Group className="mb-3 mt-5 px-3">
-                    <Form.Label>Input Type of Item</Form.Label>
-                      <Form.Select name="type" onChange={handleChange} value={formData.type || ''}>
+                
+                {enableForm ?
+                  <h4 style={{paddingTop: '10px'}}> Step 1: Input Item Details </h4>  
+                    :
+                  null                 
+                }
+
+                
+                <Form.Group 
+                  className="mb-3 mt-5 px-3"
+                  required
+                  type="select">
+                    <Form.Label >Input Type of Item</Form.Label>
+                      <Form.Select required isInvalid="" name="type" onChange={handleChange} value={formData.type || ''}>
                           <option value=""> Instrument/Accessory/Gear </option>
                           <option value="0">Instrument</option>
                           <option value="1">Accessory</option>
                           <option value="2">Gear</option>
                       </Form.Select> 
-                      
+                      <Form.Control.Feedback type="invalid">
+                        Please select an item type.
+                      </Form.Control.Feedback>         
                 </Form.Group>
 
-
+                
                 <Row>
-                  <Form.Group className="mb-3" as={Col}>
+                  <Form.Group className="mb-3" as={Col} controlId="validationCustom03">
                     <Form.Label >Item Serial Number</Form.Label>
-                      <InputGroup className="mb-3 px-3" onChange={handleChange} value={formData.serial || ''} >
-                      <Form.Control
+                      <InputGroup 
+                        hasValidation
+                        className="mb-3 px-3" 
+                        onChange={handleChange} 
+                        value={formData.serial || ''}     
+                        >
+                        <Form.Control
+                        required 
                         placeholder="Serial #"
                         aria-label="serial"
                         name="serial"
-                        type="text"                    
-                      />
-                    </InputGroup>          
+                        type="text"                            
+                        />  
+                    </InputGroup>  
+                     <Form.Control.Feedback type="invalid">
+                        Please enter a serial number for your item.
+                     </Form.Control.Feedback>     
                   </Form.Group>
 
-                  <Form.Group className="mb-3" as={Col}>
+                  <Form.Group className="mb-3" as={Col} controlId="validationCustom04">
                     <Form.Label >Year of Manufacture</Form.Label>
-                    {formData.year > 2023 ? <p>enter a real year you trump supporter</p> : null}
-                      <InputGroup className="mb-3 px-3" onChange={handleChange} value={formData.year || ''}>
-                      <Form.Control
+                      <InputGroup 
+                        hasValidation
+                        className="mb-3 px-3" 
+                        onChange={handleChange} 
+                        value={formData.year || ''}
+                        >
+                        <Form.Control
+                        required
                         placeholder="Year"
                         name="year"
                         aria-label="year"
-                        type="number"
-                        
-                      />
-                    </InputGroup>          
+                        type="number"/>      
+                      <Form.Control.Feedback type="invalid">
+                        Please enter a year of manufacture for your item.
+                      </Form.Control.Feedback>
+                    </InputGroup>   
                   </Form.Group>
                 </Row>
   
                 <Row>
                   <Form.Group className="px-4">
                     <Form.Label>Brand</Form.Label>
-                      <Form.Select name="brand" onChange={handleChange} value={formData.brand || ''}>
+                      <Form.Select required isInvalid="" name="brand" onChange={handleChange} value={formData.brand || ''}>
                           <option value=""> Select Brand/Make </option>
                           <option value="selmer">Selmer</option>
                           <option value="jupiter">Jupiter</option>
@@ -405,23 +453,20 @@ const RegisterItem = () => {
                           <option value="yanigisawa">Yanigisawa</option>
                           <option value="yamaha">Yamaha</option>
                       </Form.Select>
-                        <InputGroup className="mt-2 w-50 mx-auto" name="brand" placeholder="other" type="text" onChange={handleChange} value={formData.brand || ''}>
+                      <InputGroup className="mt-2 w-50 mx-auto" name="brand" placeholder="other" type="text" onChange={handleChange} value={formData.brand || ''}>
                         <Form.Control 
                         as="textarea" 
                         placeholder="other brand"
                         size="sm"
                         />
-                        </InputGroup>
+                      </InputGroup>
                   </Form.Group>
                 </Row>
 
-                  {/*need to account for mouthpiece or instruments brands here*/}      
-                  
-                  {/*frontend optimization, make selections here dependent on selections above*/}
                 <Row>
                   <Form.Group className="px-4">
                     <Form.Label>Select Model of Item</Form.Label>
-                      <Form.Select name="model" onChange={handleChange} value={formData.model || ''}>
+                      <Form.Select required isInvalid="" name="model" onChange={handleChange} value={formData.model || ''}>
                           <option value=""> Select Model </option>
                           <option value="ottolink">Otto Link</option>
                           <option value="morgan">Morgan</option>
@@ -438,14 +483,20 @@ const RegisterItem = () => {
                   </Form.Group>
                 </Row>
 
-                {/* Item Photos Upload */}
-
                 <Row>
                   <Form.Group className="mb-3 mt-5">  
                     
                     {enableForm ?
-                      <Row>                       
-                        <DragAndDrop photoLimit={20} formDataImport={formData} setReadyToMint={setReadyToMint} setFormData={setFormData} />
+                      <Row>  
+                        <h2>Upload Additional Images</h2>                     
+                        <DragAndDrop 
+                          photoLimit={20} 
+                          formDataImport={formData} 
+                          setReadyToMint={setReadyToMint} 
+                          setFormData={setFormData}
+                          itemPhotosUploaded={itemPhotosUploaded}
+                          setItemPhotosUploaded={setItemPhotosUploaded}                       
+                           />                   
                       </Row>  : null }
 
                     { formData.instrumentphotohashes.length >= 1 ?
@@ -453,50 +504,28 @@ const RegisterItem = () => {
                     : null
                     }
                   </Form.Group> 
-                </Row>         
+                </Row>   
+                <div className="mt-3">
+                  <Button className={styles.submitButton} type="submit" disabled={submitting}>Confirm Provenance Details</Button>
+                </div>      
             </fieldset>
-
-            <div className="mt-3">
-              <Button type="submit" onClick={handleSubmit} disabled={submitting}>Create Provenance</Button>
-            </div>  
-
-
-            
-
-
-          </Form>
+ 
+          </Form> 
         </Container>
 
-             {/*
-
-          <button onClick={() => console.log(formData, "formData")}>FormData</button>
-                 
-          <button onClick={getMothershipOwner}>Get Mothership Owner</button>
-          <button onClick={() => console.log(MothershipContract, "MothershipContract")}>Mothership Contract</button>
-          <button onClick={async() => console.log(await MothershipContract.getOwnersInstruments(), "Instruments to Owners")}>Instruments to Owners</button>
           
-          <button onClick={() => setModalShow(true)}>activate modal for UI</button>
-          */}
-
-          {showConfirmationModal ? <Modal 
-            setShowConfirmationModal={setShowConfirmationModal} 
-            formData={formData} 
-            createProvenance={createProvenance}
-            tokenId={tokenId}
-            unusedTokenID={unusedTokenID}
-            setSubmitting={setSubmitting}
-            ipfsGetterRootURL={ipfsGetterRootURL}  
-            /> : null} 
-
           {/*bootstrap modal*/}
-
-          <ConfirmationModal style={{zindex: '1'}} show={modalShow} onHide={() => setModalShow(false)}
+          <ConfirmationModal style={{zindex: '1'}} 
+            show={modalShow} 
+            onHide={() => {
+              setModalShow(false)
+              setSubmitting(false)
+              }}
             formdata={formData} 
             createprovenance={createProvenance}
             tokenid={tokenId}
             unusedtokenid={unusedTokenID}
-            setsubmitting={setSubmitting}
-              
+            setSubmitting={setSubmitting}           
             />    
             
           
@@ -508,19 +537,4 @@ const RegisterItem = () => {
 export default RegisterItem;
 
 
-
-  //Item Photo Save          
-//<Form.Group className="mb-3 mt-5">  
-//{/*Item Photo Upload*/}
-//{enableForm ?
-//<Row>                       
-//  <DragAndDrop photoLimit={20} formDataImport={formData} setReadyToMint={setReadyToMint} setFormData={setFormData} />
-//</Row>  :
-//null}
-
-//{ formData.instrumentphotohashes.length >= 1 ?
-//<PhotoPreviews photoLimit={20} formData={formData} ipfsGetterRootURL={ipfsGetterRootURL} />
-//: null
-//}
-//</Form.Group> 
 

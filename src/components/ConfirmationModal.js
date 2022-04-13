@@ -1,16 +1,20 @@
-import { Col, Modal, Image, Button, Container, Row, Table, Carousel} from 'react-bootstrap';
+import { Col, Modal, Image, Button, Container, Row, Table, Carousel, Spinner} from 'react-bootstrap';
 
 //import './ConfirmationModal.css';
 
 import waitingkitten from '../../public/images/waitingkitten.jpeg';
 
+import { useUserContext } from '../context/UserContext';
 
+import styles from './ConfirmationModal.module.css';
 
 export function ConfirmationModal(props) {
 
-    const {createpracticeprovenance, createprovenance, setsubmitting, formdata, unusedtokenid, ...restOfProps} = props;
+    const {createpracticeprovenance, createprovenance, setSubmitting, formdata, unusedtokenid, ...restOfProps} = props;
 
-    const verificationPhotoURL = "https://gateway.pinata.cloud/ipfs/" + props.formdata.verificationphotohash;
+    const { ipfsGetterRootURL } = useUserContext();
+
+    const verificationPhotoURL = ipfsGetterRootURL + props.formdata.verificationphotohash;
 
     const DataTable = () => {
         let item = '';
@@ -57,46 +61,48 @@ export function ConfirmationModal(props) {
         }
 
     const ItemImageCarousel = () => {
-        return (
-            <>
-                    <Carousel >
-                    <Carousel.Item>
-                        <img
-                        className="CarouselImage"
-                        src={verificationPhotoURL}
-                        alt="First slide"
-                        />
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <img
-                        className="CarouselImage"
-                        src={waitingkitten}
-                        alt="Second slide"
-                        />
 
-                    </Carousel.Item>
-                    <Carousel.Item>
-                        <Image
-                        className="CarouselImage"
-                        src={'https://pbs.twimg.com/profile_images/949787136030539782/LnRrYf6e_400x400.jpg'}
-                        alt="Third slide"
-                        />
-                    </Carousel.Item>
-                </Carousel>
-            </>
-           
-        )
-    }
+            return (
+              <div > 
+      
+                {props.formdata.instrumentphotohashes && (props.formdata.instrumentphotohashes).length > 0 ?      
+                    <Carousel variant="dark">
+                      {(formdata.instrumentphotohashes).map((photo, index)=> {
+                        return (       
+                            <Carousel.Item key={index}>
+                              <img 
+                                key={photo} 
+                                src={ipfsGetterRootURL + photo} 
+                                alt="item photos not yet loaded"
+                                className={styles.carouselItem}
+                                />  
+                                
+                            </Carousel.Item>
+                            )
+                      })} 
+                    </Carousel>
+                    
+                :
+                  <div>
+                    <h2>Item Photos Loading</h2>
+                    <Spinner animation="border" className='mx-auto' />
+                  </div>
+                }
+                
+                </div>
+            )
+          }
 
 
 
      
     return (
       <Modal
-        {...restOfProps}   
-        aria-labelledby="contained-modal-title-vcenter"
+        {...restOfProps}
+        backdrop="false"  
         size='lg'
         centered
+        className={styles.modalBackdrop}
         >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter" className='mx-auto' style={{paddingLeft: '100px'}}>
@@ -122,8 +128,9 @@ export function ConfirmationModal(props) {
             
           </Container>
         </Modal.Body>   
-        <Button onClick={createprovenance}>Create Provenance</Button>
-        <Button className="ProvenanceButton" onClick={createpracticeprovenance}>Create Practice Provenance</Button>
+        <Button 
+        className={styles.createProvenanceButton}
+        onClick={createprovenance}>Create Provenance</Button>
       </Modal>
     );
   }

@@ -16,15 +16,49 @@
 
 .container {
     text-align: center;
-}
-
-.containerBorder  {
-    border: 3px solid red; 
-    border-radius: 25px;
+    width: 75%;
+    margin: 0 auto;
+    margin-top: 10px;
     padding-top: 10px;
-    padding-bottom: 10px;
 
 }
+
+.ownedContainer {
+    text-align: center;
+    width: 75%;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+.ownedContainer:hover {
+    background-color: azure;
+}
+
+.pendingContainer {
+    text-align: center;
+    border: 6px solid red; 
+    border-radius: 25px;
+    width: 75%;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.linkPlacebo {
+    color: #0d6efd;
+    text-decoration: underline;
+}
+
+.itemPhotoCarousel {
+    flex: 1;
+    object-fit: cover;
+    height: 300px;
+
+}
+
+
+
+
 
 .cardContainer {
     display: flex;
