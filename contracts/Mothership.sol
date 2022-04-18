@@ -8,22 +8,24 @@ import "./InstrumentDeedToken.sol";
 
 
 
+// With Ownable it's currently over byte limit. Can get around with optimization or not using Ownable
+contract Mothership {
 
-contract Mothership is Ownable {
-    //current owners only. Provenance History is on on Provenance. Not sure array is best here.  Can back full date up on trad. database if needed
+    //maybe don't need Ownable if it bloats code too much?  pushes it over limit without optimizer
+
+    //Current Owner of Provenances.
     mapping(address => Provenance[]) public ownersToAxes;
 
     mapping(address => bool) public provenanceVerify;
 
     mapping(address => address[]) public pendingTransfers;
 
-    //to loop and get all provenances on frontend
+    //To enable a loop that will return all provenances on frontend
     address[] public ownerArray;
 
 
     InstrumentDeedToken public instrumentDeedTokenContract;
 
-    
 
     //add modifier that confirms tokenOwner is caller
     //constructor can also be removed and tokenAddress hardcoded
@@ -196,13 +198,13 @@ contract Mothership is Ownable {
 
     //FOR OWNER ONLY functions
 
-    function setExistingProvenance() public onlyOwner {
+    // function setExistingProvenance() public onlyOwner {
 
-    }
+    // }
 
-    function removeDuplicateProvenance() public onlyOwner {
+    // function removeDuplicateProvenance() public onlyOwner {
 
-    }
+    // }
 
 }
 

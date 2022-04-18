@@ -31,12 +31,6 @@ const UserContext = createContext();
         const [network, setNetwork] = useState();
 
 
-        //  potential unused
-        const [message, setMessage] = useState("");
-        const [signedMessage, setSignedMessage] = useState("");
-        const [verified, setVerified] = useState();
-        const [signature, setSignature] = useState("");
-
         
 
         //set web3Modal instance
@@ -96,6 +90,7 @@ const UserContext = createContext();
         };
 
 
+
         const handleNetwork = (e) => {
         const id = e.target.value;
         setNetwork(Number(id));
@@ -129,37 +124,6 @@ const UserContext = createContext();
 
         //maybe dont need these
 
-        /*
-
-        const signMessage = async () => {
-        if (!provider) return;
-        try {
-            const signature = await provider.modalProvider.request({
-            method: "personal_sign",
-            params: [message, account]
-            });
-            setSignedMessage(message);
-            setSignature(signature);
-        } catch (error) {
-            setError(error);
-        }
-        };
-
-        const verifyMessage = async () => {
-        if (!provider) return;
-        try {
-            const verify = await provider.modalProvider.request({
-            method: "personal_ecRecover",
-            params: [signedMessage, signature]
-            });
-            setVerified(verify === account.toLowerCase());
-        } catch (error) {
-            setError(error);
-        }
-        };
-
-        */
-
         // connect/disconnect
 
         const refreshState = () => {
@@ -167,9 +131,6 @@ const UserContext = createContext();
         setSigner();
         setChainId();
         setNetwork("");
-        setMessage("");
-        setSignature("");
-        setVerified(undefined);
         };
 
 
@@ -181,7 +142,7 @@ const UserContext = createContext();
         };
 
 
-        //event listeners, for chain switch etc
+        //EVENT LISTENERS 
 
         useEffect(() => {
         if (modalProvider?.on) {

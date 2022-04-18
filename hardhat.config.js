@@ -13,7 +13,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 module.exports = {
   gasReporter: {
-    enabled: true,
+    enabled: false,
     currency: 'USD'
   },
   paths: {
@@ -38,16 +38,13 @@ module.exports = {
   }, 
   solidity: {
     version: '0.8.10'
-    /*
-    re-introduce optimizer once code has been tightened up
     ,
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1000,
+        runs: 200,
       }
     }
-    */
   } 
 };
   

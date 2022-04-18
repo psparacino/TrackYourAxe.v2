@@ -34,22 +34,29 @@ contract Provenance is Ownable {
         string date;
     }
 
+    struct Offer {
+        address buyer;
+        uint offer;
+    }
+
+    Types public typeOfProvenance;
+    Instrument public instrument;
+
     mapping(uint16 => Owner) public ownerProvenance;
 
     enum Types{Instrument, Gear, Accessory}
 
-    Types public typeOfProvenance;
-
-    Instrument public instrument;
-
-    //updatable state, will change on ownership
-    Owner public instrumentOwner;
-
-    address public pendingOwner;
-
     uint8 public ownerCount;
 
-    //hardcode this address for less gas
+    //For Seller-Initated Transfer
+    address public pendingOwner;
+
+    //For Buyer-Initated Transfer
+
+    Offer public currentOffer;
+
+
+    //Contract Instances. Can hardcode Addresses for less gas(?)
     InstrumentDeedToken public instrumentDeedTokenContract;
     Mothership public mothershipContract;
 
@@ -98,12 +105,10 @@ contract Provenance is Ownable {
 
     }
 
-    //getters
 
-    function getItemPics() public view returns(string[] memory) {
-        return instrument.photoHashes;
-    }
-    //called on first step of transfer to new owner
+    // ************************
+    // Seller Initated Transfer
+    // ************************
     function setPendingOwner(address buyer) public onlyAuthorized {
         pendingOwner = buyer;
 
@@ -129,18 +134,91 @@ contract Provenance is Ownable {
         instrumentDeedTokenContract.safeTransferFrom(_seller, msg.sender, instrument.instrumentDeedToken);
     }
 
-    //might be able to do by looping over mapping and ownercount in the front end
+    // ************************
+    // Buyer Initated Transfer
+    // ************************
+
+    function makeOffer() public payable {
+        require(ownerProvenance[ownerCount].ownerAddress != msg.sender, "You cannot purchase your own Provenance");
+        require(msg.value > 0, "Offer must be above 0 wei");
+        require(msg.value > currentOffer.offer, "Offer must greater than current standing offer");
+ 
+        currentOffer.buyer = msg.sender;
+        currentOffer.offer = msg.value;
+
+
+    }
+
+
+    function cancelOffer() public {
+        require(msg.sender == currentOffer.buyer || msg.sender == ownerProvenance[ownerCount].ownerAddress);
+        uint declinedOffer = currentOffer.offer;
+        address declinedBuyer = currentOffer.buyer;
+
+        currentOffer.buyer = address(0);
+        currentOffer.offer = 0;
+        (bool sent, ) = payable(declinedBuyer).call{value: declinedOffer}("");
+        require(sent, "return transaction failed");
+        
+    }
+    function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
+        if (_i == 0) {
+            return "0";
+        }
+        uint j = _i;
+        uint len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(len);
+        uint k = len;
+        while (_i != 0) {
+            k = k-1;
+            uint8 temp = (48 + uint8(_i - _i / 10 * 10));
+            bytes1 b1 = bytes1(temp);
+            bstr[k] = b1;
+            _i /= 10;
+        }
+        return string(bstr);
+    }
+
+    function acceptOffer() public payable {
+       require(msg.sender == ownerProvenance[ownerCount].ownerAddress);
+
+        // mothership updates
+        mothershipContract.updateOnProvenanceSale(msg.sender, currentOffer.buyer, this, uint2str(block.timestamp));
+
+        //set new owner
+        ++ownerCount;
+        ownerProvenance[ownerCount] = Owner(ownerCount, currentOffer.buyer, "still required", uint2str(block.timestamp));
+
+        //transfer token
+        instrumentDeedTokenContract.safeTransferFrom(msg.sender, currentOffer.buyer, instrument.instrumentDeedToken);
+
+        currentOffer.buyer = address(0);
+        currentOffer.offer = 0;
+    }
+
+    // ********
+    // Getters
+    // ********
     function getOwnershipHistory() public view returns(Owner[] memory) {
         
         Owner[] memory ownershipHistory = new Owner[](ownerCount+1);
 
         for (uint16 i = 1; i <= ownerCount; i++) {
-            console.log("hitting");
+
             ownershipHistory[i] = ownerProvenance[i];
             console.log(i);
         }
         return ownershipHistory;
          
+    }
+
+
+    function getItemPics() public view returns(string[] memory) {
+        return instrument.photoHashes;
     }
 
     //publish new Instrument photo to Ipfs. Needs to replace old
