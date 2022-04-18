@@ -137,13 +137,18 @@ contract Mothership {
 
     }
 
-    // GETTERS
+
+
 
     function getPendingTransfersOfBuyer(address buyer) public view returns(address[] memory){
         return pendingTransfers[buyer];
     }
 
-    // INTERNAL FUNCTIONS FOR updateOnProvenanceSale 
+
+    // ************************
+    // INTERNAL FUNCTIONS FOR updateOnProvenanceSale
+    // ************************
+
 
     function _findProvenanceIndex(address seller, Provenance provenanceForIndex) view internal returns(uint) {
         uint index;
@@ -152,7 +157,6 @@ contract Mothership {
                 index = i;
             }
         }
-
         return index;
     }
 
@@ -177,7 +181,9 @@ contract Mothership {
     }
 
     
-    //owner info
+    // ********
+    // GETTERS
+    // ********
 
     function getOwners() external view returns(address[] memory){
        return ownerArray;
@@ -186,6 +192,16 @@ contract Mothership {
     //works
     function getOwnersInstruments() public view returns(Provenance[] memory) {
         return ownersToAxes[msg.sender];
+    }
+
+    function getAllProvenances() public view returns(Provenance[] memory) {
+        Provenance[] memory mainArray;
+
+        // for (uint i = 0; i < ownerArray.length; i++) {
+        //     if (ownersToAxes[ownerArray][i] == provenanceForIndex) {
+        //         index = i;
+        //     }
+        // }
     }
 
 
