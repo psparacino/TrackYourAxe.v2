@@ -114,9 +114,61 @@ describe("Mothership Tests", function () {
         expect((await ProvenanceContractTestSecondSigner.ownerProvenance(2)).ownerAddress).to.equal(addr2.address);
         expect((await ProvenanceContractTestSecondSigner.ownerProvenance(1)).ownerAddress).to.equal(addr1.address);
     
-
         
     });
+
+    it("get all Provenances from All Owners", async function() { 
+        const type = [0, 1, 3]
+        const brand = ["Jupiter", "Yamaha", "JL Woodwinds", "Yanigisawa", "Antigua Winds", "Pearl", "Selmer", "Buffet"]
+        const model = ["Mark VI", "SBA", "R13", "Bronze Series", "Cigar Cutter", "Balanced Action", "King 20", "Silver Fox"]
+        const images = ["QmNvzkSMNCF9bRry5CHiTCnz7s8Fc6ooNVQyuFc4EPDaQV", "QmPYABsoen4yRJWp4ta7yrhxgsqNEQLK15c68BL6BQrQAW", "QmQ4wfPDcxJeLcypv6JQt6757Nmzi95k5wZbjjFYzjsUW2", "QmdBEnkC1qXc1pZsGkRTPkwhqohGyiTd7tZKvD1v8VQ65Y" ]
+        function serial() {
+            return Math.floor(Math.random() * 1000)
+        }  
+        function tokenID() {
+            return Math.floor(Math.random() * 100)
+        } 
+        function random_element(items)
+            {  return items[Math.floor(Math.random()*items.length)];
+           }  
+        function randomDate(start, end) {
+            return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+            } 
+        await TokenContract.connect(addr1).batchMint(100, random_element(images));
+        const create10Provenances = () => { 
+                let type1 = random_element(type);
+                let serial1 = serial();
+                let brand1 = random_element(brand)
+                let model1 = random_element(model);
+                let year1 = (randomDate(new Date(1897, 0, 1), new Date())).getFullYear();
+                let tokenID1 = tokenID();
+                let date1 = (randomDate(new Date(1897, 0, 1), new Date()));
+                let vImages1 = random_element(images)
+                MothershipContract.createBatchProvenances(
+                    type1, 
+                    serial1, 
+                    brand1, 
+                    model1, 
+                    year1, 
+                    tokenID1, 
+                    date1,
+                    vImages1, 
+                    images)
+            
+            }
+
+        for (var i = 1; i < 8; i++) create10Provenances();
+
+        let result = await MothershipContract.getAllProvenances();
+
+        //console.log(result, "getAll Result")
+
+        
+    
+
+    });
+
+    
 
     // it("claimOwnership of from one owner to another", async function() { 
 

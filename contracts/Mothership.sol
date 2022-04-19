@@ -105,6 +105,70 @@ contract Mothership {
         
     }
 
+
+    function createPracticeProvenance(
+        Provenance.Types _enumType,
+        string memory _serial, 
+        string memory _brand, 
+        string memory _model, 
+        uint16 _year, 
+        uint _instrumentDeedToken,
+        string memory _date,
+        string memory _verificationPhotoHash,
+        string[] memory _instrumentPhotoHashes
+    ) public returns(address) {
+        //might need to check for dupes on frontend
+        Provenance provenance = new Provenance(
+            _enumType, 
+            _serial, 
+            _brand, 
+            _model, 
+            _year, 
+            _instrumentDeedToken, 
+            _date,
+            _verificationPhotoHash, 
+            _instrumentPhotoHashes,
+            address(this),
+            address(instrumentDeedTokenContract));
+
+        //ownerUpdates
+        ownersToAxes[msg.sender].push(provenance);
+        ownerArray.push(msg.sender);
+        provenanceVerify[address(provenance)] = true;
+
+        emit ProvenanceCreated(
+            _enumType,
+            address(provenance),
+            _serial, 
+            _brand, 
+            _model, 
+            _year, 
+            _instrumentDeedToken, 
+            _date,
+            _verificationPhotoHash, 
+            _instrumentPhotoHashes);
+
+        return(address(provenance));
+            
+        
+    }
+
+    function createBatchProvenances(
+        Provenance.Types _enumType,
+        string memory _serial, 
+        string memory _brand, 
+        string memory _model, 
+        uint16 _year, 
+        uint _instrumentDeedToken,
+        string memory _date,
+        string memory _verificationPhotoHash,
+        string[] memory _instrumentPhotoHashes
+    ) public {
+        for(uint i = 0; i<= 10; i++){
+            createPracticeProvenance(_enumType, _serial, _brand, _model, _year, _instrumentDeedToken, _date, _verificationPhotoHash, _instrumentPhotoHashes);
+        }
+    }
+
     function setPendingTransfer(address buyer, address provenanceAddress) external {
         pendingTransfers[buyer].push(provenanceAddress);
     }
@@ -194,16 +258,19 @@ contract Mothership {
         return ownersToAxes[msg.sender];
     }
 
+    // This is expensive and need a better way
     function getAllProvenances() public view returns(Provenance[] memory) {
         Provenance[] memory mainArray;
+        for (uint i = 0; i <= ownerArray.length; i++) {
+            Provenance[] memory tempArray;
+            console.log(i);
+            // for (uint j = 0; j < (ownersToAxes[ownerArray[i]]).length; j++) {
+            //     tempArray[i] = ownersToAxes[ownerArray[i]][i];
+            // }
+        }
+        return mainArray;
 
-        // for (uint i = 0; i < ownerArray.length; i++) {
-        //     if (ownersToAxes[ownerArray][i] == provenanceForIndex) {
-        //         index = i;
-        //     }
-        // }
     }
-
 
     /*
      function disable(Provenance provenance) external {

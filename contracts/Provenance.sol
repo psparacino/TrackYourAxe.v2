@@ -146,7 +146,6 @@ contract Provenance is Ownable {
         currentOffer.buyer = msg.sender;
         currentOffer.offer = msg.value;
 
-
     }
 
 

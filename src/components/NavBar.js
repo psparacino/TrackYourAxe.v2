@@ -70,7 +70,6 @@ const NavBar = () => {
               <Nav.Link href="/about">About</Nav.Link>
               <Nav.Link href="/register-item">Register Item</Nav.Link>
               <Nav.Link href="/provenances">{truncateAddress(mainAccount)} Items</Nav.Link>
-
               <Nav.Link href="/incoming-transfers" 
               style={quantity > 0 ? {color: 'red'} : null}>Transfers{quantity > 0 ? `(${quantity})` : null}</Nav.Link>
 
@@ -86,6 +85,7 @@ const NavBar = () => {
                 <NavDropdown.Divider />
                 <NavDropdown.Item eventKey="4.4">Separated link</NavDropdown.Item>
               </NavDropdown>
+              <Nav.Link href="/search">Search</Nav.Link>
 
             </Nav>
             </Navbar.Collapse>
