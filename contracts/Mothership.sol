@@ -23,6 +23,8 @@ contract Mothership {
     //To enable a loop that will return all provenances on frontend
     address[] public ownerArray;
 
+    Provenance[] public allProvenanceArray;
+
 
     InstrumentDeedToken public instrumentDeedTokenContract;
 
@@ -83,9 +85,10 @@ contract Mothership {
             address(this),
             address(instrumentDeedTokenContract));
 
-        //ownerUpdates
+        if ((ownersToAxes[msg.sender]).length == 0) ownerArray.push(msg.sender);
         ownersToAxes[msg.sender].push(provenance);
-        ownerArray.push(msg.sender);
+        allProvenanceArray.push(provenance);
+        // ownerArray.push(msg.sender);
         provenanceVerify[address(provenance)] = true;
 
         emit ProvenanceCreated(
@@ -106,6 +109,7 @@ contract Mothership {
     }
 
 
+    // FUNCTIONS FOR TESTING ONLY!!!!!!!!!!!!!
     function createPracticeProvenance(
         Provenance.Types _enumType,
         string memory _serial, 
@@ -131,9 +135,12 @@ contract Mothership {
             address(this),
             address(instrumentDeedTokenContract));
 
+
         //ownerUpdates
+        if ((ownersToAxes[msg.sender]).length == 0) ownerArray.push(msg.sender);
         ownersToAxes[msg.sender].push(provenance);
-        ownerArray.push(msg.sender);
+        allProvenanceArray.push(provenance);
+        // ownerArray.push(msg.sender);
         provenanceVerify[address(provenance)] = true;
 
         emit ProvenanceCreated(
@@ -153,6 +160,7 @@ contract Mothership {
         
     }
 
+
     function createBatchProvenances(
         Provenance.Types _enumType,
         string memory _serial, 
@@ -168,14 +176,13 @@ contract Mothership {
             createPracticeProvenance(_enumType, _serial, _brand, _model, _year, _instrumentDeedToken, _date, _verificationPhotoHash, _instrumentPhotoHashes);
         }
     }
+    // *************
 
     function setPendingTransfer(address buyer, address provenanceAddress) external {
         pendingTransfers[buyer].push(provenanceAddress);
     }
 
     // these functions should be combined with the other ones below. the differing arrays can go in the arguments
-
-
     function _findArrayIndex(address[] memory array, address provenance) pure internal returns(uint) {
         uint index;
         for (uint i = 0; i < array.length; i++) {
@@ -249,28 +256,28 @@ contract Mothership {
     // GETTERS
     // ********
 
+        //dupes, figure which is needed and get rid of other
     function getOwners() external view returns(address[] memory){
        return ownerArray;
      }  
+
+    function getOwnersToAxesOwner(address owner) public view returns(Provenance[] memory) {
+        return ownersToAxes[owner];
+    }
 
     //works
     function getOwnersInstruments() public view returns(Provenance[] memory) {
         return ownersToAxes[msg.sender];
     }
 
-    // This is expensive and need a better way
-    function getAllProvenances() public view returns(Provenance[] memory) {
-        Provenance[] memory mainArray;
-        for (uint i = 0; i <= ownerArray.length; i++) {
-            Provenance[] memory tempArray;
-            console.log(i);
-            // for (uint j = 0; j < (ownersToAxes[ownerArray[i]]).length; j++) {
-            //     tempArray[i] = ownersToAxes[ownerArray[i]][i];
-            // }
-        }
-        return mainArray;
-
+    //can also take this out and iterate through ownersToAxes with ownerArray on frontend as well
+    function getAllProvenances() external view returns(Provenance[] memory) {
+        return allProvenanceArray;
     }
+
+
+
+
 
     /*
      function disable(Provenance provenance) external {

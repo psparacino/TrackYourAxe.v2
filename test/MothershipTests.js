@@ -135,6 +135,7 @@ describe("Mothership Tests", function () {
             return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
             } 
         await TokenContract.connect(addr1).batchMint(100, random_element(images));
+        
         const create10Provenances = () => { 
                 let type1 = random_element(type);
                 let serial1 = serial();
@@ -144,7 +145,7 @@ describe("Mothership Tests", function () {
                 let tokenID1 = tokenID();
                 let date1 = (randomDate(new Date(1897, 0, 1), new Date()));
                 let vImages1 = random_element(images)
-                MothershipContract.createBatchProvenances(
+                MothershipContract.connect(addr1).createBatchProvenances(
                     type1, 
                     serial1, 
                     brand1, 
@@ -159,7 +160,19 @@ describe("Mothership Tests", function () {
 
         for (var i = 1; i < 8; i++) create10Provenances();
 
-        let result = await MothershipContract.getAllProvenances();
+        let ownerArray = await MothershipContract.getOwners();
+        
+        expect (ownerArray[0]).to.equal(addr1.address)
+
+        console.log(addr1.address, "addr1.address After")
+
+        let ownersToAxes = await MothershipContract.getOwnersToAxesOwner(addr1.address);
+        
+        let allAxes = await MothershipContract.getAllProvenances();
+
+        console.log(allAxes, "all Axes")
+
+        // let result = await MothershipContract.getAllProvenances();
 
         //console.log(result, "getAll Result")
 
