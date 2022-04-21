@@ -51,6 +51,7 @@ const ItemTable = ({ provenanceObjects, search }) => {
                 
                       <Card 
                         key={provenanceAddress + 'card'} 
+                        id={ownerAddress == mainAccount ? styles.ownedBorder : null}
                         className={pendingBool ? styles.ownedContainer : styles.pendingContainer}>
                         
                         <h2 className={pendingBool ? styles.linkPlacebo : null }>{brand} {model}</h2>

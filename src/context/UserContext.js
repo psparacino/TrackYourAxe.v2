@@ -54,7 +54,6 @@ const UserContext = createContext();
         //connect page on reload
         useEffect(async() => {
             if (web3Modal && web3Modal.cachedProvider) {
-                console.log(web3Modal.cachedProvider)
                 connectWallet();
                 }
 
@@ -122,7 +121,6 @@ const UserContext = createContext();
         }
         };
 
-        //maybe dont need these
 
         // connect/disconnect
 
@@ -176,8 +174,9 @@ const UserContext = createContext();
         }
         }, [modalProvider]); 
 
-        const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
-        
+
+
+        const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";   
         const date = new Date();  
         const dateString = date.toString();
 

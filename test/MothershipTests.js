@@ -164,13 +164,11 @@ describe("Mothership Tests", function () {
         
         expect (ownerArray[0]).to.equal(addr1.address)
 
-        console.log(addr1.address, "addr1.address After")
 
         let ownersToAxes = await MothershipContract.getOwnersToAxesOwner(addr1.address);
         
         let allAxes = await MothershipContract.getAllProvenances();
 
-        console.log(allAxes, "all Axes")
 
         // let result = await MothershipContract.getAllProvenances();
 

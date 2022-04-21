@@ -184,13 +184,15 @@ contract Provenance is Ownable {
 
     function acceptOffer() public payable {
        require(msg.sender == ownerProvenance[ownerCount].ownerAddress);
+       require(currentOffer.offer > 0, "Offer is currently 0");
 
         // mothership updates
         mothershipContract.updateOnProvenanceSale(msg.sender, currentOffer.buyer, this, uint2str(block.timestamp));
 
         //set new owner
         ++ownerCount;
-        ownerProvenance[ownerCount] = Owner(ownerCount, currentOffer.buyer, "still required", uint2str(block.timestamp));
+        ownerProvenance[ownerCount] = Owner(ownerCount, currentOffer.buyer, "QmPhNm6hikNWTSX6AgHuf1BkbZbsXmKKEkDQRjRcdw7KZk", uint2str(block.timestamp));
+
 
         //transfer token
         instrumentDeedTokenContract.safeTransferFrom(msg.sender, currentOffer.buyer, instrument.instrumentDeedToken);

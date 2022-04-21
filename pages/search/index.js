@@ -8,7 +8,9 @@ import Provenance from '../../artifacts/contracts/Provenance.sol/Provenance.json
 
 import ItemTable from '../../src/components/ItemTable/ItemTable.js';
 
-import { Button, Spinner } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+
+import { BeatLoader } from 'react-spinners';
 
 function Search() {
 
@@ -28,6 +30,7 @@ function Search() {
     function serial() {
         return Math.floor(Math.random() * 1000)
     }
+
     function tokenID() {
         return Math.floor(Math.random() * 100)
     }
@@ -40,6 +43,7 @@ function Search() {
     const batchMintTokens = () => {
         TokenContract.batchMint(100, random_element(images))
     }
+
     const create10Provenances = () => {
 
             let type1 = random_element(type);
@@ -50,15 +54,16 @@ function Search() {
             let tokenID1 = tokenID();
             let date1 = (randomDate(new Date(1897, 0, 1), new Date()));
             let vImages1 = random_element(images)
+    
 
             MothershipContract.createBatchProvenances(
                 type1, 
-                serial1, 
+                serial1.toString(), 
                 brand1, 
                 model1, 
                 year1, 
                 tokenID1, 
-                date1,
+                date1.toString(),
                 vImages1, 
                 images)
                 .then(async(result) => {
@@ -80,7 +85,7 @@ function Search() {
 
     useEffect(() => {
         if (MothershipContract) {
-          // console.log(mainAccount, "mainAccount in items UE")
+
           loadAllProvenances()
           /*
           .then(setItemAdded(false))
@@ -127,7 +132,6 @@ return (
         {loading ?
             <>
                 <h1>Contracts Loading...</h1>
-                <Spinner />
             </>
             :
             <h1>Search Provenances</h1>     
@@ -135,11 +139,16 @@ return (
     </div>
     <div>
         {loading ?
-            <>
-                <Spinner />
-            </>
+            <div style={{textAlign: 'center'}} >
+                <BeatLoader  />
+            </div>
             :
-            <ItemTable provenanceObjects={allProvenanceObjects} search={true} />    
+            <div style={{textAlign: 'center'}}>
+                <p>Green Bordered Provenances Owned By You</p>
+                <p>Red Bordered Provenances Are Incoming Provenances You Need To Accept</p>
+                <ItemTable provenanceObjects={allProvenanceObjects} search={true} />   
+            </div>
+ 
         }
     </div>
     <div style={{textAlign: 'center'}}>

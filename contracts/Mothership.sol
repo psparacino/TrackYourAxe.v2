@@ -242,6 +242,7 @@ contract Mothership {
     function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold, string memory date) external {
         //update ownership
         ownersToAxes[buyer].push(provenanceSold);
+        if ((ownersToAxes[msg.sender]).length == 0) ownerArray.push(msg.sender);
 
         uint index = _findProvenanceIndex(seller, provenanceSold);
 
