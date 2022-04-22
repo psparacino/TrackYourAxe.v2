@@ -31,7 +31,8 @@ const ItemTable = ({ provenanceObjects, search }) => {
     
     if (provenanceObjects && provenanceObjects.length > 0){
       return (
-        <>
+        <Container>
+          <Row xs={1} md={2}>
           
           {provenanceObjects.map((array, index) => {
           
@@ -46,7 +47,8 @@ const ItemTable = ({ provenanceObjects, search }) => {
             return (
               
               <div key={provenanceAddress}>
-                <Container>
+                {/* <Container> */}
+                <Col>
                   <Link href={pendingBool ? `search/${provenanceAddress}` : "/provenances" }>
                 
                       <Card 
@@ -102,20 +104,29 @@ const ItemTable = ({ provenanceObjects, search }) => {
                       </Card>
                  
                   </Link>
-                </Container>                 
+                  </Col>
+                {/* </Container>                  */}
               </div>
               )
             })
           }
              
   
-          
-        </>
+          </Row>
+        </Container>
        )} else {
         return (
-          <>
-            <h1 style={{paddingTop: '20vh'}}>You have no registered Provenances.</h1>
-          </>
+          <div>
+            {search ?
+              <>
+                <h1 style={{paddingTop: '20vh'}}>No Provenances Returned.</h1>
+              </>
+              :
+              <>
+                <h1 style={{paddingTop: '20vh'}}>You have no registered Provenances.</h1>
+              </>
+            }
+          </div>
 
 
         )}
@@ -125,12 +136,10 @@ const ItemTable = ({ provenanceObjects, search }) => {
 
     return(
         <div className={styles.container}>
-          <h3>Registered Provenances for <br/> {mainAccount}</h3>     
-          {/*
-          <button onClick={async ()=> {console.log(await MothershipContract.getOwnersInstruments())}}>Get Instruments via Contract</button>
-          <button onClick={()=> {console.log((provenanceObjects))}}>Provenance Objects</button>
-          <button onClick={async ()=> {console.log(items)}}>Get Items in State</button>
-          */}
+          {search ?
+            null
+          : <h3>Registered Provenances for <br/> {mainAccount}</h3>
+          }     
           {/*<TokensOwned />*/}
           <ProvenanceTable />
 

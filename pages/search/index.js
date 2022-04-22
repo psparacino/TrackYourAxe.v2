@@ -8,9 +8,19 @@ import Provenance from '../../artifacts/contracts/Provenance.sol/Provenance.json
 
 import ItemTable from '../../src/components/ItemTable/ItemTable.js';
 
-import { Button } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 
 import { BeatLoader } from 'react-spinners';
+
+const initialValues = {
+    brand: "",
+    token: "",
+    model: "",
+    serial: "",
+    typeOfProvenance: '',
+    year: 0,
+    ownerAddress: ""
+  };
 
 function Search() {
 
@@ -20,7 +30,12 @@ function Search() {
     const [allProvenanceObjects, setAllProvenanceObjects] = useState();
     const [loading, setLoading] = useState(false);
 
+    const [searchInput, setSearchInput] = useState([]);
+    const [values, setValues] = useState(initialValues);
+    const [filteredResults, setFilteredResults] = useState();
+    // ************************
     // TEMP FOR TESTING FILTERS
+    // ***********************
 
     const type = [0, 1, 3]
     const brand = ["Jupiter", "Yamaha", "JL Woodwinds", "Yanigisawa", "Antigua Winds", "Pearl", "Selmer", "Buffet"]
@@ -81,7 +96,9 @@ function Search() {
         
         }
 
-    // END TEMP 
+    // *********
+    // END TEMP
+    // *********
 
     useEffect(() => {
         if (MothershipContract) {
@@ -125,6 +142,75 @@ function Search() {
         }
 
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setValues({
+        ...values,
+        [name]: value,
+        });
+        searchItems(values)
+    };
+
+    const searchItems = (searchValue) => {
+            setSearchInput(searchValue)
+
+            // console.log(values, "values in searchItems")
+            
+            if (values) {
+                const filteredData = allProvenanceObjects.filter((item) => {
+                    const itemProps = item.ProvenanceProps;
+                    const itemOwnerInfo = item.ProvenanceOwnerInfo;
+                    const combinedObj = {
+                        ...itemProps,
+                       ...itemOwnerInfo
+                    }
+
+                    for (const [key, value] of Object.entries(values)) {
+                        console.log(Object.values(combinedObj).join('').toLowerCase().includes(value.toLowerCase()), "return log")
+                        return Object.values(combinedObj).join('').toLowerCase().includes(value.toLowerCase());
+
+                      }
+                    
+                })
+                console.log(filteredData, "filteredData")
+                setFilteredResults(filteredData)
+            }
+            else{
+                setFilteredResults(allProvenanceObjects)
+            }
+        }
+    
+    const clearSearchForm = () => {
+        setValues({
+            brand: "",
+            token: "",
+            model: "",
+            serial: "",
+            typeOfProvenance: '',
+            year: '',
+            ownerAddress: ""
+        })}
+
+    // const searchByOwner = (searchValue) => {
+    //         setSearchInput(searchValue)
+            
+    //         if (searchInput && searchInput.length > 0) {
+    //             const filteredDataOwner = allProvenanceObjects.filter((item) => {
+    //                 const itemProps = item.ProvenanceProvenanceProps;
+                   
+    //                 return Object.values(itemProps).join('').toLowerCase().match(searchInput.toLowerCase())
+    //             })
+    //             console.log(filteredDataOwner, "filteredDataOwner")
+    //             // setFilteredResults(filteredDataOwner)
+    //         }
+    //         else{
+    //             setFilteredResults(allProvenanceObjects)
+    //         }
+    //     }
+
+        // console.log(values, "searchInput")
+        // 0xa0Ee7A142d267C1f36714E4a8F75612F20a79720
+
 
 return (
     <>
@@ -137,6 +223,70 @@ return (
             <h1>Search Provenances</h1>     
         }
     </div>
+    {/* <div style={{textAlign: 'center'}}> */}
+    <Button onClick={clearSearchForm}>Clear Search Form</Button>
+    <Container style={{textAlign: 'center'}}>
+        <h4>Brand</h4>
+            <input icon='search'
+                value={values.brand}
+                name='brand'
+                style={{width: '80%'}}
+                placeholder='Search By Brand'
+                onChange={handleInputChange}
+            />
+        <h4>Model</h4>
+            <input icon='search'
+                value={values.model}
+                name='model'
+                style={{width: '80%'}}
+                placeholder='Search...'
+                onChange={handleInputChange}
+            />
+         <h4>Year</h4>
+            <input icon='search'
+                value={values.year}
+                name='year'
+                style={{width: '80%'}}
+                placeholder='Search...'
+                onChange={handleInputChange}
+            />
+        <h4>Token</h4>
+            <input icon='search'
+                value={values.token}
+                name='token'
+                style={{width: '80%'}}
+                placeholder='Search...'
+                onChange={handleInputChange}
+            />
+        <h4>Serial</h4>
+            <input icon='search'
+                value={values.serial}
+                name='serial'
+                style={{width: '80%'}}
+                placeholder='Search...'
+                onChange={handleInputChange}
+            />
+        <h4>Owner Address</h4>
+            <input icon='search'
+                value={values.ownerAddress}
+                name='ownerAddress'
+                style={{width: '80%'}}
+                placeholder='Search...'
+                onChange={handleInputChange}
+            />
+
+        <h4>Search by Type of Provenance</h4>
+            <input icon='search'
+                value={values.typeOfProvenance}
+                name='typeofProvenance'
+                style={{width: '80%'}}
+                placeholder='Search...'
+                onChange={(e) => searchItems(e.target.value)}
+            />
+    </Container>
+
+
+    <hr />
     <div>
         {loading ?
             <div style={{textAlign: 'center'}} >
@@ -146,7 +296,7 @@ return (
             <div style={{textAlign: 'center'}}>
                 <p>Green Bordered Provenances Owned By You</p>
                 <p>Red Bordered Provenances Are Incoming Provenances You Need To Accept</p>
-                <ItemTable provenanceObjects={allProvenanceObjects} search={true} />   
+                <ItemTable provenanceObjects={searchInput && searchInput.length > 1 ? filteredResults : allProvenanceObjects} search={true} />   
             </div>
  
         }
