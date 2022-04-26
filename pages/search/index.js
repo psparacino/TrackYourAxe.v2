@@ -6,7 +6,7 @@ import { useUserContext } from '../../src/context/UserContext.js';
 
 import Provenance from '../../artifacts/contracts/Provenance.sol/Provenance.json';
 
-import ItemTable from '../../src/components/ItemTable/ItemTable.js';
+import PublicItemTable from '../../src/components/PublicItemTable/PublicItemTable.js';
 
 import { Button, Container } from 'react-bootstrap';
 
@@ -22,7 +22,7 @@ const initialValues = {
     ownerAddress: ""
   };
 
-function Search() {
+function PublicProvenanceTable() {
 
     const { MothershipContract, TokenContract } = useContractContext();
     const { provider, signer } = useUserContext();
@@ -125,8 +125,15 @@ function Search() {
                   const ProvenanceOwnerInfo = await ProvenanceContract.ownerProvenance(index);
   
                   const ProvenancePendingOwner = await ProvenanceContract.pendingOwner();
+                  const ProvenanceCurrentOffer = await ProvenanceContract.currentOffer();
                   
-                  allProvenanceArray.push({'ProvenanceContract': ProvenanceContract, 'ProvenanceProps': ProvenanceProps, 'ProvenanceOwnerInfo': ProvenanceOwnerInfo, 'ProvenancePendingOwner' : ProvenancePendingOwner})
+                  allProvenanceArray.push({
+                    'ProvenanceContract': ProvenanceContract, 
+                    'ProvenanceProps': ProvenanceProps, 
+                    'ProvenanceOwnerInfo': ProvenanceOwnerInfo, 
+                    'ProvenancePendingOwner' : ProvenancePendingOwner,
+                    'ProvenanceCurrentOffer': ProvenanceCurrentOffer})
+                
                 }
            setAllProvenanceObjects(allProvenanceArray);   
            setLoading(false)        
@@ -138,7 +145,6 @@ function Search() {
 
     const getAll = async() => {
             const result = await MothershipContract.getAllProvenances();
-            console.log(result, "getAll result")
         }
 
 
@@ -296,7 +302,8 @@ return (
             <div style={{textAlign: 'center'}}>
                 <p>Green Bordered Provenances Owned By You</p>
                 <p>Red Bordered Provenances Are Incoming Provenances You Need To Accept</p>
-                <ItemTable provenanceObjects={searchInput && searchInput.length > 1 ? filteredResults : allProvenanceObjects} search={true} />   
+                <p>Purple Bordered Provenances have open offers</p>
+                <PublicItemTable provenanceObjects={searchInput && searchInput.length > 1 ? filteredResults : allProvenanceObjects} />   
             </div>
  
         }
@@ -318,4 +325,4 @@ return (
   }
 
   
-  export default Search;
+  export default PublicProvenanceTable;

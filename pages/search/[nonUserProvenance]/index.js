@@ -21,7 +21,7 @@ import styles from '../Search.module.css'
 
 
 
-const PublicFacingProvenance = () => {
+const NonUserProvenance = () => {
 
   const { ipfsGetterRootURL } = useItemContext();
   const { TokenContract, MothershipContract } = useContractContext();
@@ -183,7 +183,7 @@ const PublicFacingProvenance = () => {
         )}
 }
 
-  const Acquire = () => {
+  const MakeOfferOnProvenance = () => {
     const [newOfferAmount, setNewOfferAmount] = useState();
     const [currentOfferBuyer, setCurrentOfferBuyer] = useState();
     const [currentOfferAmount, setCurrentOfferAmount] = useState(0)
@@ -344,7 +344,7 @@ null
             <ItemPhotoCarousel />
             <ProvenanceHistory />
             <hr />
-            <Acquire />
+            <MakeOfferOnProvenance />
 
         </div>
         </Container>
@@ -363,5 +363,5 @@ null
 }
 
 
-export default PublicFacingProvenance;
+export default NonUserProvenance;
 

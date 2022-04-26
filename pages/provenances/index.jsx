@@ -21,9 +21,11 @@ import { useUserContext } from '../../src/context/UserContext';
 import styles from './ProvenanceHub.module.css';
 import { Container, Table, Row, Col, Card, Spinner } from 'react-bootstrap';
 
+import ItemTable from '../../src/components/PublicItemTable/PublicItemTable.js';
 
 
-const ProvenanceHub = () => {
+
+const OwnedProvenanceHub = () => {
 
 
   const { mainAccount, signer } = useUserContext()
@@ -43,8 +45,7 @@ const ProvenanceHub = () => {
     }  
   },[])
 
-
-  const ItemTable = () => {
+  const OwnedProvenanceTable = () => {
     
     if (provenanceObjects && provenanceObjects.length > 0){
       return (
@@ -57,7 +58,8 @@ const ProvenanceHub = () => {
           const{ serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = ProvenanceProps;   
           const { ownerAddress, name, verificationPhotoHash, date} = ProvenanceOwnerInfo;
           
-          const pendingBool = ProvenancePendingOwner === ethers.constants.AddressZero;
+          const pendingBool = !(ProvenancePendingOwner === ethers.constants.AddressZero);
+          const ownerBool = (ownerAddress === mainAccount);
 
          
             return (
@@ -65,15 +67,15 @@ const ProvenanceHub = () => {
               <div key={provenanceAddress}>
               
                 <Container>
-                  <Link href={pendingBool ? `provenances/${provenanceAddress}` : "/provenances" }>
+                  <Link href={pendingBool ?`provenances` : `provenances/${provenanceAddress}` }>
                 
                       <Card 
                         key={provenanceAddress + 'card'} 
-                        className={pendingBool ? styles.ownedContainer : styles.pendingContainer}>
+                        className={pendingBool ? styles.pendingContainer : styles.ownedContainer }>
                         
                         <h2 className={pendingBool ? styles.linkPlacebo : null }>{brand} {model}</h2>
 
-                        {pendingBool ? null : <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p> }
+                        {pendingBool ? <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p>  : null }
                         
                           <Card.Body>
                             <Row>
@@ -143,7 +145,7 @@ const ProvenanceHub = () => {
           <button onClick={async ()=> {console.log(items)}}>Get Items in State</button>
           */}
           {/*<TokensOwned />*/}
-          <ItemTable />
+          <OwnedProvenanceTable />
 
     
         </div>
@@ -151,7 +153,7 @@ const ProvenanceHub = () => {
 }
 
 
-export default ProvenanceHub;
+export default OwnedProvenanceHub;
 
 
 

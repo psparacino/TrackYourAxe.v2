@@ -48,7 +48,8 @@ const TransferProfile = () => {
   const { mainAccount, provider, dateString } = useUserContext();
 
   const router = useRouter();
-  const { transfer } = router.query;
+  const { incomingTransfer } = router.query;
+  console.log(router.query)
 
 
   const [ loaded , setLoaded ] = useState(false);
@@ -67,7 +68,7 @@ const TransferProfile = () => {
 
   
   useEffect(async() => {
-    if (pendingTransferContracts && transfer) {
+    if (pendingTransferContracts && incomingTransfer) {
     loadProvenance()
   }
     
@@ -75,7 +76,8 @@ const TransferProfile = () => {
   
     async function loadProvenance() { 
       for (let contract of pendingTransferContracts) {
-        if (contract.ProvenanceContract.address === transfer) {
+        if (contract.ProvenanceContract.address === incomingTransfer) {
+          console.log("hitting")
 
           const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } = contract;
 
@@ -86,7 +88,7 @@ const TransferProfile = () => {
         }
       }
     }
-  },[pendingTransferContracts, transfer])
+  },[pendingTransferContracts, incomingTransfer])
 
   
 
@@ -118,7 +120,7 @@ const TransferProfile = () => {
    
     )
   }
-
+  console.log(loaded, "loaded check")
     
     if (loaded) {
 

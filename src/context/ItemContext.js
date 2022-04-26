@@ -100,8 +100,16 @@ export function ItemContextProvider({ children }) {
                 const ProvenanceOwnerInfo = await ProvenanceContract.ownerProvenance(index);
 
                 const ProvenancePendingOwner = await ProvenanceContract.pendingOwner();
+
+                const ProvenanceCurrentOffer = await ProvenanceContract.currentOffer();
+
                 
-                provenanceArray.push({'ProvenanceContract': ProvenanceContract, 'ProvenanceProps': ProvenanceProps, 'ProvenanceOwnerInfo': ProvenanceOwnerInfo, 'ProvenancePendingOwner' : ProvenancePendingOwner})
+                provenanceArray.push({
+                  'ProvenanceContract': ProvenanceContract, 
+                  'ProvenanceProps': ProvenanceProps, 
+                  'ProvenanceOwnerInfo': ProvenanceOwnerInfo, 
+                  'ProvenancePendingOwner' : ProvenancePendingOwner,
+                  'ProvenanceCurrentOffer': ProvenanceCurrentOffer})
               }
          setProvenanceObjects(provenanceArray);          
       }   

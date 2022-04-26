@@ -10,15 +10,16 @@ import { useRouter } from 'next/router';
 
 
 //context imports
-import { useItemContext } from '../../../src/context/ItemContext';
-import { useUserContext } from '../../../src/context/UserContext';
+import { useItemContext } from '../../context/ItemContext';
+import { useUserContext } from '../../context/UserContext';
 
 //style imports
 import styles from './ItemTable.module.css';
 import { Container, Table, Row, Col, Card, Spinner } from 'react-bootstrap';
+import { formatEther, hexlify } from 'ethers/lib/utils';
 
 
-const ItemTable = ({ provenanceObjects, search }) => {
+const PublicItemTable = ({ provenanceObjects }) => {
 
 
   const { mainAccount, signer } = useUserContext()
@@ -26,39 +27,52 @@ const ItemTable = ({ provenanceObjects, search }) => {
 
   const {ipfsGetterRootURL} = useItemContext();
 
+  const router = useRouter();
 
   const ProvenanceTable = () => {
     
     if (provenanceObjects && provenanceObjects.length > 0){
       return (
         <Container>
-          <Row xs={1} md={2}>
+          <Row xs={1} md={1}>
           
           {provenanceObjects.map((array, index) => {
           
-          const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo, ProvenancePendingOwner } = array;
+          const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo, ProvenancePendingOwner, ProvenanceCurrentOffer } = array;
           const provenanceAddress = ProvenanceContract.address;
           const{ serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = ProvenanceProps;   
           const { ownerAddress, name, verificationPhotoHash, date} = ProvenanceOwnerInfo;
+          const { buyer, offer } = ProvenanceCurrentOffer;
+          const currentOffer = ethers.utils.formatEther(offer.toString());
           
-          const pendingBool = ProvenancePendingOwner === ethers.constants.AddressZero;
+
+          
+
+
+          const pendingBool = !(ProvenancePendingOwner === ethers.constants.AddressZero);
+
+          const ownerBool = (ownerAddress === mainAccount);
+
 
          
             return (
-              
+            
+        
               <div key={provenanceAddress}>
                 {/* <Container> */}
                 <Col>
-                  <Link href={pendingBool ? `search/${provenanceAddress}` : "/provenances" }>
-                
+                  {/* not a complete fix, need to deactivate transfer functions on direct provenance url as well, not just deactivate link   */}
+                  <Link href={ownerBool ? 
+                                pendingBool ? `${router.pathname}` : `provenances/${provenanceAddress}`
+                                  : `search/${provenanceAddress}` }>
+
                       <Card 
                         key={provenanceAddress + 'card'} 
-                        id={ownerAddress == mainAccount ? styles.ownedBorder : null}
-                        className={pendingBool ? styles.ownedContainer : styles.pendingContainer}>
-                        
-                        <h2 className={pendingBool ? styles.linkPlacebo : null }>{brand} {model}</h2>
-
-                        {pendingBool ? null : <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p> }
+                        id={ownerBool ?  
+                              pendingBool ? styles.pendingBorder : styles.ownedBorder : null}
+                        className={pendingBool ? styles.pendingContainer : styles.ownedContainer}>
+                        <h2 className={ownerBool ? (pendingBool ? styles.linkPlacebo : null ) : console.log("nope")}>{brand} {model}</h2>
+                        {(pendingBool && ownerBool) ? <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p> : null }
                         
                           <Card.Body>
                             <Row>
@@ -70,11 +84,12 @@ const ItemTable = ({ provenanceObjects, search }) => {
                                 <Table key={provenanceAddress+Math.random()} className="w-50 mb-5 mx-auto rounded border-3 border-dark" responsive striped bordered>
                                   
                                   <tbody> 
-                                    {search ?
+                                    {ownerBool ?
+                                        null
+                                        :
                                         <tr key={ownerAddress+ownerAddress}>
-                                        <td>Owner Address: {ownerAddress}</td>
+                                          <td>Owner Address: {ownerAddress}</td>
                                         </tr>
-                                        : null
                                     }
                                     <tr key={provenanceAddress+provenanceAddress}>
                                       <td>Provenance Address: {provenanceAddress}</td>
@@ -117,7 +132,7 @@ const ItemTable = ({ provenanceObjects, search }) => {
        )} else {
         return (
           <div>
-            {search ?
+            {(mainAccount) ?
               <>
                 <h1 style={{paddingTop: '20vh'}}>No Provenances Returned.</h1>
               </>
@@ -136,7 +151,7 @@ const ItemTable = ({ provenanceObjects, search }) => {
 
     return(
         <div className={styles.container}>
-          {search ?
+          {(mainAccount) ?
             null
           : <h3>Registered Provenances for <br/> {mainAccount}</h3>
           }     
@@ -149,7 +164,7 @@ const ItemTable = ({ provenanceObjects, search }) => {
 }
 
 
-export default ItemTable;
+export default PublicItemTable;
 
 
 
