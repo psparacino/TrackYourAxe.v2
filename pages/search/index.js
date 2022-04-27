@@ -14,15 +14,17 @@ import { BeatLoader } from 'react-spinners';
 
 const initialValues = {
     brand: "",
-    token: "",
+    date: "",
+    instrumentDeedToken: '',
     model: "",
+    ownerAddress: "",
+    ownerCount: '',
     serial: "",
     typeOfProvenance: '',
-    year: 0,
-    ownerAddress: ""
+    year: ''
   };
 
-function PublicProvenanceTable() {
+function PublicProvenanceSearchTable() {
 
     const { MothershipContract, TokenContract } = useContractContext();
     const { provider, signer } = useUserContext();
@@ -37,7 +39,7 @@ function PublicProvenanceTable() {
     // TEMP FOR TESTING FILTERS
     // ***********************
 
-    const type = [0, 1, 3]
+    const type = [0, 1, 2]
     const brand = ["Jupiter", "Yamaha", "JL Woodwinds", "Yanigisawa", "Antigua Winds", "Pearl", "Selmer", "Buffet"]
     const model = ["Mark VI", "SBA", "R13", "Bronze Series", "Cigar Cutter", "Balanced Action", "King 20", "Silver Fox"]
     const images = ["QmNvzkSMNCF9bRry5CHiTCnz7s8Fc6ooNVQyuFc4EPDaQV", "QmPYABsoen4yRJWp4ta7yrhxgsqNEQLK15c68BL6BQrQAW", "QmQ4wfPDcxJeLcypv6JQt6757Nmzi95k5wZbjjFYzjsUW2", "QmdBEnkC1qXc1pZsGkRTPkwhqohGyiTd7tZKvD1v8VQ65Y" ]
@@ -149,7 +151,9 @@ function PublicProvenanceTable() {
 
 
     const handleInputChange = (e) => {
+        clearSearchForm();
         const { name, value } = e.target;
+        console.log(value, "value")
         setValues({
         ...values,
         [name]: value,
@@ -157,45 +161,51 @@ function PublicProvenanceTable() {
         searchItems(values)
     };
 
-    const searchItems = (searchValue) => {
-            setSearchInput(searchValue)
 
-            // console.log(values, "values in searchItems")
+    const searchItems = () => {         
             
             if (values) {
                 const filteredData = allProvenanceObjects.filter((item) => {
+
                     const itemProps = item.ProvenanceProps;
                     const itemOwnerInfo = item.ProvenanceOwnerInfo;
                     const combinedObj = {
                         ...itemProps,
-                       ...itemOwnerInfo
+                    ...itemOwnerInfo
                     }
-
-                    for (const [key, value] of Object.entries(values)) {
-                        console.log(Object.values(combinedObj).join('').toLowerCase().includes(value.toLowerCase()), "return log")
-                        return Object.values(combinedObj).join('').toLowerCase().includes(value.toLowerCase());
-
-                      }
-                    
+               
+                    for (const [key, value] of Object.entries(values)) {   
+         
+                        if (value !== '' && !(Object.values((combinedObj[key]).toString()).join('').toLowerCase().includes((value.toString()).toLowerCase()))) {
+                            console.log(Object.values(combinedObj[key]).join('').toLowerCase(), "key, value") 
+                            return false;                             
+                        }
+                    }
+                    return true;
+                                                 
                 })
+            
+                
+
                 console.log(filteredData, "filteredData")
                 setFilteredResults(filteredData)
-            }
-            else{
+            }else {
                 setFilteredResults(allProvenanceObjects)
-            }
-        }
+            }}
     
     const clearSearchForm = () => {
-        setValues({
-            brand: "",
-            token: "",
-            model: "",
-            serial: "",
-            typeOfProvenance: '',
-            year: '',
-            ownerAddress: ""
-        })}
+        // setValues({
+        //     brand: "",
+        //     token: "",
+        //     model: "",
+        //     serial: "",
+        //     typeOfProvenance: '',
+        //     year: '',
+        //     ownerAddress: ""
+        // })
+        setValues(initialValues)
+        setFilteredResults(allProvenanceObjects)
+    }
 
     // const searchByOwner = (searchValue) => {
     //         setSearchInput(searchValue)
@@ -230,7 +240,12 @@ return (
         }
     </div>
     {/* <div style={{textAlign: 'center'}}> */}
+    <>
     <Button onClick={clearSearchForm}>Clear Search Form</Button>
+    <Button onClick={()=> {console.log(values)}}>Values</Button>
+
+    </>
+
     <Container style={{textAlign: 'center'}}>
         <h4>Brand</h4>
             <input icon='search'
@@ -258,7 +273,7 @@ return (
             />
         <h4>Token</h4>
             <input icon='search'
-                value={values.token}
+                value={values.instrumentDeedToken}
                 name='token'
                 style={{width: '80%'}}
                 placeholder='Search...'
@@ -303,7 +318,7 @@ return (
                 <p>Green Bordered Provenances Owned By You</p>
                 <p>Red Bordered Provenances Are Incoming Provenances You Need To Accept</p>
                 <p>Purple Bordered Provenances have open offers</p>
-                <PublicItemTable provenanceObjects={searchInput && searchInput.length > 1 ? filteredResults : allProvenanceObjects} />   
+                <PublicItemTable provenanceObjects={values !== initialValues ? filteredResults : allProvenanceObjects} />   
             </div>
  
         }
@@ -311,11 +326,11 @@ return (
     <div style={{textAlign: 'center'}}>
         <Button variant="secondary" onClick={batchMintTokens}> Mint 100 Tokens </Button>
         <Button variant="warning" onClick={create10Provenances}> Generate 10 practice provenances </Button>
-        <Button onClick={getAll}>GetAll Provenances</Button>
+        <Button onClick={getAll}>Get All Provenances</Button>
     </div>
     
     
-    
+    e
 
     </>
 
@@ -325,4 +340,43 @@ return (
   }
 
   
-  export default PublicProvenanceTable;
+  export default PublicProvenanceSearchTable;
+
+
+
+
+//   if (!(isEmptyObject(values))) {
+//     const filteredData = allProvenanceObjects.filter((item) => {
+//         const itemProps = item.ProvenanceProps;
+//         const itemOwnerInfo = item.ProvenanceOwnerInfo;
+//         const combinedObj = {
+//             ...itemProps,
+//            ...itemOwnerInfo
+//         }
+//         const valuesKeys = Object.keys(values);
+//         const combinedObjKeys = Object.keys(combinedObj);
+//         for (const [key, value] of Object.entries(values)) {
+            
+//             console.log(key, value)
+//             return Object.values(combinedObj).join('').toLowerCase().includes(value.toLowerCase());
+            
+            
+//             // console.log(Object.entries(values), "object entires")
+//             // console.log(combinedObj, "combinedObj")
+//             // return Object.values(combinedObj).join('').toLowerCase().includes(value.toLowerCase());
+//           }
+//         })
+    
+//     // const filteredData = allProvenanceObjects.filter(function(item) {
+//     //     for (const [key, value] of Object.entries(values)) {
+//     //         console.log(key, "key")
+//     //       if (item[key] === undefined || item[key] != filter[key])
+//     //         return false;
+//     //     }
+//     //     return true;
+//     //   });
+    
+
+//     console.log(filteredData, "filteredData")
+//     setFilteredResults(filteredData)
+// }

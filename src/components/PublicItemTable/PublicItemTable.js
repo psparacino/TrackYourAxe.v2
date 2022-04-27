@@ -14,9 +14,9 @@ import { useItemContext } from '../../context/ItemContext';
 import { useUserContext } from '../../context/UserContext';
 
 //style imports
-import styles from './ItemTable.module.css';
+import styles from './PublicItemTable.module.css';
 import { Container, Table, Row, Col, Card, Spinner } from 'react-bootstrap';
-import { formatEther, hexlify } from 'ethers/lib/utils';
+import { formatEther } from 'ethers/lib/utils';
 
 
 const PublicItemTable = ({ provenanceObjects }) => {
@@ -43,7 +43,7 @@ const PublicItemTable = ({ provenanceObjects }) => {
           const{ serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = ProvenanceProps;   
           const { ownerAddress, name, verificationPhotoHash, date} = ProvenanceOwnerInfo;
           const { buyer, offer } = ProvenanceCurrentOffer;
-          const currentOffer = ethers.utils.formatEther(offer.toString());
+          const currentOffer = formatEther(offer.toString());
           
 
           
@@ -66,14 +66,20 @@ const PublicItemTable = ({ provenanceObjects }) => {
                                 pendingBool ? `${router.pathname}` : `provenances/${provenanceAddress}`
                                   : `search/${provenanceAddress}` }>
 
+
                       <Card 
                         key={provenanceAddress + 'card'} 
-                        id={ownerBool ?  
-                              pendingBool ? styles.pendingBorder : styles.ownedBorder : null}
-                        className={pendingBool ? styles.pendingContainer : styles.ownedContainer}>
+                        id={currentOffer > 0 && !ownerBool ? styles.offerBorder : null}
+                        className={ownerBool ?
+                                    styles.ownedContainer :
+                                      pendingBool ? styles.pendingContainer : styles.publicContainer
+                                      }>
+                        {/* fix below h2 */}
                         <h2 className={ownerBool ? (pendingBool ? styles.linkPlacebo : null ) : console.log("nope")}>{brand} {model}</h2>
                         {(pendingBool && ownerBool) ? <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p> : null }
-                        
+                        {(pendingBool && !ownerBool) ? <Link href={`incoming-transfers/${provenanceAddress}`} style={{color: 'red'}}>Claim This Provenance</Link> : null }
+                        {currentOffer > 0 ? <h5 style={{color:'orange'}}>CURRENT OFFER ON THIS PROVENANCE: {ethers.constants.EtherSymbol}{currentOffer}</h5> : null}
+             
                           <Card.Body>
                             <Row>
                               <Col>
