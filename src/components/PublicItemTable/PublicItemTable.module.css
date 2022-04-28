@@ -77,9 +77,6 @@
 }
 
 
-
-
-
 .cardContainer {
     display: flex;
     height: 250px;
@@ -106,3 +103,27 @@
     margin-left: 10px;
     
 }
+
+/* Image Dimensions */
+
+.imageContainer div {
+
+    width: 100%;
+    position: unset !important;
+  
+
+  }
+
+  /* .image {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+  } */
+
+  .image {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+  }

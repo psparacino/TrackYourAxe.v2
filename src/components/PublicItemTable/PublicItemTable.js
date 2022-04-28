@@ -44,10 +44,7 @@ const PublicItemTable = ({ provenanceObjects }) => {
           const { ownerAddress, name, verificationPhotoHash, date} = ProvenanceOwnerInfo;
           const { buyer, offer } = ProvenanceCurrentOffer;
           const currentOffer = formatEther(offer.toString());
-          
-
-          
-
+        
 
           const pendingBool = !(ProvenancePendingOwner === ethers.constants.AddressZero);
 
@@ -83,7 +80,17 @@ const PublicItemTable = ({ provenanceObjects }) => {
                           <Card.Body>
                             <Row>
                               <Col>
-                                <img key={provenanceAddress+ verificationPhotoHash} src={ipfsGetterRootURL + verificationPhotoHash}  style={{objectFit: 'contain', width: '100%'}}  />
+                                 <div className={styles.imageContainer}>
+                                  <Image 
+                                    key={provenanceAddress+ verificationPhotoHash} 
+                                    src={ipfsGetterRootURL + verificationPhotoHash} 
+                                    layout="fill" 
+                                    className={styles.image} />
+
+                                 </div>         
+
+
+                                
                               </Col>
 
                               <Col>

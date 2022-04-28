@@ -143,6 +143,11 @@ function PublicProvenanceSearchTable() {
           
           
       },[MothershipContract])
+
+      useEffect(async() => {
+        if (values){
+        searchItems(values)}
+      }, [values]);
   
 
     const getAll = async() => {
@@ -151,20 +156,19 @@ function PublicProvenanceSearchTable() {
 
 
     const handleInputChange = (e) => {
-        clearSearchForm();
         const { name, value } = e.target;
-        console.log(value, "value")
+
         setValues({
         ...values,
         [name]: value,
         });
-        searchItems(values)
+        // searchItems(values);
     };
 
 
     const searchItems = () => {         
             
-            if (values) {
+            if (values !== initialValues) {
                 const filteredData = allProvenanceObjects.filter((item) => {
 
                     const itemProps = item.ProvenanceProps;
@@ -175,8 +179,9 @@ function PublicProvenanceSearchTable() {
                     }
                
                     for (const [key, value] of Object.entries(values)) {   
-         
-                        if (value !== '' && !(Object.values((combinedObj[key]).toString()).join('').toLowerCase().includes((value.toString()).toLowerCase()))) {
+                        // console.log(value, "value inside")
+                        // console.log(Object.values((combinedObj[key]).toString()), "check")
+                        if ((value !== ('' || 0)) && !(Object.values((combinedObj[key]).toString()).join('').toLowerCase().includes((value.toString()).toLowerCase()))) {
                             console.log(Object.values(combinedObj[key]).join('').toLowerCase(), "key, value") 
                             return false;                             
                         }
@@ -194,38 +199,9 @@ function PublicProvenanceSearchTable() {
             }}
     
     const clearSearchForm = () => {
-        // setValues({
-        //     brand: "",
-        //     token: "",
-        //     model: "",
-        //     serial: "",
-        //     typeOfProvenance: '',
-        //     year: '',
-        //     ownerAddress: ""
-        // })
         setValues(initialValues)
         setFilteredResults(allProvenanceObjects)
     }
-
-    // const searchByOwner = (searchValue) => {
-    //         setSearchInput(searchValue)
-            
-    //         if (searchInput && searchInput.length > 0) {
-    //             const filteredDataOwner = allProvenanceObjects.filter((item) => {
-    //                 const itemProps = item.ProvenanceProvenanceProps;
-                   
-    //                 return Object.values(itemProps).join('').toLowerCase().match(searchInput.toLowerCase())
-    //             })
-    //             console.log(filteredDataOwner, "filteredDataOwner")
-    //             // setFilteredResults(filteredDataOwner)
-    //         }
-    //         else{
-    //             setFilteredResults(allProvenanceObjects)
-    //         }
-    //     }
-
-        // console.log(values, "searchInput")
-        // 0xa0Ee7A142d267C1f36714E4a8F75612F20a79720
 
 
 return (
@@ -240,11 +216,11 @@ return (
         }
     </div>
     {/* <div style={{textAlign: 'center'}}> */}
-    <>
+    <div style={{textAlign: 'center'}}>
     <Button onClick={clearSearchForm}>Clear Search Form</Button>
     <Button onClick={()=> {console.log(values)}}>Values</Button>
 
-    </>
+    </div>
 
     <Container style={{textAlign: 'center'}}>
         <h4>Brand</h4>
@@ -274,7 +250,7 @@ return (
         <h4>Token</h4>
             <input icon='search'
                 value={values.instrumentDeedToken}
-                name='token'
+                name='instrumentDeedToken'
                 style={{width: '80%'}}
                 placeholder='Search...'
                 onChange={handleInputChange}
@@ -296,13 +272,13 @@ return (
                 onChange={handleInputChange}
             />
 
-        <h4>Search by Type of Provenance</h4>
+        <h4>Type of Provenance</h4>
             <input icon='search'
                 value={values.typeOfProvenance}
-                name='typeofProvenance'
+                name='typeOfProvenance'
                 style={{width: '80%'}}
                 placeholder='Search...'
-                onChange={(e) => searchItems(e.target.value)}
+                onChange={handleInputChange}
             />
     </Container>
 
