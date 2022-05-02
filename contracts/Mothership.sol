@@ -8,23 +8,19 @@ import "./InstrumentDeedToken.sol";
 
 
 
-// With Ownable it's currently over byte limit. Can get around with optimization or not using Ownable
-contract Mothership {
 
-    //maybe don't need Ownable if it bloats code too much?  pushes it over limit without optimizer
-
-    //Current Owner of Provenances.
+contract Mothership is Ownable {
+    //current owners only. Provenance History is on on Provenance. Not sure array is best here.  Can back full date up on trad. database if needed
     mapping(address => Provenance[]) public ownersToAxes;
 
     mapping(address => bool) public provenanceVerify;
 
     mapping(address => address[]) public pendingTransfers;
 
-    //To enable a loop that will return all provenances on frontend
+    //to loop and get all provenances on frontend
     address[] public ownerArray;
 
     Provenance[] public allProvenanceArray;
-
 
     InstrumentDeedToken public instrumentDeedTokenContract;
 
@@ -40,20 +36,20 @@ contract Mothership {
     event ProvenanceCreated(
         Provenance.Types _enumType,
         address childAddress,         
-        string serial, 
-        string brand, 
-        string model, 
+        bytes32 serial, 
+        bytes32 brand, 
+        bytes32 model, 
         uint16 year, 
-        uint instrumentDeedToken,
-        string date,
-        string verificationPhotoHash,
-        string[] instrumentPhotoHashes);
+        uint16 instrumentDeedToken,
+        bytes32 date,
+        bytes32 verificationPhotoHash,
+        bytes[] instrumentPhotoHashes);
     
     event ProvenanceSale(
         address seller,
         address buyer,
         address provenanaceAddress,
-        string date
+        bytes32 date
     );
 
     // SETTERS 
@@ -61,14 +57,14 @@ contract Mothership {
     //this function needs to check that an existing provenance doesn't already exist for this instrument
     function createNewProvenance(
         Provenance.Types _enumType,
-        string memory _serial, 
-        string memory _brand, 
-        string memory _model, 
+        bytes32 _serial, 
+        bytes32  _brand, 
+        bytes32 _model, 
         uint16 _year, 
-        uint _instrumentDeedToken,
-        string memory _date,
-        string memory _verificationPhotoHash,
-        string[] memory _instrumentPhotoHashes
+        uint16 _instrumentDeedToken,
+        bytes32 _date,
+        bytes32 _verificationPhotoHash,
+        bytes[] memory _instrumentPhotoHashes
     ) external returns(address) {
         //might need to check for dupes on frontend
         require(msg.sender == instrumentDeedTokenContract.ownerOf(_instrumentDeedToken), "You are not the owner of the Deed Token for this instrument");
@@ -85,10 +81,9 @@ contract Mothership {
             address(this),
             address(instrumentDeedTokenContract));
 
-        if ((ownersToAxes[msg.sender]).length == 0) ownerArray.push(msg.sender);
+        //ownerUpdates
         ownersToAxes[msg.sender].push(provenance);
-        allProvenanceArray.push(provenance);
-        // ownerArray.push(msg.sender);
+        ownerArray.push(msg.sender);
         provenanceVerify[address(provenance)] = true;
 
         emit ProvenanceCreated(
@@ -108,18 +103,17 @@ contract Mothership {
         
     }
 
-
-    // FUNCTIONS FOR TESTING ONLY!!!!!!!!!!!!!
+     // FUNCTIONS FOR TESTING ONLY!!!!!!!!!!!!!
     function createPracticeProvenance(
         Provenance.Types _enumType,
-        string memory _serial, 
-        string memory _brand, 
-        string memory _model, 
+        bytes32 _serial, 
+        bytes32 _brand, 
+        bytes32 _model, 
         uint16 _year, 
-        uint _instrumentDeedToken,
-        string memory _date,
-        string memory _verificationPhotoHash,
-        string[] memory _instrumentPhotoHashes
+        uint16 _instrumentDeedToken,
+        bytes32 _date,
+        bytes32 _verificationPhotoHash,
+        bytes[] memory _instrumentPhotoHashes
     ) public returns(address) {
         //might need to check for dupes on frontend
         Provenance provenance = new Provenance(
@@ -163,26 +157,28 @@ contract Mothership {
 
     function createBatchProvenances(
         Provenance.Types _enumType,
-        string memory _serial, 
-        string memory _brand, 
-        string memory _model, 
+        bytes32 _serial, 
+        bytes32 _brand, 
+        bytes32 _model, 
         uint16 _year, 
-        uint _instrumentDeedToken,
-        string memory _date,
-        string memory _verificationPhotoHash,
-        string[] memory _instrumentPhotoHashes
+        uint16 _instrumentDeedToken,
+        bytes32 _date,
+        bytes32 _verificationPhotoHash,
+        bytes[] memory _instrumentPhotoHashes
     ) public {
         for(uint i = 0; i<= 10; i++){
             createPracticeProvenance(_enumType, _serial, _brand, _model, _year, _instrumentDeedToken, _date, _verificationPhotoHash, _instrumentPhotoHashes);
         }
     }
-    // *************
+    // ***************************
 
     function setPendingTransfer(address buyer, address provenanceAddress) external {
         pendingTransfers[buyer].push(provenanceAddress);
     }
 
     // these functions should be combined with the other ones below. the differing arrays can go in the arguments
+
+
     function _findArrayIndex(address[] memory array, address provenance) pure internal returns(uint) {
         uint index;
         for (uint i = 0; i < array.length; i++) {
@@ -208,18 +204,8 @@ contract Mothership {
 
     }
 
-
-
-
-    function getPendingTransfersOfBuyer(address buyer) public view returns(address[] memory){
-        return pendingTransfers[buyer];
-    }
-
-
-    // ************************
-    // INTERNAL FUNCTIONS FOR updateOnProvenanceSale
-    // ************************
-
+    
+    // INTERNAL FUNCTIONS FOR updateOnProvenanceSale 
 
     function _findProvenanceIndex(address seller, Provenance provenanceForIndex) view internal returns(uint) {
         uint index;
@@ -228,6 +214,7 @@ contract Mothership {
                 index = i;
             }
         }
+
         return index;
     }
 
@@ -239,10 +226,9 @@ contract Mothership {
 
 
     //called from Provenance to update mothership state. needs tokenOwner modifier for security
-    function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold, string memory date) external {
+    function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold, bytes32 date) external {
         //update ownership
         ownersToAxes[buyer].push(provenanceSold);
-        if ((ownersToAxes[msg.sender]).length == 0) ownerArray.push(msg.sender);
 
         uint index = _findProvenanceIndex(seller, provenanceSold);
 
@@ -252,31 +238,27 @@ contract Mothership {
          
     }
 
-    
-    // ********
+    // **********
     // GETTERS
-    // ********
+    // **********
 
-        //dupes, figure which is needed and get rid of other
+    function getPendingTransfersOfBuyer(address buyer) external view returns(address[] memory){
+        return pendingTransfers[buyer];
+    }
+
+
     function getOwners() external view returns(address[] memory){
        return ownerArray;
      }  
-
-    function getOwnersToAxesOwner(address owner) public view returns(Provenance[] memory) {
-        return ownersToAxes[owner];
-    }
 
     //works
     function getOwnersInstruments() public view returns(Provenance[] memory) {
         return ownersToAxes[msg.sender];
     }
 
-    //can also take this out and iterate through ownersToAxes with ownerArray on frontend as well
     function getAllProvenances() external view returns(Provenance[] memory) {
         return allProvenanceArray;
     }
-
-
 
 
 
@@ -289,13 +271,13 @@ contract Mothership {
 
     //FOR OWNER ONLY functions
 
-    // function setExistingProvenance() public onlyOwner {
+    function setExistingProvenance() public onlyOwner {
 
-    // }
+    }
 
-    // function removeDuplicateProvenance() public onlyOwner {
+    function removeDuplicateProvenance() public onlyOwner {
 
-    // }
+    }
 
 }
 

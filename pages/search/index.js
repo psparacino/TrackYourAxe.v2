@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
+// context imports
 import { useContractContext } from '../../src/context/ContractContext.js';
 import { useUserContext } from '../../src/context/UserContext.js';
+
 
 import Provenance from '../../artifacts/contracts/Provenance.sol/Provenance.json';
 
 import PublicItemTable from '../../src/components/PublicItemTable/PublicItemTable.js';
 
+// styles imports
 import { Button, Container } from 'react-bootstrap';
-
 import { BeatLoader } from 'react-spinners';
 
 const initialValues = {
@@ -27,7 +29,7 @@ const initialValues = {
 function PublicProvenanceSearchTable() {
 
     const { MothershipContract, TokenContract } = useContractContext();
-    const { provider, signer } = useUserContext();
+    const { provider, signer, toBytes, getBytes32FromMultihash, lengthenIPFSHash } = useUserContext();
 
     const [allProvenanceObjects, setAllProvenanceObjects] = useState();
     const [loading, setLoading] = useState(false);
@@ -35,6 +37,7 @@ function PublicProvenanceSearchTable() {
     const [searchInput, setSearchInput] = useState([]);
     const [values, setValues] = useState(initialValues);
     const [filteredResults, setFilteredResults] = useState();
+
     // ************************
     // TEMP FOR TESTING FILTERS
     // ***********************
@@ -42,8 +45,8 @@ function PublicProvenanceSearchTable() {
     const type = [0, 1, 2]
     const brand = ["Jupiter", "Yamaha", "JL Woodwinds", "Yanigisawa", "Antigua Winds", "Pearl", "Selmer", "Buffet"]
     const model = ["Mark VI", "SBA", "R13", "Bronze Series", "Cigar Cutter", "Balanced Action", "King 20", "Silver Fox"]
-    const images = ["QmNvzkSMNCF9bRry5CHiTCnz7s8Fc6ooNVQyuFc4EPDaQV", "QmPYABsoen4yRJWp4ta7yrhxgsqNEQLK15c68BL6BQrQAW", "QmQ4wfPDcxJeLcypv6JQt6757Nmzi95k5wZbjjFYzjsUW2", "QmdBEnkC1qXc1pZsGkRTPkwhqohGyiTd7tZKvD1v8VQ65Y" ]
-
+    const images = ["QmNvzkSMNCF9bRry5CHiTCnz7s8Fc6ooNVQyuFc4EPDaQV", "QmPYABsoen4yRJWp4ta7yrhxgsqNEQLK15c68BL6BQrQAW", "QmQ4wfPDcxJeLcypv6JQt6757Nmzi95k5wZbjjFYzjsUW2", "QmdBEnkC1qXc1pZsGkRTPkwhqohGyiTd7tZKvD1v8VQ65Y"]
+    console.log(getBytes32FromMultihash(images[0]), "length")
     function serial() {
         return Math.floor(Math.random() * 1000)
     }
@@ -61,40 +64,47 @@ function PublicProvenanceSearchTable() {
         TokenContract.batchMint(100, random_element(images))
     }
 
-    const create10Provenances = () => {
 
-            let type1 = random_element(type);
-            let serial1 = serial();
-            let brand1 = random_element(brand)
-            let model1 = random_element(model);
-            let year1 = (randomDate(new Date(1897, 0, 1), new Date())).getFullYear();
-            let tokenID1 = tokenID();
-            let date1 = (randomDate(new Date(1897, 0, 1), new Date()));
-            let vImages1 = random_element(images)
+
+    const create10Provenances = () => {
+        null
+
+            // let type1 = random_element(type);        
+            // let serial1 = toBytes(serial());    
+            // let brand1 = toBytes(random_element(brand));
+            // let model1 = toBytes(random_element(model));
+            // let year1 = (randomDate(new Date(1897, 0, 1), new Date())).getFullYear();
+            // let tokenID1 = tokenID();
+            // let date1 = toBytes((randomDate(new Date(1897, 0, 1), new Date())));
+   
+            // let vImages1 = random_element(images);
+            // console.log(("QmNvzkSMNCF9bRry5CHiTCnz7s8Fc6ooNVQyuFc4EPDaQV").length, "images check")
+
+            // console.log("hitting");
     
 
-            MothershipContract.createBatchProvenances(
-                type1, 
-                serial1.toString(), 
-                brand1, 
-                model1, 
-                year1, 
-                tokenID1, 
-                date1.toString(),
-                vImages1, 
-                images)
-                .then(async(result) => {
-                  provider.waitForTransaction(result.hash)
-                  .then(mined => {
-                      if (mined) {        
-                        MothershipContract.once("ProvenanceCreated", (type, newAddress) => {
+            // MothershipContract.createBatchProvenances(
+            //     type1, 
+            //     serial1, 
+            //     brand1, 
+            //     model1, 
+            //     year1, 
+            //     tokenID1, 
+            //     date1.toString(),
+            //     vImages1, 
+            //     images)
+            //     .then(async(result) => {
+            //       provider.waitForTransaction(result.hash)
+            //       .then(mined => {
+            //           if (mined) {        
+            //             MothershipContract.once("ProvenanceCreated", (type, newAddress) => {
                           
-                          console.log(`CreateBatchProvenances(11) a success!`)
+            //               console.log(`CreateBatchProvenances(11) a success!`)
                           
-                      })}
-                  })
+            //           })}
+            //       })
                   
-                })
+            //     })
         
         }
 

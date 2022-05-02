@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { toHex, truncateAddress } from '../hooks/utils';
 import { ethers } from "ethers";
 
+import bs58 from 'bs58';
+
 
 import Web3Modal from "web3modal";
 import { providerOptions } from '../components/web3Modal/providerOptions';
@@ -179,6 +181,26 @@ const UserContext = createContext();
         const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";   
         const date = new Date();  
         const dateString = date.toString();
+        const toBytes = (string) => ethers.utils.formatBytes32String(string);
+
+        function getBytes32FromMultihash(ipfs_hash) {
+            
+            var h = bs58.decode(ipfs_hash).toString('hex').replace(/^1220/, '');
+            console.log(h.length, "h.length")
+            if (h.length != 64) {
+                console.log('invalid ipfs format', ipfs_hash, h);
+                return null;
+            }
+            return '0x' + h;
+          
+            // return {
+            //   digest: `0x${decoded.slice(2).toString('hex')}`,
+            //   hashFunction: decoded[0],
+            //   size: decoded[1],
+            // };
+          }
+
+        const lengthenIPFSHash = (short) => bs58.encode(Buffer.from('1220' + short.slice(2), 'hex'))
 
 
 
@@ -195,7 +217,10 @@ const UserContext = createContext();
             disconnect, 
             switchNetwork, 
             dateString, 
-            ipfsGetterRootURL }
+            ipfsGetterRootURL,
+            toBytes,
+            getBytes32FromMultihash,
+            lengthenIPFSHash}
 
         // console.log(signer, "signer in UserContext", state, "state in UC")
 

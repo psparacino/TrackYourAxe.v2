@@ -85,7 +85,6 @@ describe("Buyer Initiated Transfer Tests", function () {
         expect((await ProvenanceContractTest.ownerProvenance(ownerNumber)).ownerAddress).to.equal(addr2.address)
         expect((await ProvenanceContractTest.ownerProvenance(ownerNumber - 1)).ownerAddress).to.equal(addr1.address)
 
-        console.log(((await ProvenanceContractTest.getOwnershipHistory())), "getOwnershipHistory")
 
     });
 
