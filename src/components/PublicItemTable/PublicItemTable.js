@@ -2,30 +2,51 @@ import { useEffect, useState } from 'react';
 
 //ethers import
 import { ethers } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 
-
+// Next Imports
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-
 
 //context imports
 import { useItemContext } from '../../context/ItemContext';
 import { useUserContext } from '../../context/UserContext';
 
+// components Imports
+
+// import Pagination from '../Pagination/Pagination';
+
 //style imports
 import styles from './PublicItemTable.module.css';
 import { Container, Table, Row, Col, Card, Spinner } from 'react-bootstrap';
-import { formatEther } from 'ethers/lib/utils';
+
 
 
 const PublicItemTable = ({ provenanceObjects }) => {
-
-
   const { mainAccount, signer } = useUserContext()
-
-
   const {ipfsGetterRootURL} = useItemContext();
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [currentProvenances, setCurrentProvenances] = useState();
+  // const [postsPerPage] = useState(10);
+
+
+
+  // useEffect(()=> {
+
+  //   if (provenanceObjects){
+  //   const indexOfLastPost = currentPage * postsPerPage;
+  //   const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  //   const currentPage = provenanceObjects.slice(indexOfFirstPost, indexOfLastPost);
+  //   setCurrentProvenances(currentPage)}
+
+  // },[provenanceObjects])
+
+	// // set number of pages for interviews
+
+	// const paginate = pageNum => setCurrentPage(pageNum);  
+  
+
 
   const router = useRouter();
 
@@ -78,19 +99,16 @@ const PublicItemTable = ({ provenanceObjects }) => {
                         {currentOffer > 0 ? <h5 style={{color:'orange'}}>CURRENT OFFER ON THIS PROVENANCE: {ethers.constants.EtherSymbol}{currentOffer}</h5> : null}
              
                           <Card.Body>
-                            <Row>
+                            <Row style={{display: 'flex'}}>
                               <Col>
                                  <div className={styles.imageContainer}>
                                   <Image 
                                     key={provenanceAddress+ verificationPhotoHash} 
                                     src={ipfsGetterRootURL + verificationPhotoHash} 
-                                    layout="fill" 
+                                    layout="fill"
+                                    objectFit="contain"
                                     className={styles.image} />
-
-                                 </div>         
-
-
-                                
+                                 </div>              
                               </Col>
 
                               <Col>
@@ -141,6 +159,11 @@ const PublicItemTable = ({ provenanceObjects }) => {
              
   
           </Row>
+          {/* <Pagination 
+          postsPerPage={20}
+          totalPosts={provenanceObjects.length}
+          paginate={paginate}
+          /> */}
         </Container>
        )} else {
         return (

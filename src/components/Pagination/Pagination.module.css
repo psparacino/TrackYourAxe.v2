@@ -1,0 +1,55 @@
+
+.Pages {
+	display: flex;
+	padding: 0;
+	list-style: none;
+	justify-content: center;
+}
+
+.Pages li {
+	height: 32px;
+	width: 32px;
+	line-height: 32px;
+	background: var(--text-primary);
+	color: var(--color-black);
+	text-align: center;
+
+	border-radius: 4px;
+}
+
+.Pages li a {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.Pages li a:hover {
+	color: var(--color-black);
+}
+
+.Pages li:not(:first-of-type) {
+	margin-left: 8px;
+}
+
+.Pages li:hover {
+	background: var(--color-primary);
+}
+
+.Selected {
+	background: var(--color-primary) !important;
+}
+
+.Disabled {
+	cursor: default;
+	background: var(--color-grey) !important;
+}
+
+.Pages li:active {
+	background: none !important;
+	color: var(--color-primary) !important;
+	border: 1px solid var(--color-primary) !important;
+}
+
+.Pages li:active a {
+	color: var(--color-primary) !important;
+}

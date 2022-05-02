@@ -40,7 +40,16 @@ contract Provenance is Ownable {
     }
 
     Types public typeOfProvenance;
+
     Instrument public instrument;
+
+    //For Buyer-Initated Transfer
+
+    Offer public currentOffer;
+
+    //For Seller-Initated Transfer
+    
+    address public pendingOwner;
 
     mapping(uint16 => Owner) public ownerProvenance;
 
@@ -48,13 +57,9 @@ contract Provenance is Ownable {
 
     uint8 public ownerCount;
 
-    //For Seller-Initated Transfer
-    address public pendingOwner;
 
-    //For Buyer-Initated Transfer
 
-    Offer public currentOffer;
-
+    event OfferMade(address buyer, uint amount);
 
     //Contract Instances. Can hardcode Addresses for less gas(?)
     InstrumentDeedToken public instrumentDeedTokenContract;
@@ -145,6 +150,8 @@ contract Provenance is Ownable {
  
         currentOffer.buyer = msg.sender;
         currentOffer.offer = msg.value;
+
+        emit OfferMade(msg.sender, msg.value);
 
     }
 

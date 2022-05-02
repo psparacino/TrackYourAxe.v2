@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import Provenance from '../../../artifacts/contracts/Provenance.sol/Provenance.json'
 
 //react-bootstrap imports
-import { Container, Carousel, Table, Row, Col, Card, Image, Button, ListGroup, ListGroupItem, InputGroup, Form, FormControl} from 'react-bootstrap';
+import { Container, Carousel, Table, Card, Image, Button} from 'react-bootstrap';
 
 // context imports
 import { useItemContext } from '../../../src/context/ItemContext';
@@ -18,6 +18,10 @@ import { useTransferContext } from '../../../src/context/TransferContext';
 
 // styles
 import styles from '../Search.module.css'
+
+//  components Imports
+
+import { OfferModal } from '../../../src/components/OfferModal/OfferModal';
 
 
 
@@ -34,12 +38,11 @@ const NonUserProvenance = () => {
 
 
   const [ loaded , setLoaded ] = useState(false);
-
   const [ provenanceContract, setProvenanceContract ] = useState();
   const [ provenanceProps, setProvenanceProps ] = useState();
   const [ provenanceOwnerInfo, setProvenanceOwnerInfo ] = useState();
   const [pendingOwner, setPendingOwner] = useState();
-
+  
 
  
   //load all info 
@@ -186,7 +189,11 @@ const NonUserProvenance = () => {
   const MakeOfferOnProvenance = () => {
     const [newOfferAmount, setNewOfferAmount] = useState();
     const [currentOfferBuyer, setCurrentOfferBuyer] = useState();
-    const [currentOfferAmount, setCurrentOfferAmount] = useState(0)
+    const [currentOfferAmount, setCurrentOfferAmount] = useState(0);
+    const [show, setShow] = useState(false);
+    const [offerMade, setOfferMade] = useState(false)
+
+
 
     
 
@@ -198,13 +205,20 @@ const NonUserProvenance = () => {
       if (buyer !== ethers.constants.AddressZero) setCurrentOfferBuyer(buyer);
       if (offer !== 0.0)setCurrentOfferAmount(ethers.utils.formatEther(offer));
       
+      if (offerMade) {
+        setOfferMade(false);
+      }
+      
 
-    },[provenanceContract])
+    },[provenanceContract, offerMade])
 
     const handleChange = event => {
-      console.log(event.target.value, "value")
+      // console.log(event.target.value, "value")
       setNewOfferAmount(event.target.value);
     }
+
+    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
 
     
 
@@ -214,11 +228,6 @@ const NonUserProvenance = () => {
       .catch(error => console.log(error.data.message, "offer error"));
     }
 
-    async function offer() {
-      await provenanceContract.makeOffer({value: ethers.utils.parseEther(newOfferAmount)}).
-      then(result => console.log(result))
-      .catch(error => console.log(error.data.message, "offer error"));
-    }
 
     async function cancel() {
       await provenanceContract.cancelOffer().
@@ -243,18 +252,14 @@ const NonUserProvenance = () => {
 
         {currentOfferBuyer ?
           <div>
-            <h4>Current Offer By: {currentOfferBuyer}</h4>
-            <br/>
-            <h4>Amount: {ethers.constants.EtherSymbol}{currentOfferAmount}</h4>
+            <h4 style={{paddingBottom: '40px'}}>Current Offer By: {currentOfferBuyer} for {ethers.constants.EtherSymbol}{currentOfferAmount} </h4>
           </div>
           : 
           <div>
             <p>No Current Offers on This Provenance</p>
           </div>}
 
-          <p>eventually this transfer flow should pop up in a modal</p>
-
-          {(provenanceOwnerInfo.ownerAddress === mainAccount) && (currentOfferAmount !== (0 && undefined)) ?
+          {(provenanceOwnerInfo.ownerAddress === mainAccount) && (currentOfferAmount !== (0 || undefined)) ?
           <div>
             <Button variant="primary" onClick={approveToken}>Approve Token Transfer</Button>
             <Button variant="primary" onClick={accept}>Accept Offer</Button>
@@ -263,27 +268,21 @@ const NonUserProvenance = () => {
           </div>
           : 
           <div>
-            <input 
-            name="userAddress" 
-            type="text" 
-            placeholder='make offer in eth'
-            onChange={handleChange}
-            value={newOfferAmount || ''}
-            style={{width: '65%', height: '40px', marginBottom: '20px', fontSize: '20px', textAlign: 'center'}} />
+
             <div>
-              <Button style={{fontSize: '40px'}} onClick={offer}>Make Offer</Button>
-            </div>
-          </div>}
+              <Button style={{fontSize: '40px'}} onClick={handleShow}>Make Offer</Button>
+            </div> 
 
-        {provenanceOwnerInfo.ownerAddress === mainAccount ?
-          null
-          : 
-null
-        }
+            <OfferModal style={{zindex: '1'}} 
+            show={show} 
+            handleClose={handleClose}
+            handleChange={handleChange} 
+            newOfferAmount={newOfferAmount}
+            provenanceContract={provenanceContract}
+            setOfferMade={setOfferMade}
+             />
 
-
-
-        
+          </div>}      
       </div>
       
     )
