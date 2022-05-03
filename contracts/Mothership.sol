@@ -42,8 +42,8 @@ contract Mothership is Ownable {
         uint16 year, 
         uint16 instrumentDeedToken,
         bytes32 date,
-        bytes32 verificationPhotoHash,
-        bytes[] instrumentPhotoHashes);
+        string verificationPhotoHash,
+        string[] instrumentPhotoHashes);
     
     event ProvenanceSale(
         address seller,
@@ -63,8 +63,8 @@ contract Mothership is Ownable {
         uint16 _year, 
         uint16 _instrumentDeedToken,
         bytes32 _date,
-        bytes32 _verificationPhotoHash,
-        bytes[] memory _instrumentPhotoHashes
+        string memory _verificationPhotoHash,
+        string[] memory _instrumentPhotoHashes
     ) external returns(address) {
         //might need to check for dupes on frontend
         require(msg.sender == instrumentDeedTokenContract.ownerOf(_instrumentDeedToken), "You are not the owner of the Deed Token for this instrument");
@@ -112,8 +112,8 @@ contract Mothership is Ownable {
         uint16 _year, 
         uint16 _instrumentDeedToken,
         bytes32 _date,
-        bytes32 _verificationPhotoHash,
-        bytes[] memory _instrumentPhotoHashes
+        string memory _verificationPhotoHash,
+        string[] memory _instrumentPhotoHashes
     ) public returns(address) {
         //might need to check for dupes on frontend
         Provenance provenance = new Provenance(
@@ -163,8 +163,8 @@ contract Mothership is Ownable {
         uint16 _year, 
         uint16 _instrumentDeedToken,
         bytes32 _date,
-        bytes32 _verificationPhotoHash,
-        bytes[] memory _instrumentPhotoHashes
+        string memory _verificationPhotoHash,
+        string[] memory _instrumentPhotoHashes
     ) public {
         for(uint i = 0; i<= 10; i++){
             createPracticeProvenance(_enumType, _serial, _brand, _model, _year, _instrumentDeedToken, _date, _verificationPhotoHash, _instrumentPhotoHashes);

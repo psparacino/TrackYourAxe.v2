@@ -16,6 +16,8 @@ describe("Mothership-Transfer Tests", function () {
     let addr2;
     let addr3;
     let addr4;
+    const stringToBytes32 = (string) => ethers.utils.formatBytes32String(string);
+    const bytes32ToString = (bytes) => ethers.utils.parseBytes32String(bytes);
 
     before(async function () {
         const IDTC = await ethers.getContractFactory('InstrumentDeedToken');
@@ -27,7 +29,16 @@ describe("Mothership-Transfer Tests", function () {
 
         await TokenContract.safeMint(addr1.address, "www.google.com")
 
-        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, 'ipfs', 'John', ["ipfs"])
+        const result = await MothershipContract.connect(addr1).createNewProvenance(
+            1, 
+            stringToBytes32('serial#'), 
+            stringToBytes32('Selmer'), 
+            stringToBytes32('SBA'), 
+            stringToBytes32('1957'), 
+            0, 
+            stringToBytes32("12/31/1999"), 
+            'ipfs', 
+            ["ipfs"])
         let receipt = await result.wait()
         let event = await receipt.events?.filter((x) => {return x.event == "ProvenanceCreated"});
         let ProvenanceAddress = event[0].args.childAddress;

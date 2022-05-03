@@ -25,7 +25,7 @@ import { Container, Table, Row, Col, Card, Spinner } from 'react-bootstrap';
 
 const PublicItemTable = ({ provenanceObjects }) => {
   const { mainAccount, signer } = useUserContext()
-  const {ipfsGetterRootURL} = useItemContext();
+  const {ipfsGetterRootURL, bytes32ToString } = useItemContext();
   // const [currentPage, setCurrentPage] = useState(1);
   // const [currentProvenances, setCurrentProvenances] = useState();
   // const [postsPerPage] = useState(10);
@@ -64,7 +64,12 @@ const PublicItemTable = ({ provenanceObjects }) => {
           const{ serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = ProvenanceProps;   
           const { ownerAddress, name, verificationPhotoHash, date} = ProvenanceOwnerInfo;
           const { buyer, offer } = ProvenanceCurrentOffer;
+
           const currentOffer = formatEther(offer.toString());
+
+          const brandFormatted = bytes32ToString(brand);
+
+          const modelFormatted = bytes32ToString(model);
         
 
           const pendingBool = !(ProvenancePendingOwner === ethers.constants.AddressZero);
@@ -93,7 +98,7 @@ const PublicItemTable = ({ provenanceObjects }) => {
                                       pendingBool ? styles.pendingContainer : styles.publicContainer
                                       }>
                         {/* fix below h2 */}
-                        <h2 className={ownerBool ? (pendingBool ? styles.linkPlacebo : null ) : console.log("nope")}>{brand} {model}</h2>
+                        <h2 className={ownerBool ? (pendingBool ? styles.linkPlacebo : null ) : console.log("nope")}>{brandFormatted} {modelFormatted}</h2>
                         {(pendingBool && ownerBool) ? <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p> : null }
                         {(pendingBool && !ownerBool) ? <Link href={`incoming-transfers/${provenanceAddress}`} style={{color: 'red'}}>Claim This Provenance</Link> : null }
                         {currentOffer > 0 ? <h5 style={{color:'orange'}}>CURRENT OFFER ON THIS PROVENANCE: {ethers.constants.EtherSymbol}{currentOffer}</h5> : null}
@@ -126,10 +131,10 @@ const PublicItemTable = ({ provenanceObjects }) => {
                                       <td>Provenance Address: {provenanceAddress}</td>
                                     </tr>
                                     <tr key={provenanceAddress+brand}>
-                                      <td>Brand: {brand}</td>
+                                      <td>Brand: {brandFormatted}</td>
                                     </tr>
                                     <tr key={provenanceAddress+model}>
-                                      <td>Model: {model}</td>
+                                      <td>Model: {modelFormatted}</td>
                                     </tr>
                                     <tr key={provenanceAddress+instrumentDeedToken.toString()+ Math.random()}>
                                       <td>Token ID: {instrumentDeedToken.toString()}</td>

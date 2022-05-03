@@ -14,6 +14,8 @@ describe("Provenance Tests", function () {
     let owner;
     let addr1;
     let addr2;
+    const stringToBytes32 = (string) => ethers.utils.formatBytes32String(string);
+    const bytes32ToString = (bytes) => ethers.utils.parseBytes32String(bytes);
 
     beforeEach(async function () {
         const IDTC = await ethers.getContractFactory('InstrumentDeedToken');
@@ -47,14 +49,23 @@ describe("Provenance Tests", function () {
         //console.log(MothershipContract.address, "MothershipContract address")
 
 
-        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, "12/31/2000", 'ipfs', ["ipfs"])
+        const result = await MothershipContract.connect(addr1).createNewProvenance(
+            1, 
+            stringToBytes32('serial#'), 
+            stringToBytes32('Selmer'), 
+            stringToBytes32('SBA'), 
+            1957, 
+            0, 
+            stringToBytes32("12/31/1999"), 
+            'ipfs', 
+            ["ipfs"])
         let receipt = await result.wait()
         let event = await receipt.events?.filter((x) => {return x.event == "ProvenanceCreated"});
         let ProvenanceAddress = event[0].args.childAddress;
         ProvenanceContract = new ethers.Contract(ProvenanceAddress, ProvenanceABI.abi, addr1);
 
         //Sample Provenance Trait
-        expect((await ProvenanceContract.instrument()).serial).to.equal('serial#');
+        expect((await ProvenanceContract.instrument()).serial).to.equal(stringToBytes32('serial#'));
         //Mothership remains Provenance 'owner'
         expect(await ProvenanceContract.owner()).to.equal(MothershipContract.address);
         //Provenance listed owner is owner of item
@@ -67,7 +78,14 @@ describe("Provenance Tests", function () {
         let ProvenanceContractTest;
         
 
-        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 'serial#', 'Selmer', 'SBA', 1957, 0, "12/31/2000", 'ipfs', ["ipfs"])
+        const result = await MothershipContract.connect(addr1).createNewProvenance(1, 
+            ethers.utils.formatBytes32String('serial'), 
+            ethers.utils.formatBytes32String('Selmer'), 
+            ethers.utils.formatBytes32String('SBA'), 
+            1957, 0, 
+            ethers.utils.formatBytes32String("12/31/2000"), 
+            ethers.utils.formatBytes32String('ipfs'), 
+            [ethers.utils.formatBytes32String("ipfs")])
         let receipt = await result.wait()
         let event = await receipt.events?.filter((x) => {return x.event == "ProvenanceCreated"});
         let ProvenanceAddress = event[0].args.childAddress;
@@ -90,7 +108,7 @@ describe("Provenance Tests", function () {
         const ProvenanceContractTestSecondSigner = await ProvenanceContractTest.connect(addr2);  
 
 
-        await ProvenanceContractTestSecondSigner.connect(addr2).claimOwnership(provenanceOwner, 'verificationPhoto2','12/31/1999');    
+        await ProvenanceContractTestSecondSigner.connect(addr2).claimOwnership(provenanceOwner, 'verificationPhoto2',stringToBytes32('12/31/1999'));    
 
 
         const updatedAddr1Provs = await MothershipContract.connect(addr1).getOwnersInstruments();

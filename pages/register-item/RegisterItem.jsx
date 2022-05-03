@@ -72,8 +72,9 @@ const RegisterItem = () => {
 
 
     //context
-    const {mainAccount, provider, signer, dateString} = useUserContext();
+    const { mainAccount, provider, signer, dateString } = useUserContext();
     const { MothershipContract, TokenContract } = useContractContext();
+    const { stringToBytes32 } = useItemContext();
 
 
     const {items, 
@@ -146,12 +147,12 @@ const RegisterItem = () => {
   const createProvenance = () => {
     MothershipContract.createNewProvenance(
       formData.type, 
-      formData.serial, 
-      formData.brand , 
-      formData.model, 
+      stringToBytes32((formData.serial).toString()), 
+      stringToBytes32(formData.brand) , 
+      stringToBytes32(formData.model), 
       formData.year, 
       unusedTokenID, 
-      dateString,
+      stringToBytes32(dateString),
       formData.verificationphotohash, 
       formData.instrumentphotohashes)
       .then(async(result) => {
@@ -209,9 +210,14 @@ const RegisterItem = () => {
       let provenanceTokens = [];
       let unusedTokens = [];
 
-      for (let i = 0; i < provenanceObjects.length; i++) {
-        provenanceTokens.push(provenanceObjects[i].ProvenanceProps.instrumentDeedToken.toNumber())
+      useEffect(async() => {
+        if (provenanceObjects && provenanceObjects.length > 0){
+        for (let i = 0; i < provenanceObjects.length; i++) {
+          provenanceTokens.push(provenanceObjects[i].ProvenanceProps.instrumentDeedToken)
+        }
       }
+      }, [provenanceObjects])
+
       
       tokens.forEach((token) => {
         const result = provenanceTokens.includes(token);
@@ -303,7 +309,7 @@ const RegisterItem = () => {
         <div className={styles.NewProvenance}>
           <Container>
             <h1 className="pt-5 mx-auto">Create A Deed of Provenance</h1>
-            <h4>First time minting? Follow the <Link href="guides/tutorial">tutorial</Link></h4>
+            <h4>First time minting? Follow the <Link href="/guides/tutorial">tutorial</Link></h4>
             <h2 style={{paddingTop: '40px'}}>STEP 1: MINT TOKEN (NFT)</h2>
             <Accordion className={styles.bodyText}>
               <Accordion.Item eventKey="0">

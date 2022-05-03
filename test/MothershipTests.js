@@ -10,10 +10,14 @@ describe("Mothership Tests", function () {
     
     let TokenContract;
     let MothershipContract;
-    //let ProvenanceContract;
+
+    const provider = waffle.provider;
+
     let owner;
     let addr1;
     let addr2;
+    const stringToBytes32 = (string) => ethers.utils.formatBytes32String(string);
+    const bytes32ToString = (bytes) => ethers.utils.parseBytes32String(bytes);
 
     beforeEach(async function () {
         const IDTC = await ethers.getContractFactory('InstrumentDeedToken');
@@ -118,34 +122,49 @@ describe("Mothership Tests", function () {
     });
 
     it("get all Provenances from All Owners", async function() { 
-        const type = [0, 1, 3]
+        const type = [0, 1, 2]
         const brand = ["Jupiter", "Yamaha", "JL Woodwinds", "Yanigisawa", "Antigua Winds", "Pearl", "Selmer", "Buffet"]
         const model = ["Mark VI", "SBA", "R13", "Bronze Series", "Cigar Cutter", "Balanced Action", "King 20", "Silver Fox"]
-        const images = ["QmNvzkSMNCF9bRry5CHiTCnz7s8Fc6ooNVQyuFc4EPDaQV", "QmPYABsoen4yRJWp4ta7yrhxgsqNEQLK15c68BL6BQrQAW", "QmQ4wfPDcxJeLcypv6JQt6757Nmzi95k5wZbjjFYzjsUW2", "QmdBEnkC1qXc1pZsGkRTPkwhqohGyiTd7tZKvD1v8VQ65Y" ]
+        const images = ["QmNvzkSMNCF9bRry5CHiTCnz7s8Fc6ooNVQyuFc4EPDaQV", "QmPYABsoen4yRJWp4ta7yrhxgsqNEQLK15c68BL6BQrQAW", "QmQ4wfPDcxJeLcypv6JQt6757Nmzi95k5wZbjjFYzjsUW2", "QmdBEnkC1qXc1pZsGkRTPkwhqohGyiTd7tZKvD1v8VQ65Y"]
+    
         function serial() {
-            return Math.floor(Math.random() * 1000)
-        }  
+            return Math.floor(Math.random() * 1000);
+        }
+    
         function tokenID() {
             return Math.floor(Math.random() * 100)
-        } 
+        }
         function random_element(items)
             {  return items[Math.floor(Math.random()*items.length)];
-           }  
+           }
         function randomDate(start, end) {
+            const dateStr = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+            return dateStr.toLocaleDateString();
+        }
+        function randomYear(start, end) {
             return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-            } 
-        await TokenContract.connect(addr1).batchMint(100, random_element(images));
-        
-        const create10Provenances = () => { 
-                let type1 = random_element(type);
-                let serial1 = serial();
-                let brand1 = random_element(brand)
-                let model1 = random_element(model);
-                let year1 = (randomDate(new Date(1897, 0, 1), new Date())).getFullYear();
+            }
+    
+        const batchMintTokens = () => {
+            TokenContract.batchMint(100, random_element(images))
+        }
+    
+        const create10Provenances = async() => {
+            
+    
+                let type1 = random_element(type);        
+                let serial1 = stringToBytes32((serial()).toString());    
+                let brand1 = stringToBytes32(random_element(brand));
+                let model1 = stringToBytes32(random_element(model));
+                let year1 = (randomYear(new Date(1897, 0, 1), new Date())).getFullYear();
                 let tokenID1 = tokenID();
-                let date1 = (randomDate(new Date(1897, 0, 1), new Date()));
-                let vImages1 = random_element(images)
-                MothershipContract.connect(addr1).createBatchProvenances(
+                let date1 = stringToBytes32(((randomDate(new Date(1897, 0, 1), new Date()))).toString());
+       
+                let vImages1 = random_element(images);
+    
+        
+    
+                await MothershipContract.connect(addr1).createBatchProvenances(
                     type1, 
                     serial1, 
                     brand1, 
@@ -155,24 +174,33 @@ describe("Mothership Tests", function () {
                     date1,
                     vImages1, 
                     images)
+                    .then(async(result) => {
+                      provider.waitForTransaction(result.hash)
+                      .then(mined => {
+                          if (mined) {        
+                            MothershipContract.once("ProvenanceCreated", (type, newAddress) => {
+                              
+                              console.log(`CreateBatchProvenances(11) a success!`)
+                              
+                          })}
+                      })
+                      
+                    })
+                    .catch(error => console.log(error, "error"))
             
             }
+
+        await batchMintTokens()
 
         for (var i = 1; i < 8; i++) create10Provenances();
 
         let ownerArray = await MothershipContract.getOwners();
         
-        expect (ownerArray[0]).to.equal(addr1.address)
-
-
-        let ownersToAxes = await MothershipContract.getOwnersToAxesOwner(addr1.address);
-        
+        expect (ownerArray[0]).to.equal(addr1.address)  
         let allAxes = await MothershipContract.getAllProvenances();
 
 
-        // let result = await MothershipContract.getAllProvenances();
-
-        //console.log(result, "getAll Result")
+      
 
         
     

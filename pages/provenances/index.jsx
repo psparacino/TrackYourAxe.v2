@@ -32,7 +32,7 @@ const OwnedProvenanceHub = () => {
 
   const { MothershipContract, TokenContract } = useContractContext();
 
-  const {tokens, setTokens, items, setItems, itemAdded,setItemAdded, provenanceObjects, ipfsGetterRootURL, setProvenanceObjects} = useItemContext();
+  const {tokens, setTokens, items, setItems, itemAdded,setItemAdded, provenanceObjects, ipfsGetterRootURL, setProvenanceObjects, bytes32ToString} = useItemContext();
 
   const router = useRouter();
 
@@ -61,7 +61,11 @@ const OwnedProvenanceHub = () => {
           const pendingBool = !(ProvenancePendingOwner === ethers.constants.AddressZero);
           const ownerBool = (ownerAddress === mainAccount);
 
-         
+          const serialFormatted = bytes32ToString(serial);
+          const brandFormatted = bytes32ToString(brand);
+          const modelFormatted = bytes32ToString(model);
+
+            
             return (
 
               <div key={provenanceAddress}>
@@ -73,7 +77,7 @@ const OwnedProvenanceHub = () => {
                         key={provenanceAddress + 'card'} 
                         className={pendingBool ? styles.pendingContainer : styles.ownedContainer }>
                         
-                        <h2 className={pendingBool ? styles.linkPlacebo : null }>{brand} {model}</h2>
+                        <h2 className={pendingBool ? styles.linkPlacebo : null }>{brandFormatted} {modelFormatted}</h2>
 
                         {pendingBool ? <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p>  : null }
                         
@@ -91,10 +95,10 @@ const OwnedProvenanceHub = () => {
                                       <td>Provenance Address: {provenanceAddress}</td>
                                     </tr>
                                     <tr key={provenanceAddress+brand}>
-                                      <td>Brand: {brand}</td>
+                                      <td>Brand: {brandFormatted}</td>
                                     </tr>
                                     <tr key={provenanceAddress+model}>
-                                      <td>Model: {model}</td>
+                                      <td>Model: {modelFormatted}</td>
                                     </tr>
                                     <tr key={provenanceAddress+instrumentDeedToken.toString()+ Math.random()}>
                                       <td>Token ID: {instrumentDeedToken.toString()}</td>
