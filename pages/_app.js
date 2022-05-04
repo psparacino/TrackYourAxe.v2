@@ -10,7 +10,7 @@ import '../src/components/DragAndDrop.css';
 
 
 //component imports
-import NavBar from '../src/components/NavBar';
+import NavBar from '../src/components/NavBar/NavBar';
 
 //context imports
 import { UserContextProvider} from '../src/context/UserContext';

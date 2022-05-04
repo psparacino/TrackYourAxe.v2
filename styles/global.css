@@ -7,13 +7,12 @@
   pointer-events: none;
 }
 
-h1 {
-  font-family:'Courier New', Courier, monospace;
-  font-weight: bold;
-  text-align: center;
-}
 
 .modal-backdrop {
   z-index: 0;
+}
+
+h1 h2 h3 h4 p {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 

@@ -230,8 +230,7 @@ return (
     </div>
     {/* <div style={{textAlign: 'center'}}> */}
     <div style={{textAlign: 'center'}}>
-    <Button onClick={clearSearchForm}>Clear Search Form</Button>
-    <Button onClick={()=> {console.log(values)}}>Values</Button>
+    {/* <Button onClick={()=> {console.log(values)}}>Values</Button> */}
 
     </div>
 
@@ -293,6 +292,8 @@ return (
                 placeholder='Search...'
                 onChange={handleInputChange}
             />
+            <br/>
+        <Button style={{marginTop: '25px'}} variant="outline-primary" onClick={clearSearchForm}>Clear Search Form</Button>
     </Container>
 
 

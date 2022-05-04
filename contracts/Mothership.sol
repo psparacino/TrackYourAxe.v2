@@ -149,9 +149,7 @@ contract Mothership is Ownable {
             _verificationPhotoHash, 
             _instrumentPhotoHashes);
 
-        return(address(provenance));
-            
-        
+        return(address(provenance));                
     }
 
 
@@ -201,11 +199,12 @@ contract Mothership is Ownable {
         uint index = _findArrayIndex(pendingTransfers[buyer], provenance);
 
        _burnTransferIndex(buyer, index);
-
     }
 
     
+    // ******************************************
     // INTERNAL FUNCTIONS FOR updateOnProvenanceSale 
+    // ******************************************
 
     function _findProvenanceIndex(address seller, Provenance provenanceForIndex) view internal returns(uint) {
         uint index;
@@ -269,7 +268,9 @@ contract Mothership is Ownable {
      }
      */
 
-    //FOR OWNER ONLY functions
+    // *********************
+    // Admin Only Functions
+    // *********************
 
     function setExistingProvenance() public onlyOwner {
 

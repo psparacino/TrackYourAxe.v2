@@ -32,7 +32,7 @@ const NonUserProvenance = () => {
   const { ipfsGetterRootURL, bytes32ToString } = useItemContext();
   const { TokenContract, MothershipContract } = useContractContext();
   const { mainAccount, provider, signer } = useUserContext();
-  const { setOutgoingContract } = useTransferContext();
+
   const router = useRouter();
 
   const { nonUserProvenance } = router.query;
@@ -43,7 +43,7 @@ const NonUserProvenance = () => {
   const [ provenanceContract, setProvenanceContract ] = useState();
   const [ provenanceProps, setProvenanceProps ] = useState();
   const [ provenanceOwnerInfo, setProvenanceOwnerInfo ] = useState();
-  const [pendingOwner, setPendingOwner] = useState();
+
   
 
  
@@ -112,82 +112,6 @@ const NonUserProvenance = () => {
         </div>
     )
   }
-
-
-
-//   const ProvenanceHistory = () => { 
-
-//     const [provenanceHistoryArray, setProvenanceHistoryArray] = useState([]);
-
-//     useEffect(async() => {
-      
-//       if (MothershipContract && loaded) {
-//         loadProvenanceHistory()
-//       }
-//       async function loadProvenanceHistory() { 
-//           const history = await provenanceContract.getOwnershipHistory();
-//           const historyShift = [...history];
-//           historyShift.shift();
-//           // The line below is throwing an error due to state update, memory leak. make a note to fix.
-//           setProvenanceHistoryArray(historyShift);
-          
-//         }
-//     },[MothershipContract, loaded])
-
-
-//     if (loaded){
-//       return (  
-//           <div>
-//           <hr />
-//           <h1>Provenance Ownership History</h1>
-//           {provenanceHistoryArray.map((provenanceOwnerInfo, index)=> {
-//             const { ownerAddress, date, verificationPhotoHash, ownerCount  } = provenanceOwnerInfo;
-         
-//             const dateFormatted = bytes32ToString(date);
-//             return (
-
-//               <Container key={ownerAddress}>
-//                 <Card>
-                  
-//                   <Card.Header>Owner {ownerCount}</Card.Header>
-//                     <Card.Body>
-//                       <div className={styles.cardContainer}>
-//                         <div className={styles.cardPhotoContainer}>
-//                           {console.log(verificationPhotoHash)}
-//                           <Image src={ipfsGetterRootURL+verificationPhotoHash} className={styles.cardPhoto} alt={'verification photo'} />
-//                         </div>
-//                         <div className={styles.cardInfoContainer}>
-//                           <Card.Title>Owner Address</Card.Title>             
-//                           <Card.Text style={{color: 'black'}}>
-//                             {ownerAddress}
-//                           </Card.Text>
-//                           <Card.Title>Date Acquired</Card.Title>
-//                           <Card.Text style={{color: 'black'}}>+
-//                             {dateFormatted}
-//                           </Card.Text>
-
-//                           <Card.Title>Notes</Card.Title>
-//                           <Card.Text style={{color: 'black'}}>
-//                             Additional data can maybe stored off-chain?
-//                           </Card.Text>
-//                         </div>
-                        
-                        
-//                       </div>         
-
-//                     </Card.Body>
-//                   </Card>    
-//                 </Container>
-//               )
-//             })
-//           }              
-//         </div>
-        
-//        )} else {
-//         return (
-//           <p>nothing to show here</p>
-//         )}
-// }
 
   const MakeOfferOnProvenance = () => {
     const [newOfferAmount, setNewOfferAmount] = useState();
@@ -289,9 +213,9 @@ const NonUserProvenance = () => {
     )
   }
   
+  // need logic here for loading and/or ownership of Contract
 
-
-    if (loaded) {
+    if (loaded && provenanceContract !== undefined) {
     const { serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = provenanceProps; 
 
     const brandFormatted = bytes32ToString(brand);
@@ -360,9 +284,10 @@ const NonUserProvenance = () => {
   
     } else {
       return(
-        <>
-          <h1 style={{paddingTop: '20vh'}}>You do not own this Provenance.</h1>
-        </>
+        <div style={{textAlign: 'center'}} >
+          <h1 style={{paddingTop: '20vh'}}>No Public Provenance at this Address</h1>
+          <p>if you think you own this item please check in your items</p>
+        </div>
 
       )
     }

@@ -12,7 +12,6 @@ import { ethers } from 'ethers';
 import fox from '../public/images/MetaMask_Fox.svg'
 import mintNFT from '../public/images/mintNFT-graphic.png'
 import tablet from '../public/images/tablet.jpeg'
-
 import rosettaStone from '../public/images/799px-Rosetta_Stone_BW.jpeg'
 
 import arrow from '../public/images/iconmonstr-arrow-right-thin.svg'
@@ -54,6 +53,7 @@ function App() {
               <Link href="#seeItWork">
                 <Button 
                   size='lg'
+                  variant="outline-primary"
                   className={styles.introButton}>
                   See How It Works
                 </Button>
@@ -63,7 +63,8 @@ function App() {
               <Link href="#howDoesItWork">
                 <Button 
                   size='lg'
-                  variant='secondary'
+                  variant="outline-primary"
+
                   className={styles.introButton}>
                   Read How It Works
                 </Button>
@@ -76,7 +77,7 @@ function App() {
           size='lg'
           className={styles.registerButton}
           href='register-item'
-          variant="warning"
+          variant="success"
         >
           Register Item
         </Button>
@@ -88,34 +89,22 @@ function App() {
   const Visualization = () => {
     return(
       <Container className={styles.pageContainer}>
-        <h2>Simple Two-Step Process to Creating a Provenance</h2>
-        <p>Prerequisite: Create a <Link href="/guides/wallet">Wallet</Link> (if you don't have one already)</p>
-
-
         <Row>
-          <Col>
-            <h4>Pre-Requisite: Create Walllet</h4>
-          </Col>
-          <Col xs={2} >
-            <h1>&#8594;</h1>
-          </Col>
-          <Col className={styles.graphicContainer}>
-            <Image
-            id="seeItWork"
-            src={fox}
-            layout='fill'
-            objectFit='contain'
-            fluid="true"
-             />        
-          </Col>
+          <h2>Simple Two-Step Process to Creating a Provenance</h2>
+          <p>Prerequisite: Create a <Link href="/guides/wallet">Wallet</Link> (if you don't have one already)</p>
+          {/* <Image
+              id="seeItWork"
+              src={fox}
+              layout='fill'
+              className={styles.walletImage}
+          />  */}
         </Row>
-        
 
         <Row>
-          <Col>
-            <h4>1. Mint an NFT with a verification photo</h4>
+          <Col className={styles.flexContainerCentered}>
+              <h4 >1. Mint an NFT with a verification photo</h4>
           </Col>
-          <Col xs={2} >
+          <Col xs={2} className={styles.flexContainerCentered} >
             <h1>&#8594;</h1>
           </Col>
           <Col>
@@ -128,10 +117,10 @@ function App() {
         </Row>
 
         <Row>
-          <Col>
+          <Col className={styles.flexContainerCentered}>
             <h4>2. Add item information and additional photos to create the Provenance.</h4>
           </Col>
-          <Col xs={2}>
+          <Col xs={2} className={styles.flexContainerCentered}>
             <h1>&#8594;</h1>
           </Col>
           <Col className={styles.graphicContainer}>  
@@ -139,13 +128,14 @@ function App() {
               src={rosettaStone}   
               layout='fill'
               objectFit='contain'
+              className={styles.imageSizing}
               />   
           </Col>
         </Row>
         <h1>Done!</h1>
         <p>for a step-by-step guide to creating a Provenance click <Link href="/guides/step-by-step">here</Link></p>
         <p>for a more technical description of what is happening behind the scenes <Link href="/guides/technical-step-by-step">here</Link></p>
-        <Link href="#top"><Button>Top</Button></Link>
+        <Link href="#top"><Button variant="outline-secondary" className={styles.topButton}>Top</Button></Link>
 
       </Container>
 
@@ -164,7 +154,7 @@ function App() {
         Ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget. Vulputate odio ut enim blandit volutpat. Metus aliquam eleifend mi in. Feugiat in ante metus dictum at. Lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque. Praesent tristique magna sit amet purus gravida quis blandit. Risus viverra adipiscing at in tellus. Fusce id velit ut tortor pretium viverra suspendisse potenti. Aliquet risus feugiat in ante metus dictum at. Nec ultrices dui sapien eget mi proin. Tortor vitae purus faucibus ornare suspendisse. Eros in cursus turpis massa tincidunt dui ut ornare. Consequat semper viverra nam libero justo laoreet sit. Egestas sed tempus urna et pharetra pharetra massa massa ultricies. Diam quam nulla porttitor massa id neque aliquam vestibulum morbi.
 
         Molestie ac feugiat sed lectus. Diam donec adipiscing tristique risus nec feugiat in fermentum posuere. Curabitur gravida arcu ac tortor dignissim convallis aenean et tortor. Et odio pellentesque diam volutpat commodo sed. Nunc aliquet bibendum enim facilisis gravida. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper dignissim. Tellus orci ac auctor augue. Eget nulla facilisi etiam dignissim diam quis enim lobortis. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget. Elementum integer enim neque volutpat. Habitant morbi tristique senectus et. Convallis convallis tellus id interdum. Sit amet massa vitae tortor condimentum lacinia quis vel. Sit amet mauris commodo quis imperdiet massa. Massa massa ultricies mi quis hendrerit.</p>
-        <Link href="#top"><Button>Top</Button></Link>
+        <Link href="#top"><Button variant="outline-secondary" className={styles.topButton}>Top</Button></Link>
       </Container>
     )
   }
@@ -174,7 +164,11 @@ function App() {
         <div className="App" id="bootstrap-overrides">
          
           <Home />  
-          <Visualization />
+          <div>
+            <Visualization />
+
+          </div>
+          
           <HowDoesItWork />  
           
          

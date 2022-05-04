@@ -191,7 +191,7 @@ contract Provenance is Ownable {
         instrumentDeedTokenContract.safeTransferFrom(_seller, msg.sender, instrument.instrumentDeedToken);
     }
 
-     // ************************
+    // ************************
     // Buyer Initated Transfer
     // ************************
 
@@ -219,6 +219,8 @@ contract Provenance is Ownable {
         require(sent, "return transaction failed");
         
     }
+
+    // Piur
     function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
         if (_i == 0) {
             return "0";
@@ -240,6 +242,10 @@ contract Provenance is Ownable {
         }
         return string(bstr);
     }
+
+    // ************************
+    // Pure Functions
+    // ************************
 
     function stringToBytes32(string memory source) public pure returns (bytes32 result) {
         bytes memory tempEmptyStringTest = bytes(source);
@@ -280,6 +286,10 @@ contract Provenance is Ownable {
         }
         return ownershipHistory;       
     }
+
+    // ************************
+    // Admin Only Functions
+    // ************************
 
     // //publish new Instrument photo to Ipfs. Needs to replace old
     // function addNewInstrumentPhoto(bytes32 instrumentPhotoHash) public onlyOwner {

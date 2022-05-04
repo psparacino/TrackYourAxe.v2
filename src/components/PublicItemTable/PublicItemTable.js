@@ -92,11 +92,10 @@ const PublicItemTable = ({ provenanceObjects }) => {
 
                       <Card 
                         key={provenanceAddress + 'card'} 
-                        id={currentOffer > 0 && !ownerBool ? styles.offerBorder : null}
+                        id={(currentOffer > 0 && !ownerBool) ? styles.offerBorder : null}
                         className={ownerBool ?
                                     styles.ownedContainer :
-                                      pendingBool ? styles.pendingContainer : styles.publicContainer
-                                      }>
+                                      pendingBool ? styles.pendingContainer : styles.publicContainer}>
                         {/* fix below h2 */}
                         <h2 className={ownerBool ? (pendingBool ? styles.linkPlacebo : null ) : console.log("nope")}>{brandFormatted} {modelFormatted}</h2>
                         {(pendingBool && ownerBool) ? <p style={{color: 'red'}}>This provenance has been released and is awaiting claim by buyer {ProvenancePendingOwner}</p> : null }
@@ -105,14 +104,15 @@ const PublicItemTable = ({ provenanceObjects }) => {
              
                           <Card.Body>
                             <Row style={{display: 'flex'}}>
-                              <Col>
+                              <Col className={styles.imageColumn}>
                                  <div className={styles.imageContainer}>
-                                  <Image 
-                                    key={provenanceAddress+ verificationPhotoHash} 
-                                    src={ipfsGetterRootURL + verificationPhotoHash} 
-                                    layout="fill"
-                                    objectFit="contain"
-                                    className={styles.image} />
+                                    <Card.Img
+                                      md
+                                      key={provenanceAddress+ verificationPhotoHash} 
+                                      src={ipfsGetterRootURL + verificationPhotoHash} 
+                                      layout="fill"
+                                      objectFit="contain"
+                                      className={styles.image} />
                                  </div>              
                               </Col>
 
