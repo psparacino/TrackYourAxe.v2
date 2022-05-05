@@ -31,7 +31,7 @@ function PublicProvenanceSearchTable() {
 
     const { MothershipContract, TokenContract } = useContractContext();
     const { provider, signer } = useUserContext();
-    const { stringToBytes32 } = useItemContext();
+    const { bytes32ToString } = useItemContext();
 
     const [allProvenanceObjects, setAllProvenanceObjects] = useState();
     const [loading, setLoading] = useState(false);
@@ -130,25 +130,35 @@ function PublicProvenanceSearchTable() {
           let addresses = await MothershipContract.getAllProvenances();
           
               for (let address of addresses) {
-                  const ProvenanceContract = new ethers.Contract(address, Provenance.abi, signer);
-  
-                  const ProvenanceDetails = await ProvenanceContract.instrument()
-                  const itemPhotos = await ProvenanceContract.getItemPics();
-                  const ProvenanceProps = {...ProvenanceDetails, itemPhotos}
-       
-                  const index = ProvenanceContract.ownerCount();
-                  const ProvenanceOwnerInfo = await ProvenanceContract.ownerProvenance(index);
-  
-                  const ProvenancePendingOwner = await ProvenanceContract.pendingOwner();
-                  const ProvenanceCurrentOffer = await ProvenanceContract.currentOffer();
-                  
-                  allProvenanceArray.push({
-                    'ProvenanceContract': ProvenanceContract, 
-                    'ProvenanceProps': ProvenanceProps, 
-                    'ProvenanceOwnerInfo': ProvenanceOwnerInfo, 
-                    'ProvenancePendingOwner' : ProvenancePendingOwner,
-                    'ProvenanceCurrentOffer': ProvenanceCurrentOffer})
                 
+                const ProvenanceContract = new ethers.Contract(address, Provenance.abi, signer);
+                const ProvenanceDetailsImport = await ProvenanceContract.instrument(); 
+
+                const ProvenanceDetails = structuredClone(ProvenanceDetailsImport)
+
+                const { brand, model, serial } = ProvenanceDetails;
+
+                ProvenanceDetails.brand = bytes32ToString(brand)
+                ProvenanceDetails.model = bytes32ToString(model)
+                ProvenanceDetails.serial = bytes32ToString(serial)
+         
+
+                const itemPhotos = await ProvenanceContract.getItemPics();
+                const ProvenanceProps = {...ProvenanceDetails, itemPhotos}
+
+                const index = ProvenanceContract.ownerCount();
+                const ProvenanceOwnerInfo = await ProvenanceContract.ownerProvenance(index);
+
+                const ProvenancePendingOwner = await ProvenanceContract.pendingOwner();
+                const ProvenanceCurrentOffer = await ProvenanceContract.currentOffer();
+                  
+                allProvenanceArray.push({
+                'ProvenanceContract': ProvenanceContract, 
+                'ProvenanceProps': ProvenanceProps, 
+                'ProvenanceOwnerInfo': ProvenanceOwnerInfo, 
+                'ProvenancePendingOwner' : ProvenancePendingOwner,
+                'ProvenanceCurrentOffer': ProvenanceCurrentOffer})
+
                 }
            setAllProvenanceObjects(allProvenanceArray);   
            setLoading(false)        
@@ -178,6 +188,17 @@ function PublicProvenanceSearchTable() {
         // searchItems(values);
     };
 
+    const handleInputChangeConvertToBytes = (e) => {
+        const { name, value } = e.target;
+
+        setValues({
+        ...values,
+        [name]: value,
+        });
+        // searchItems(values);
+    };
+
+
 
     const searchItems = () => {         
             
@@ -192,10 +213,8 @@ function PublicProvenanceSearchTable() {
                     }
                
                     for (const [key, value] of Object.entries(values)) {   
-                        // console.log(value, "value inside")
                         // console.log(Object.values((combinedObj[key]).toString()), "check")
                         if ((value !== ('' || 0)) && !(Object.values((combinedObj[key]).toString()).join('').toLowerCase().includes((value.toString()).toLowerCase()))) {
-                            console.log(Object.values(combinedObj[key]).join('').toLowerCase(), "key, value") 
                             return false;                             
                         }
                     }
@@ -219,7 +238,7 @@ function PublicProvenanceSearchTable() {
 
 return (
     <>
-    <div>
+    <div style={{textAlign: 'center'}}>
         {loading ?
             <>
                 <h1>Contracts Loading...</h1>
@@ -319,8 +338,6 @@ return (
         <Button onClick={getAll}>Get All Provenances</Button>
     </div>
     
-    
-    e
 
     </>
 

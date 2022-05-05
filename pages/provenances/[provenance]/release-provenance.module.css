@@ -4,6 +4,7 @@
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 25px;
+    padding: 30px 30px;
 }
 
 .itemTable {
@@ -31,6 +32,7 @@
     border-radius: 25px;
     padding-top: 10px;
     padding-bottom: 10px;
+    text-align: center;
 
 }
 

@@ -20,6 +20,7 @@ import { useUserContext } from '../../src/context/UserContext';
 //style imports
 import styles from './ProvenanceHub.module.css';
 import { Container, Table, Row, Col, Card, Spinner } from 'react-bootstrap';
+import { BeatLoader } from 'react-spinners';
 
 import ItemTable from '../../src/components/PublicItemTable/PublicItemTable.js';
 
@@ -29,10 +30,9 @@ const OwnedProvenanceHub = () => {
 
 
   const { mainAccount, signer } = useUserContext()
-
-  const { MothershipContract, TokenContract } = useContractContext();
-
-  const {tokens, setTokens, items, setItems, itemAdded,setItemAdded, provenanceObjects, ipfsGetterRootURL, setProvenanceObjects, bytes32ToString} = useItemContext();
+  const {itemAdded,setItemAdded, provenanceObjects, ipfsGetterRootURL, bytes32ToString} = useItemContext();
+  const [loading, setLoading] = useState(false);
+  const [hasProvenances, setHasProvenances] = useState(true);
 
   const router = useRouter();
 
@@ -45,9 +45,25 @@ const OwnedProvenanceHub = () => {
     }  
   },[])
 
+  useEffect(async() => {
+    setLoading(true);
+    setHasProvenances(false)
+    const result = await provenanceObjects;
+    if (result.length > 0) {
+      setHasProvenances(true)
+    };
+
+  },[provenanceObjects])
+
+  useEffect(async() => {
+    setLoading(false)
+
+  },[hasProvenances])
+
+
   const OwnedProvenanceTable = () => {
     
-    if (provenanceObjects && provenanceObjects.length > 0){
+    if (provenanceObjects && provenanceObjects.length > 0 && !loading){
       return (
         <>
           
@@ -124,14 +140,21 @@ const OwnedProvenanceHub = () => {
               )
             })
           }
-             
-  
+            
           
         </>
        )} else {
         return (
           <>
-            <h1 style={{paddingTop: '20vh'}}>You have no registered Provenances.</h1>
+            {loading ? 
+              <div>
+                <h1> Loading Your Provenances...</h1>
+                <BeatLoader /> 
+              </div>
+              : 
+              !hasProvenances ? null :
+                <h1 style={{paddingTop: '20vh'}}>You have no registered Provenances.</h1>            
+            }
           </>
 
 

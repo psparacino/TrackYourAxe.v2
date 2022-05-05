@@ -172,9 +172,11 @@ const ReleaseProvenance = () => {
     if (loaded){
       return (          
         <Container>
-            <h1>Transfer Provenance {outgoingContract.address}</h1>
-            <p>include etherscan link maybe? also need it for approval txn and release txn</p>
-            
+            <div style={{textAlign: 'center'}}>
+              <h1>Transfer Provenance</h1><h4> {outgoingContract.address}</h4>
+              <p>include etherscan link maybe? also need it for approval txn and release txn</p>          
+            </div>
+
             {pendingTransfer ? 
 
                 <div className={styles.containerBorder}>
@@ -191,7 +193,7 @@ const ReleaseProvenance = () => {
                   </Row>
                   <Row>
                     <Col>
-                      {tokenApproved ? <Button variant="danger" onClick={revokeTransferApproval}>Made a mistake?  Revoke Token Approval</Button> : <Button onClick={approveTransfer}>Approve Token Transfer</Button>}          
+                      {tokenApproved ? <Button variant="danger" onClick={revokeTransferApproval}>Made a mistake?  Revoke Token Approval</Button> : <Button style={{fontSize: '30px'}} onClick={approveTransfer}>Approve Token Transfer</Button>}          
                     </Col>                    
                   </Row>
                   <hr/>
@@ -202,8 +204,8 @@ const ReleaseProvenance = () => {
                   
                   {ethers.utils.isAddress(buyerAccount) ? <h3>You are transferring this provenance to this address: {buyerAccount}</h3> : null}
 
-                  <h6>0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h6>
-                  <h6>0x14dC79964da2C08b23698B3D3cc7Ca32193d9955</h6>
+                  <h6>0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</h6>
+                  <h6>0x70997970C51812dc3A010C7d01b50e0d17dc79C8</h6>
                   {addressErrorMessage ?
                   <p>{addressErrorMessage}</p> : null}
                   <h2>Enter Eth Address to Transfer To:</h2>

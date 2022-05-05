@@ -273,10 +273,14 @@ const RegisterItem = () => {
 
                 {unusedTokens.length > 0 ?
                 <Dropdown.Menu>
+                  <div style={{maxHeight:"200px", width: '100%', overflowY:'auto'}}>
                     {unusedTokens.map((unusedToken) => {
-                      return <Dropdown.Item key={unusedToken} onClick={() => getTokenProps(unusedToken)}>{unusedToken}</Dropdown.Item>
-                    })}   
-                </Dropdown.Menu> :
+                        return <Dropdown.Item key={unusedToken} onClick={() => getTokenProps(unusedToken)}>{unusedToken}</Dropdown.Item>
+                      })}   
+                  </div> 
+
+                  </Dropdown.Menu>
+:
                 <Dropdown.Menu>
                     <Dropdown.Item style={{fontSize: '30px'}}>there are no unused tokens</Dropdown.Item>
                 </Dropdown.Menu>
