@@ -1,19 +1,17 @@
 .itemTable {
-    border-collapse: collapse;
-    border: 1px solid black;
-    margin: 0 auto;
-    margin-bottom: 40px;
-    
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+  margin-bottom: 40px;
 }
 
 .tokenTable {
-    border-collapse: collapse;
-    border: 1px solid black;
-    margin: 0 auto;
-    margin-bottom: 40px;
-
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+  margin-bottom: 40px;
 }
 
 .container {
-    text-align: center;
+  text-align: center;
 }

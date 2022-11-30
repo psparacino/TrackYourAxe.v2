@@ -1,35 +1,43 @@
-import { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 
 //next imports
-import Link from 'next/link'
-import { useRouter } from 'next/router';
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 //react-bootstrap imports
-import { Container, Carousel, Table, Row, Col, Card, Image, Button, ListGroup, ListGroupItem, InputGroup, Form, FormControl} from 'react-bootstrap';
+import {
+  Container,
+  Carousel,
+  Table,
+  Row,
+  Col,
+  Card,
+  Image,
+  Button,
+  ListGroup,
+  ListGroupItem,
+  InputGroup,
+  Form,
+  FormControl,
+} from "react-bootstrap";
 
 // context imports
-import { useItemContext } from '../../../src/context/ItemContext';
-import { useContractContext } from '../../../src/context/ContractContext';
-import { useUserContext } from '../../../src/context/UserContext';
-import { useTransferContext } from '../../../src/context/TransferContext';
+import { useItemContext } from "../../../src/context/ItemContext";
+import { useContractContext } from "../../../src/context/ContractContext";
+import { useUserContext } from "../../../src/context/UserContext";
+import { useTransferContext } from "../../../src/context/TransferContext";
 
 // components imports
 
-import ProvenanceHistory from '../../../src/components/ProvenanceHistory/ProvenanceHistory.js'
-
+import ProvenanceHistory from "../../../src/components/ProvenanceHistory/ProvenanceHistory.js";
 
 // styles
-import styles from '../ProvenanceHub.module.css'
-
-
-
-
-
+import styles from "../ProvenanceHub.module.css";
 
 const ProvenanceProfile = () => {
-
-  const { provenanceObjects, ipfsGetterRootURL, bytes32ToString } = useItemContext();
+  const { provenanceObjects, ipfsGetterRootURL, bytes32ToString } =
+    useItemContext();
   const { TokenContract, MothershipContract } = useContractContext();
   const { mainAccount, provider } = useUserContext();
   const { setOutgoingContract } = useTransferContext();
@@ -37,176 +45,176 @@ const ProvenanceProfile = () => {
 
   const { provenance } = router.query;
 
+  const [loaded, setLoaded] = useState(false);
 
-  const [ loaded , setLoaded ] = useState(false);
+  const [provenanceContract, setProvenanceContract] = useState();
+  const [provenanceProps, setProvenanceProps] = useState();
+  const [provenanceOwnerInfo, setProvenanceOwnerInfo] = useState();
 
-  const [ provenanceContract, setProvenanceContract ] = useState();
-  const [ provenanceProps, setProvenanceProps ] = useState();
-  const [ provenanceOwnerInfo, setProvenanceOwnerInfo ] = useState();
-
-
-
- 
-  //load all info 
-  useEffect(async() => {
+  //load all info
+  useEffect(async () => {
     if (provenanceObjects && provenance) {
-    loadProvenance()
-  }
+      loadProvenance();
+    }
     // would be faster search with an object not a for loop. not sure how that would work with the map though.
-    async function loadProvenance() { 
+    async function loadProvenance() {
       for (let contract of provenanceObjects) {
         if (contract.ProvenanceContract.address == provenance) {
-          const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } = contract;
+          const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } =
+            contract;
 
           setProvenanceContract(ProvenanceContract);
           setProvenanceProps(ProvenanceProps);
           setProvenanceOwnerInfo(ProvenanceOwnerInfo);
-          setLoaded(true)
+          setLoaded(true);
         }
       }
     }
-  },[provenanceObjects, provenance])
-
+  }, [provenanceObjects, provenance]);
 
   function loadAndPush() {
-      const address = provenanceContract.address;
-      router.push(`/provenances/${address}/release-provenance`)
-
+    const address = provenanceContract.address;
+    router.push(`/provenances/${address}/release-provenance`);
   }
 
   const ItemPhotoCarousel = () => {
     const itemPhotoArray = provenanceProps.itemPhotos;
 
     return (
-      <div className="previewPhoto"> 
+      <div className="previewPhoto">
         <hr />
         <h2>Item Photos</h2>
-        {itemPhotoArray.length > 0 ?      
-            <Carousel variant="dark">
-              {itemPhotoArray.map((photo, index)=> {
-                return (       
-                    <Carousel.Item key={index}>
-                      <img 
-                        key={photo} 
-                        src={ipfsGetterRootURL + photo} 
-                        alt="item photos not yet loaded"
-                        className={styles.itemPhotoCarousel} />  
-                    </Carousel.Item>
-                    )
-              })} 
-            </Carousel>
-            
-        :
+        {itemPhotoArray.length > 0 ? (
+          <Carousel variant="dark">
+            {itemPhotoArray.map((photo, index) => {
+              return (
+                <Carousel.Item key={index}>
+                  <img
+                    key={photo}
+                    src={ipfsGetterRootURL + photo}
+                    alt="item photos not yet loaded"
+                    className={styles.itemPhotoCarousel}
+                  />
+                </Carousel.Item>
+              );
+            })}
+          </Carousel>
+        ) : (
           <div>
             <h2>Item Photos Loading</h2>
-            <Spinner animation="border" className='mx-auto' />
+            <Spinner animation="border" className="mx-auto" />
           </div>
-        }
-        
-        </div>
-    )
-  }
+        )}
+      </div>
+    );
+  };
 
+  //   const ProvenanceHistory = () => {
 
+  //     const [ provenanceHistoryArray, setProvenanceHistoryArray ] = useState([]);
 
-//   const ProvenanceHistory = () => { 
+  //     useEffect(async() => {
 
-//     const [ provenanceHistoryArray, setProvenanceHistoryArray ] = useState([]);
+  //       if (MothershipContract) {
+  //       loadProvenanceHistory()
+  //       }
+  //       async function loadProvenanceHistory() {
+  //           const history = await provenanceContract.getOwnershipHistory();
+  //           const historyShift = [...history];
+  //           historyShift.shift();
+  //           setProvenanceHistoryArray(historyShift);
 
-//     useEffect(async() => {
-      
-//       if (MothershipContract) {
-//       loadProvenanceHistory()
-//       }
-//       async function loadProvenanceHistory() { 
-//           const history = await provenanceContract.getOwnershipHistory();
-//           const historyShift = [...history];
-//           historyShift.shift();
-//           setProvenanceHistoryArray(historyShift);
-          
-//         }
-//     },[MothershipContract])
+  //         }
+  //     },[MothershipContract])
 
+  //     if (loaded){
+  //       return (
+  //           <div>
+  //           <hr />
+  //           <h1>Provenance Ownership History</h1>
+  //           {provenanceHistoryArray.map((provenanceOwnerInfo, index)=> {
+  //             const { ownerAddress, date, verificationPhotoHash, ownerCount  } = provenanceOwnerInfo;
 
-//     if (loaded){
-//       return (  
-//           <div>
-//           <hr />
-//           <h1>Provenance Ownership History</h1>
-//           {provenanceHistoryArray.map((provenanceOwnerInfo, index)=> {
-//             const { ownerAddress, date, verificationPhotoHash, ownerCount  } = provenanceOwnerInfo;
+  //             const dateFormatted = bytes32ToString(date)
 
-//             const dateFormatted = bytes32ToString(date)
-  
-//             return (
+  //             return (
 
-//               <Container key={ownerAddress}>
-//                 <Card>
-                  
-//                   <Card.Header>Owner {ownerCount}</Card.Header>
-//                     <Card.Body>
-//                       <div className={styles.cardContainer}>
-//                         <div className={styles.cardPhotoContainer}>
-//                           <Image src={ipfsGetterRootURL+verificationPhotoHash} className={styles.cardPhoto} alt={'verification photo'} />
-//                         </div>
-//                         <div className={styles.cardInfoContainer}>
-//                           <Card.Title>Owner Address</Card.Title>             
-//                           <Card.Text style={{color: 'black'}}>
-//                             {ownerAddress}
-//                           </Card.Text>
-//                           <Card.Title>Date Acquired</Card.Title>
-//                           <Card.Text style={{color: 'black'}}>
-//                             {dateFormatted}
-//                           </Card.Text>
+  //               <Container key={ownerAddress}>
+  //                 <Card>
 
-//                           <Card.Title>Notes</Card.Title>
-//                           <Card.Text style={{color: 'black'}}>
-//                             Additional data can maybe stored off-chain?
-//                           </Card.Text>
-//                         </div>
-                        
-                        
-//                       </div>         
+  //                   <Card.Header>Owner {ownerCount}</Card.Header>
+  //                     <Card.Body>
+  //                       <div className={styles.cardContainer}>
+  //                         <div className={styles.cardPhotoContainer}>
+  //                           <Image src={ipfsGetterRootURL+verificationPhotoHash} className={styles.cardPhoto} alt={'verification photo'} />
+  //                         </div>
+  //                         <div className={styles.cardInfoContainer}>
+  //                           <Card.Title>Owner Address</Card.Title>
+  //                           <Card.Text style={{color: 'black'}}>
+  //                             {ownerAddress}
+  //                           </Card.Text>
+  //                           <Card.Title>Date Acquired</Card.Title>
+  //                           <Card.Text style={{color: 'black'}}>
+  //                             {dateFormatted}
+  //                           </Card.Text>
 
-//                     </Card.Body>
-//                   </Card>    
-//                 </Container>
-//               )
-//             })
-//           }              
-//         </div>
-        
-//        )} else {
-//         return (
-//           <p>nothing to show here</p>
-//         )}
-// }
-  
+  //                           <Card.Title>Notes</Card.Title>
+  //                           <Card.Text style={{color: 'black'}}>
+  //                             Additional data can maybe stored off-chain?
+  //                           </Card.Text>
+  //                         </div>
 
+  //                       </div>
 
-    if (loaded) {
+  //                     </Card.Body>
+  //                   </Card>
+  //                 </Container>
+  //               )
+  //             })
+  //           }
+  //         </div>
 
-    const { serial, brand, instrumentDeedToken, model, year, typeOfProvenance } = provenanceProps; 
-    
-      const brandFormatted = bytes32ToString(brand);
+  //        )} else {
+  //         return (
+  //           <p>nothing to show here</p>
+  //         )}
+  // }
 
-      const modelFormatted = bytes32ToString(model);
+  if (loaded) {
+    const {
+      serial,
+      brand,
+      instrumentDeedToken,
+      model,
+      year,
+      typeOfProvenance,
+    } = provenanceProps;
 
-      const serialFormatted = bytes32ToString(serial);
+    const brandFormatted = bytes32ToString(brand);
 
+    const modelFormatted = bytes32ToString(model);
+
+    const serialFormatted = bytes32ToString(serial);
 
     return (
       <Container>
-        <div className={styles.container}>            
-          <h2>{brandFormatted} {modelFormatted}: {year}</h2>
+        <div className={styles.container}>
+          <h2>
+            {brandFormatted} {modelFormatted}: {year}
+          </h2>
           <p></p>
           <h3>Verification Photo Image</h3>
-          <img src={ipfsGetterRootURL + provenanceOwnerInfo.verificationPhotoHash} style={{width: '50%'}} />
-          <h2 style={{paddingTop: '30px'}}>Provenance Information</h2>         
-          <Table  bordered>
+          <img
+            src={ipfsGetterRootURL + provenanceOwnerInfo.verificationPhotoHash}
+            style={{ width: "50%" }}
+          />
+          <h2 style={{ paddingTop: "30px" }}>Provenance Information</h2>
+          <Table bordered>
             <tbody>
               <tr>
-                <td className='bold' style={{width :'50%'}}>Provenance Contract Address</td>
+                <td className="bold" style={{ width: "50%" }}>
+                  Provenance Contract Address
+                </td>
                 <td>{provenanceContract.address}</td>
               </tr>
               <tr>
@@ -237,29 +245,27 @@ const ProvenanceProfile = () => {
                 <td>Serial Number</td>
                 <td>{serialFormatted}</td>
               </tr>
+            </tbody>
+          </Table>
 
+          <ItemPhotoCarousel />
+          <ProvenanceHistory
+            provenanceContract={provenanceContract}
+            loaded={loaded}
+          />
+          <hr />
 
-              </tbody>
-            </Table>
-
-            <ItemPhotoCarousel />
-            <ProvenanceHistory provenanceContract={provenanceContract} loaded={loaded} />
-            <hr />
-
-          <Button onClick={loadAndPush}>Begin Transfer for this Provenance</Button> 
+          <Button onClick={loadAndPush}>
+            Begin Transfer for this Provenance
+          </Button>
         </div>
-        </Container>
-        
-    )
-  
-    } else {
-      return(
-        <h1 style={{paddingTop: '20vh'}}>You do not own this Provenance.</h1>
-      )
-    }
-    
-}
-
+      </Container>
+    );
+  } else {
+    return (
+      <h1 style={{ paddingTop: "20vh" }}>You do not own this Provenance.</h1>
+    );
+  }
+};
 
 export default ProvenanceProfile;
-

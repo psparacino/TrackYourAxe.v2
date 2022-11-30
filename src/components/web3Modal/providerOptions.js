@@ -8,22 +8,22 @@ export const providerOptions = {
     package: CoinbaseWalletSDK, // Required
     options: {
       appName: "Web 3 Modal Demo", // Required
-      infuraId:process.env.NEXT_PUBLIC_RINKEBY_ENDPOINT // Required unless you provide a JSON RPC url; see `rpc` below
-    }
+      infuraId: process.env.NEXT_PUBLIC_RINKEBY_ENDPOINT, // Required unless you provide a JSON RPC url; see `rpc` below
+    },
   },
   walletconnect: {
     package: WalletConnect, // required
     options: {
-      infuraId: process.env.NEXT_PUBLIC_RINKEBY_ENDPOINT  // required
-    }
+      infuraId: process.env.NEXT_PUBLIC_RINKEBY_ENDPOINT, // required
+    },
   },
-//   https://github.com/Web3Modal/web3modal/blob/master/docs/providers/portis.md
+  //   https://github.com/Web3Modal/web3modal/blob/master/docs/providers/portis.md
   portis: {
     package: Portis, // required
     options: {
-      id: "PORTIS_ID_PLACEHOLDER_NEED REAL ONE" // required
-    }
-  }  
+      id: "PORTIS_ID_PLACEHOLDER_NEED REAL ONE", // required
+    },
+  },
   /*
   
   torus: {

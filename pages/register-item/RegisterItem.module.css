@@ -1,13 +1,13 @@
 /* New Provenance  */
 
 .NewProvenance {
-    display: block;
-    text-align: center;
+  display: block;
+  text-align: center;
 }
 
 .NewProvenance fieldset {
-    margin: 20px 0;
-    text-align: center;
+  margin: 20px 0;
+  text-align: center;
 }
 
 /* Text */
@@ -17,10 +17,10 @@
 }
 
 .previewContainer {
-    display: flex;
-    min-height: 200px;
-    width: 80%;
-    margin: 0 auto;
+  display: flex;
+  min-height: 200px;
+  width: 80%;
+  margin: 0 auto;
 }
 
 .buttonContainer {
@@ -33,7 +33,6 @@
 .resetButton {
   font-size: 10px;
   margin-bottom: 20px;
- 
 }
 
 .submitButton {
@@ -42,58 +41,59 @@
   font-size: 40px;
   padding: 10px 30px;
   margin-bottom: 30px;
-  transition: background-color .5s ease-out 100ms;
-
+  transition: background-color 0.5s ease-out 100ms;
 }
 
 .submitButton:hover {
   background-color: red;
-
 }
 
 .previewPhoto {
-    flex: 1;
-    max-width: 50%;
+  flex: 1;
+  max-width: 50%;
 }
 
 .image {
-    width: 80%;
-    height: 80%;
-    object-fit: cover;
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
 }
 
 /* Success Message */
 
-.mintSuccess{
+.mintSuccess {
   position: absolute;
   width: 100vw;
   top: 40%;
   left: 50%;
   font-size: 700%;
   color: green;
-  transform: translate(-50%,-50%);
-  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
 
-  animation:mint-success 1s 1;
-  -webkit-animation:mint-success 0.5s 1;
+  animation: mint-success 1s 1;
+  -webkit-animation: mint-success 0.5s 1;
   animation-fill-mode: forwards;
 
-  animation-delay:3s;
-  -webkit-animation-delay:4s; /* Safari and Chrome 
+  animation-delay: 3s;
+  -webkit-animation-delay: 4s; /* Safari and Chrome 
   -webkit-animation-fill-mode: forwards;   */
-
-} 
-
-@keyframes mint-success{
-  from {opacity :1;}
-  to {opacity :0;}
 }
 
-@-webkit-keyframes mint-success{
-  from {opacity :1;}
-  to {opacity :0;}
+@keyframes mint-success {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
-
-
-
+@-webkit-keyframes mint-success {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

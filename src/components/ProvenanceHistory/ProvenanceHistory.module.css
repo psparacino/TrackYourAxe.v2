@@ -1,26 +1,23 @@
 .itemTable {
-    border-collapse: collapse;
-    border: 1px solid black;
-    margin: 0 auto;
-    margin-bottom: 40px;
-    
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+  margin-bottom: 40px;
 }
 
 .tokenTable {
-    border-collapse: collapse;
-    border: 1px solid black;
-    margin: 0 auto;
-    margin-bottom: 40px;
-
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+  margin-bottom: 40px;
 }
 
 .container {
-    text-align: center;
-    width: 75%;
-    margin: 0 auto;
-    margin-top: 10px;
-    padding-top: 10px;
-
+  text-align: center;
+  width: 75%;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding-top: 10px;
 }
 
 /* .ownedContainer {
@@ -56,33 +53,27 @@
 
 } */
 
-
-
-
-
 .cardContainer {
-    display: flex;
-    height: 250px;
+  display: flex;
+  height: 250px;
 }
 
 .cardPhotoContainer {
-    flex: 1;
-    max-width: 25%;
-    object-fit: contain;
+  flex: 1;
+  max-width: 25%;
+  object-fit: contain;
 }
 
 .cardPhoto {
-    max-width: 100%;
-    max-height: 100%;
-
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .cardInfoContainer {
-    flex: 2;
-    border: solid 2px lightgray;
-    border-radius: 10px;
+  flex: 2;
+  border: solid 2px lightgray;
+  border-radius: 10px;
 
-    padding-top: 5px;
-    margin-left: 10px;
-    
+  padding-top: 5px;
+  margin-left: 10px;
 }

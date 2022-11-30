@@ -1,85 +1,79 @@
+.homeContainer {
+  height: 70vh;
 
+  margin-top: 30px;
+  padding-top: 15px;
+  border: 2px solid #1976d2;
+  border-radius: 25px;
 
-  .homeContainer {
-    height: 70vh;
+  /* to center the internal div for later use */
 
-    margin-top: 30px;
-    padding-top: 15px;
-    border: 2px solid #1976d2;
-    border-radius: 25px;
-
-    /* to center the internal div for later use */
-
-    /* display: flex;
+  /* display: flex;
     align-items: center; */
-  
-  }
+}
 
-  .pageContainer{
-    margin-top: 30px;
-    padding-top: 15px;
-    border: 2px solid #1976d2;
-    border-radius: 25px;
-  }
+.pageContainer {
+  margin-top: 30px;
+  padding-top: 15px;
+  border: 2px solid #1976d2;
+  border-radius: 25px;
+}
 
-  .internalHomeContainer {
-    margin-top: 5%;
+.internalHomeContainer {
+  margin-top: 5%;
+}
 
-  }
+.introButton {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 35px;
+  border-radius: 25px;
+  margin-top: 40px;
+}
 
+.introButton:hover {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 35px;
+  border-radius: 25px;
+  margin-top: 40px;
+}
 
+.registerButton {
+  display: inline-block;
+  padding: 0.46em 1.6em;
+  margin: 0 0.2em 0.2em 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: #ffffff;
+  border-radius: 25px;
+  text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+  background-color: green;
+  text-align: center;
+  transition: all 0.15s;
+  box-shadow: 10px 5px 20px rgb(162, 161, 161);
 
-  .introButton {
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 35px;
-    border-radius: 25px;
-    margin-top: 40px;
-  }
+  font-weight: bolder;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 300%;
+}
 
-  .introButton:hover {
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 35px;
-    border-radius: 25px;
-    margin-top: 40px;
-  }
+.flexContainerCentered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.registerButton:hover {
+  text-shadow: 0 0 2em rgba(255, 255, 255, 1);
+  color: #ffffff;
+  border-color: #ffffff;
+  font-weight: bolder;
+  border-radius: 25px;
+}
 
-  .registerButton{
-    display:inline-block;
-    padding:0.46em 1.6em;
-    margin:0 0.2em 0.2em 0;
-    box-sizing: border-box;
-    text-decoration:none;
-    color:#FFFFFF;
-    border-radius: 25px;
-    text-shadow: 0 0.04em 0.04em rgba(0,0,0,0.35);
-    background-color:green;
-    text-align:center;
-    transition: all 0.15s;
-    box-shadow: 10px 5px 20px rgb(162, 161, 161);
+.graphicContainer {
+  position: relative;
+  height: 200px;
+}
 
-    font-weight: bolder;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 300%;
-    }
-
-  .flexContainerCentered {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .registerButton:hover{
-    text-shadow: 0 0 2em rgba(255,255,255,1);
-    color:#FFFFFF;
-    border-color:#FFFFFF;
-    font-weight: bolder;
-    border-radius: 25px;
-    }
-
-  .graphicContainer {
-      position: relative;
-      height: 200px;
-    }
-
-  .topButton {
-      margin-bottom: 10px;
-    }
+.topButton {
+  margin-bottom: 10px;
+}

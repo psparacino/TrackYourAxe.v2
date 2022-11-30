@@ -1,22 +1,18 @@
 /*currently not working*/
 
-
 .container {
   text-align: center;
   justify-content: center;
 }
 
 .provenanceSuccess {
-    border: 3px !important;
-    border-color: black !important;
-  }
+  border: 3px !important;
+  border-color: black !important;
+}
 
-
-
-.imageWrapper{
+.imageWrapper {
   position: relative;
   height: 300px;
-    
 }
 
 .CTAButton {
