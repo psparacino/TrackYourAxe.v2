@@ -102,16 +102,15 @@ const PublicItemTable = ({ provenanceObjects }) => {
              
                           <Card.Body>
                             <Row style={{display: 'flex'}}>
-                              <Col className={styles.imageColumn}>
-                                 <div className={styles.imageContainer}>
-                                    <Card.Img
-                                      key={provenanceAddress+ verificationPhotoHash} 
-                                      src={ipfsGetterRootURL + verificationPhotoHash} 
-                                      layout="fill"
-                                      objectfit="contain"
-                                      className={styles.image} />
-                                 </div>              
-                              </Col>
+                              <Col className={styles.imageContainer}>
+                                <Card.Img
+                                  key={provenanceAddress+ verificationPhotoHash} 
+                                  src={ipfsGetterRootURL + verificationPhotoHash} 
+                                  layout="fill"
+                                  objectfit="contain"
+                                  className={styles.image} />
+                              </Col>              
+                        
 
                               <Col>
                                 <Table key={provenanceAddress+Math.random()} className="w-50 mb-5 mx-auto rounded border-3 border-dark" responsive striped bordered>

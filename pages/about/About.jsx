@@ -1,7 +1,9 @@
 import * as React from "react";
 import Link  from "next/link";
+import Image from "next/image";
 import { Container } from "react-bootstrap";
 
+import ethPowerUsage from '../../public/images/eth_power_usage.jpg'
 import styles from './About.module.css';
 
 function About() {
@@ -29,6 +31,7 @@ function About() {
             </p>
 
           <h4>Why bother? And isn't blockchain bad for the planet?!?</h4>
+          <Image src={ethPowerUsage} />
           <p>
             Some instruments are so famous they are a household name; Lucille comes to mind. However the number of instruments and artifacts that trade hands daily is legion, and these instruments hold significant cultural and monetary value. TYA allows for 
             an indestrucible record and lineage of these items and instruments and their history. 

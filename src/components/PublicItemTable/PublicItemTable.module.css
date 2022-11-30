@@ -73,10 +73,6 @@
 
 }
 
-.imageColumn {
-    max-width: 100%;
-}
-
 /* Image Dimensions */
 
 .imageContainer {
@@ -87,7 +83,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     min-width: 250px;
   }
 

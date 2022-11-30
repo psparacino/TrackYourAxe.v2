@@ -31,7 +31,7 @@ function PublicProvenanceSearchTable() {
 
     const { MothershipContract, TokenContract } = useContractContext();
     const { provider, signer } = useUserContext();
-    const { bytes32ToString } = useItemContext();
+    const { bytes32ToString, stringToBytes32 } = useItemContext();
 
     const [allProvenanceObjects, setAllProvenanceObjects] = useState();
     const [loading, setLoading] = useState(false);
@@ -45,8 +45,8 @@ function PublicProvenanceSearchTable() {
     // ***********************
 
     const type = [0, 1, 2]
-    const brand = ["Jupiter", "Yamaha", "JL Woodwinds", "Yanigisawa", "Antigua Winds", "Pearl", "Selmer", "Buffet"]
-    const model = ["Mark VI", "SBA", "R13", "Bronze Series", "Cigar Cutter", "Balanced Action", "King 20", "Silver Fox"]
+    const brands = ["Jupiter", "Yamaha", "JL Woodwinds", "Yanigisawa", "Antigua Winds", "Pearl", "Selmer", "Buffet"]
+    const models = ["Mark VI", "SBA", "R13", "Bronze Series", "Cigar Cutter", "Balanced Action", "King 20", "Silver Fox"]
     const images = ["QmNvzkSMNCF9bRry5CHiTCnz7s8Fc6ooNVQyuFc4EPDaQV", "QmPYABsoen4yRJWp4ta7yrhxgsqNEQLK15c68BL6BQrQAW", "QmQ4wfPDcxJeLcypv6JQt6757Nmzi95k5wZbjjFYzjsUW2", "QmdBEnkC1qXc1pZsGkRTPkwhqohGyiTd7tZKvD1v8VQ65Y"]
 
     function serial() {
@@ -56,9 +56,12 @@ function PublicProvenanceSearchTable() {
     function tokenID() {
         return Math.floor(Math.random() * 100)
     }
+
     function random_element(items)
-        {  return items[Math.floor(Math.random()*items.length)];
+        {
+        return items[Math.floor(Math.random()*items.length)];
        }
+
     function randomDate(start, end) {
         const dateStr = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
         return dateStr.toLocaleDateString();
@@ -67,22 +70,25 @@ function PublicProvenanceSearchTable() {
         return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
         }
 
-    const batchMintTokens = () => {
-        TokenContract.batchMint(100, random_element(images))
+    const batchMintTokens = async() => {
+        await TokenContract.batchMint(100, random_element(images))
+
     }
 
-    const create10Provenances = () => {
+    const create10Provenances = async () => {
         
 
-            let type1 = random_element(type);        
-            let serial1 = stringToBytes32((serial()).toString());    
-            let brand1 = stringToBytes32(random_element(brand));
-            let model1 = stringToBytes32(random_element(model));
+
+            let type1 = await random_element(type);        
+            let serial1 = stringToBytes32((serial()).toString());  
+            let brand1 = await stringToBytes32(random_element(brands));
+            let model1 = stringToBytes32(random_element(models));
             let year1 = (randomYear(new Date(1897, 0, 1), new Date())).getFullYear();
             let tokenID1 = tokenID();
             let date1 = stringToBytes32(((randomDate(new Date(1897, 0, 1), new Date()))).toString());
    
             let vImages1 = random_element(images);
+
 
     
 
