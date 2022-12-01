@@ -20,6 +20,7 @@ import {
   InputGroup,
   Form,
   FormControl,
+  Spinner,
 } from "react-bootstrap";
 
 // context imports
@@ -52,7 +53,7 @@ const ProvenanceProfile = () => {
   const [provenanceOwnerInfo, setProvenanceOwnerInfo] = useState();
 
   //load all info
-  useEffect(async () => {
+  useEffect(() => {
     if (provenanceObjects && provenance) {
       loadProvenance();
     }
@@ -207,6 +208,7 @@ const ProvenanceProfile = () => {
           <img
             src={ipfsGetterRootURL + provenanceOwnerInfo.verificationPhotoHash}
             style={{ width: "50%" }}
+            alt="getter url"
           />
           <h2 style={{ paddingTop: "30px" }}>Provenance Information</h2>
           <Table bordered>

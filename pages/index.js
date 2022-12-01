@@ -42,10 +42,10 @@ function App() {
 
   const Home = () => {
     return (
-      <Container className={styles.homeContainer} id="home">
+      <div className={styles.homeContainer} id="home">
         <div className={styles.internalHomeContainer}>
           <h3>
-            a blockchain-powered provenance and verification solution for <br />
+            a blockchain-backed provenance and verification solution for <br />
             instruments and musical items
           </h3>
           {chainId && chainId != 31337 ? (
@@ -55,10 +55,10 @@ function App() {
           ) : null}
           <Row>
             <Col>
-              <Link href="#seeItWork">
+              <Link href="#seeItWork" passHref>
                 <Button
                   size="lg"
-                  variant="outline-primary"
+                  variant="primary"
                   className={styles.introButton}
                 >
                   See How It Works
@@ -66,10 +66,10 @@ function App() {
               </Link>
             </Col>
             <Col>
-              <Link href="#howDoesItWork">
+              <Link href="#howDoesItWork" passHref>
                 <Button
                   size="lg"
-                  variant="outline-primary"
+                  variant="primary"
                   className={styles.introButton}
                 >
                   Read How It Works
@@ -78,28 +78,28 @@ function App() {
             </Col>
           </Row>
           <br />
-          <h4>Know all this stuff and ready to get going?</h4>
-          <Button
-            size="lg"
-            className={styles.registerButton}
-            href="register-item"
-            variant="success"
-          >
-            Register Item
-          </Button>
         </div>
-      </Container>
+        <h4>Know all this stuff and ready to get going?</h4>
+        <Button
+          size="lg"
+          className={styles.registerButton}
+          href="register-item"
+          variant="success"
+        >
+          Register Item
+        </Button>
+      </div>
     );
   };
 
   const Visualization = () => {
     return (
-      <Container className={styles.pageContainer}>
+      <div className={styles.pageContainer}>
         <Row>
           <h2>Simple Two-Step Process to Creating a Provenance</h2>
           <p>
             Prerequisite: Create a <Link href="/guides/wallet">Wallet</Link> (if
-            you don't have one already)
+            you don&apos;t have one already)
           </p>
           {/* <Image
               id="seeItWork"
@@ -149,18 +149,22 @@ function App() {
           for a more technical description of what is happening behind the
           scenes <Link href="/guides/technical-step-by-step">here</Link>
         </p>
-        <Link href="#top">
+        <Link href="#top" passHref>
           <Button variant="outline-secondary" className={styles.topButton}>
             Top
           </Button>
         </Link>
-      </Container>
+      </div>
     );
   };
 
   const HowDoesItWork = () => {
     return (
-      <Container className={styles.pageContainer} id="howDoesItWork">
+      <div
+        className={styles.pageContainer}
+        style={{ backgroundColor: "lightgray" }}
+        id="howDoesItWork"
+      >
         <h2> HOW DOES IT WORK?</h2>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -214,12 +218,12 @@ function App() {
           mauris commodo quis imperdiet massa. Massa massa ultricies mi quis
           hendrerit.
         </p>
-        <Link href="#top">
+        <Link href="#top" passHref>
           <Button variant="outline-secondary" className={styles.topButton}>
             Top
           </Button>
         </Link>
-      </Container>
+      </div>
     );
   };
 

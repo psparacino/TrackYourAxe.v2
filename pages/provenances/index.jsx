@@ -33,29 +33,37 @@ const OwnedProvenanceHub = () => {
     bytes32ToString,
   } = useItemContext();
   const [loading, setLoading] = useState(false);
-  const [hasProvenances, setHasProvenances] = useState(true);
+  const [hasProvenances, setHasProvenances] = useState(false);
 
   const router = useRouter();
 
   // to rebuild page and add new item. can probably be optimized.
   useEffect(async () => {
-    const confirmAddition = await itemAdded;
-    if (confirmAddition) {
-      router.reload();
-      setItemAdded(false);
-    }
-  }, []);
+    confirmAdded();
 
-  useEffect(async () => {
+    async function confirmAdded() {
+      const confirmAddition = await itemAdded;
+      if (confirmAddition) {
+        router.reload();
+        setItemAdded(false);
+      }
+    }
+  }, [itemAdded, router, setItemAdded]);
+
+  //  FIX HERE
+
+  useEffect(() => {
     setLoading(true);
-    setHasProvenances(false);
-    const result = await provenanceObjects;
-    if (result.length > 0) {
-      setHasProvenances(true);
+
+    if (provenanceObjects) {
+      if (provenanceObjects.length > 0) {
+        setHasProvenances(true);
+      }
+      setLoading(false);
     }
   }, [provenanceObjects]);
 
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(false);
   }, [hasProvenances]);
 
@@ -127,6 +135,7 @@ const OwnedProvenanceHub = () => {
                               key={provenanceAddress + verificationPhotoHash}
                               src={ipfsGetterRootURL + verificationPhotoHash}
                               style={{ objectFit: "contain", width: "100%" }}
+                              alt="getter url"
                             />
                           </Col>
 
@@ -191,16 +200,19 @@ const OwnedProvenanceHub = () => {
     } else {
       return (
         <>
+          {console.log({ hasProvenances })}
+          {console.log({ loading })}
+
           {loading ? (
             <div>
               <h1> Loading Your Provenances...</h1>
               <BeatLoader />
             </div>
-          ) : !hasProvenances ? null : (
+          ) : !hasProvenances ? (
             <h1 style={{ paddingTop: "20vh" }}>
               You have no registered Provenances.
             </h1>
-          )}
+          ) : null}
         </>
       );
     }

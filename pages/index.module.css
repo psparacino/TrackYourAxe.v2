@@ -1,10 +1,10 @@
 .homeContainer {
   height: 70vh;
-
-  margin-top: 30px;
   padding-top: 15px;
-  border: 2px solid #1976d2;
-  border-radius: 25px;
+  background-color: lightgray;
+  width: 100%;
+  /* border: 2px solid #1976d2;
+  border-radius: 25px; */
 
   /* to center the internal div for later use */
 
@@ -13,10 +13,7 @@
 }
 
 .pageContainer {
-  margin-top: 30px;
-  padding-top: 15px;
-  border: 2px solid #1976d2;
-  border-radius: 25px;
+  padding: 30px;
 }
 
 .internalHomeContainer {
@@ -25,24 +22,18 @@
 
 .introButton {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 35px;
-  border-radius: 25px;
-  margin-top: 40px;
-}
-
-.introButton:hover {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 35px;
+  font-size: 20px;
+  font-weight: bold;
+  border-width: 5px;
   border-radius: 25px;
   margin-top: 40px;
 }
 
 .registerButton {
   display: inline-block;
+  margin-top: 20px;
   padding: 0.46em 1.6em;
-  margin: 0 0.2em 0.2em 0;
   box-sizing: border-box;
-  text-decoration: none;
   color: #ffffff;
   border-radius: 25px;
   text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
@@ -60,6 +51,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 .registerButton:hover {
   text-shadow: 0 0 2em rgba(255, 255, 255, 1);

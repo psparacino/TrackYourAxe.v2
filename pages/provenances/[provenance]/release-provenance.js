@@ -64,8 +64,8 @@ const ReleaseProvenance = () => {
   const router = useRouter();
   const { provenance } = router.query;
 
-  // this will change is prov objects is an object with address key instead of array
-  useEffect(async () => {
+  // this will change if prov objects is an object with address key instead of array
+  useEffect(() => {
     if (provenanceObjects && provenance) {
       loadProvenance();
     }
@@ -84,7 +84,7 @@ const ReleaseProvenance = () => {
     }
   }, [provenanceObjects, provenance]);
 
-  useEffect(async () => {
+  useEffect(() => {
     if (TokenContract && outgoingProvenanceProps) {
       checkApproved();
     }
@@ -96,18 +96,22 @@ const ReleaseProvenance = () => {
         setTokenApproved(true);
       }
     }
-  }, [TokenContract, outgoingProvenanceProps]);
+  }, [TokenContract, outgoingProvenanceProps, outgoingContract.address]);
 
-  useEffect(async () => {
+  useEffect(() => {
     if (outgoingContract || transferInitiated) {
+      getPendingOwner();
+    }
+
+    async function getPendingOwner() {
       const pendingOwner = await outgoingContract.pendingOwner();
 
       if (pendingOwner != ethers.constants.AddressZero) {
         setPendingTransfer(true);
         setPendingTransferAddress(pendingOwner);
+      } else {
+        console.log("No Pending Owner");
       }
-    } else {
-      console.log("No Pending Owner");
     }
   }, [outgoingContract, transferInitiated]);
 

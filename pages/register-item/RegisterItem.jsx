@@ -214,7 +214,7 @@ const RegisterItem = () => {
     let provenanceTokens = [];
     let unusedTokens = [];
 
-    useEffect(async () => {
+    useEffect(() => {
       if (provenanceObjects && provenanceObjects.length > 0) {
         for (let i = 0; i < provenanceObjects.length; i++) {
           provenanceTokens.push(
@@ -222,7 +222,7 @@ const RegisterItem = () => {
           );
         }
       }
-    }, [provenanceObjects]);
+    }, [provenanceTokens]);
 
     tokens.forEach((token) => {
       const result = provenanceTokens.includes(token);
@@ -417,8 +417,8 @@ const RegisterItem = () => {
             </Accordion.Header>
             <Accordion.Body>
               In this step you enter all the identifying information about your
-              item. All of this info will be stored on a blockchain in it's own
-              unique smart contract forever and is publicy verifiable at any
+              item. All of this info will be stored on a blockchain in it&apos;s
+              own unique smart contract forever and is publicy verifiable at any
               time (the link to view the contract on-chain is in the individual
               item page).
               <br />

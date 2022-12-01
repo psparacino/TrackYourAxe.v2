@@ -102,6 +102,7 @@ const IncomingTransfers = () => {
                                     objectFit: "contain",
                                     width: "100%",
                                   }}
+                                  alt="getter url"
                                 />
                               </Col>
 

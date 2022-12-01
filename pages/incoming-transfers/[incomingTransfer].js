@@ -75,7 +75,7 @@ const TransferProfile = () => {
 
   //load all info
 
-  useEffect(async () => {
+  useEffect(() => {
     if (pendingTransferContracts && incomingTransfer) {
       loadProvenance();
     }
@@ -83,8 +83,6 @@ const TransferProfile = () => {
     async function loadProvenance() {
       for (let contract of pendingTransferContracts) {
         if (contract.ProvenanceContract.address === incomingTransfer) {
-          console.log("hitting");
-
           const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } =
             contract;
 
@@ -168,6 +166,7 @@ const TransferProfile = () => {
           <img
             src={ipfsGetterRootURL + provenanceOwnerInfo.verificationPhotoHash}
             style={{ width: "50%" }}
+            alt="getter url"
           />
           <hr />
           <Table bordered>
@@ -220,100 +219,3 @@ const TransferProfile = () => {
 };
 
 export default TransferProfile;
-
-/*
-
-these will only with an API endpoint calling a smart contract. nothing user based.
-
-export async function getStaticPaths() {
-
-  const paths = getProvenanceAddresses();
-  console.log(paths, "paths")
-  return {
-    paths,
-    fallback: false // false or 'blocking'
-  };
-}
-
-
-async function getStaticProps(context) {
-
-  console.log(context, "context")
-
-  const results = await fetch('http://dummy.restapiexample.com/api/v1/employees').then(r => r.json())
-  return {
-    props: { results }, // will be passed to the page component as props
-  }
-}
-
-
-export async function getStaticProps() {
-    return {
-        props: {
-            lists: [
-                {dirId: '1', name: 'Directory 1'},
-                {dirId: '2', name: 'Directory 2'},
-                {dirId: '3', name: 'Directory 3'},
-                {dirId: '4', name: 'Directory 4'}
-            ],
-        }
-    }
-}
-*/
-
-/* original sale function
- function ClaimProvenance() {
-
-      async function sell() {
-      setErrorMessage('')
-      if (ethers.utils.isAddress(buyerAccount)) {
-
-        await TokenContract.approve(provenanceAddress, instrumentDeedToken.toString())
-        .then(async(result) => {
-          provider.waitForTransaction(result.hash)
-          .then(async(mined) => {
-              if (mined) {
-                await provenanceContract.sale(buyerAccount, waitingkitten, verificationPhotoHash)
-                .then(async(result) => {
-                  provider.waitForTransaction(result.hash)
-                  .then(async(mined) => {
-                    if (mined) {
-                      //  need to fix this from react router
-                      router.push(`/${mainAccount}`)
-                    }
-                  })})
-                .catch((error)=> {
-                  console.log(error)       
-                })
-              } else {
-                setErrorMessage('Please enter a valid Ethereum address')
-              }
-              })}
-          )
-      }
-    }
-
-      return (          
-        <div>
-          <h3>sell To Address: 0xa0Ee7A142d267C1f36714E4a8F75612F20a79720</h3>
-          <input 
-              name="userAddress" 
-              type="text" 
-              placeholder='enter address to transfer to here'
-              onChange={(e) => setBuyerAccount(e.target.value)} 
-              value={buyerAccount || ''}
-              style={{width: '65%', height: '40px', fontSize: '20px', marginTop: '30px', textAlign: 'center'}} />
-
-          <div>
-            <button onClick={sell}>Transfer This Token and Provenance</button>  
-          </div>    
-
-          <div>
-            <Link href={`/${mainAccount}`}>Back To Main</Link> 
-          </div>
-        </div>
-   
-     
-      )
-    }
-    */

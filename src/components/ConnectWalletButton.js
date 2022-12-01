@@ -24,7 +24,7 @@ const ConnectWalletButton = () => {
 
   useEffect(() => {
     if (mainAccount) setConnectionErrorMessage("");
-  }, [mainAccount]);
+  }, [mainAccount, setConnectionErrorMessage]);
 
   return (
     <div>

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "deploytoken": "hh run --network localhost scripts/deployInstrumentToken.js",
-    "deploymothership": "hh run --network localhost scripts/deployMothership.js"
+    "deploymothership": "hh run --network localhost scripts/deployMothership.js",
+    "prettify": "yarn prettier --write ."
   },
   "dependencies": {
     "3d-earth": "^1.0.8",

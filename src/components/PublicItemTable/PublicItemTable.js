@@ -46,8 +46,6 @@ const PublicItemTable = ({ provenanceObjects }) => {
 
   // },[provenanceObjects])
 
-  // // set number of pages for interviews
-
   // const paginate = pageNum => setCurrentPage(pageNum);
 
   const router = useRouter();
@@ -101,6 +99,7 @@ const PublicItemTable = ({ provenanceObjects }) => {
                             : `provenances/${provenanceAddress}`
                           : `search/${provenanceAddress}`
                       }
+                      passHref
                     >
                       <Card
                         key={provenanceAddress + "card"}

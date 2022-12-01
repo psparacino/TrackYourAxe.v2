@@ -56,14 +56,14 @@ const ProvenanceSuccess = () => {
 
         <Row>
           <Col>
-            <Link href="/register-item">
+            <Link href="/register-item" passHref>
               <Button className={styles.CTAButton}>
                 Register Another Item
               </Button>
             </Link>
           </Col>
           <Col>
-            <Link href="/provenances">
+            <Link href="/provenances" passHref>
               <Button className={styles.CTAButton}>All Provenances</Button>
             </Link>
           </Col>

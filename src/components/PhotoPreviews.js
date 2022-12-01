@@ -30,7 +30,7 @@ const PhotoPreviews = ({
 
   // console.log(formData.instrumentphotohashes)
 
-  useEffect(async () => {
+  useEffect(() => {
     if (formData.instrumentphotohashes) {
       loadItemHashes();
     }

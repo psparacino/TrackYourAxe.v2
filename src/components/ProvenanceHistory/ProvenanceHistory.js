@@ -17,7 +17,7 @@ const ProvenanceHistory = ({ provenanceContract, loaded }) => {
 
   const { ipfsGetterRootURL, bytes32ToString } = useItemContext();
 
-  useEffect(async () => {
+  useEffect(() => {
     if (MothershipContract && loaded) {
       loadProvenanceHistory();
     }
@@ -28,7 +28,7 @@ const ProvenanceHistory = ({ provenanceContract, loaded }) => {
       // The line below is throwing an error due to state update, memory leak. make a note to fix.
       setProvenanceHistoryArray(historyShift);
     }
-  }, [MothershipContract, loaded]);
+  }, [MothershipContract, provenanceContract, loaded]);
 
   if (loaded) {
     return (

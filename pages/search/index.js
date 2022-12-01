@@ -13,6 +13,7 @@ import PublicItemTable from "../../src/components/PublicItemTable/PublicItemTabl
 // styles imports
 import { Button, Container } from "react-bootstrap";
 import { BeatLoader } from "react-spinners";
+import { SignatureKind } from "typescript";
 
 const initialValues = {
   brand: "",
@@ -187,9 +188,9 @@ function PublicProvenanceSearchTable() {
       setAllProvenanceObjects(allProvenanceArray);
       setLoading(false);
     }
-  }, [MothershipContract]);
+  }, [MothershipContract, bytes32ToString, signer]);
 
-  useEffect(async () => {
+  useEffect(() => {
     if (values) {
       searchItems(values);
     }

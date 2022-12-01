@@ -15,6 +15,7 @@ import {
   Card,
   Image,
   Button,
+  Spinner,
 } from "react-bootstrap";
 
 // context imports
@@ -47,7 +48,7 @@ const NonUserProvenance = () => {
   const [provenanceOwnerInfo, setProvenanceOwnerInfo] = useState();
 
   //load all info
-  useEffect(async () => {
+  useEffect(() => {
     if (nonUserProvenance && signer) {
       loadSingleProvenance().catch((error) =>
         console.log(error, "populate error")
@@ -116,16 +117,21 @@ const NonUserProvenance = () => {
     const [show, setShow] = useState(false);
     const [offerMade, setOfferMade] = useState(false);
 
-    useEffect(async () => {
-      const result = await provenanceContract.currentOffer();
-      const buyer = result.buyer;
-      const offer = result.offer;
+    useEffect(() => {
+      loadDetails();
 
-      if (buyer !== ethers.constants.AddressZero) setCurrentOfferBuyer(buyer);
-      if (offer !== 0.0) setCurrentOfferAmount(ethers.utils.formatEther(offer));
+      async function loadDetails() {
+        const result = await provenanceContract.currentOffer();
+        const buyer = result.buyer;
+        const offer = result.offer;
 
-      if (offerMade) {
-        setOfferMade(false);
+        if (buyer !== ethers.constants.AddressZero) setCurrentOfferBuyer(buyer);
+        if (offer !== 0.0)
+          setCurrentOfferAmount(ethers.utils.formatEther(offer));
+
+        if (offerMade) {
+          setOfferMade(false);
+        }
       }
     }, [provenanceContract, offerMade]);
 
@@ -248,6 +254,7 @@ const NonUserProvenance = () => {
           <img
             src={ipfsGetterRootURL + provenanceOwnerInfo.verificationPhotoHash}
             style={{ width: "50%" }}
+            alt="getter url"
           />
           <h2 style={{ paddingTop: "30px" }}>Provenance Information</h2>
           <Table bordered>
