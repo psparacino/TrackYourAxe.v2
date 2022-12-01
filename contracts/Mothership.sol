@@ -20,10 +20,10 @@ contract Mothership is Ownable {
     //to loop and get all provenances on frontend
     address[] public ownerArray;
 
+    Provenance[] public allProvenanceArray;
 
     InstrumentDeedToken public instrumentDeedTokenContract;
 
-    
 
     //add modifier that confirms tokenOwner is caller
     //constructor can also be removed and tokenAddress hardcoded
@@ -36,12 +36,12 @@ contract Mothership is Ownable {
     event ProvenanceCreated(
         Provenance.Types _enumType,
         address childAddress,         
-        string serial, 
-        string brand, 
-        string model, 
+        bytes32 serial, 
+        bytes32 brand, 
+        bytes32 model, 
         uint16 year, 
-        uint instrumentDeedToken,
-        string date,
+        uint16 instrumentDeedToken,
+        bytes32 date,
         string verificationPhotoHash,
         string[] instrumentPhotoHashes);
     
@@ -49,7 +49,7 @@ contract Mothership is Ownable {
         address seller,
         address buyer,
         address provenanaceAddress,
-        string date
+        bytes32 date
     );
 
     // SETTERS 
@@ -57,12 +57,12 @@ contract Mothership is Ownable {
     //this function needs to check that an existing provenance doesn't already exist for this instrument
     function createNewProvenance(
         Provenance.Types _enumType,
-        string memory _serial, 
-        string memory _brand, 
-        string memory _model, 
+        bytes32 _serial, 
+        bytes32  _brand, 
+        bytes32 _model, 
         uint16 _year, 
-        uint _instrumentDeedToken,
-        string memory _date,
+        uint16 _instrumentDeedToken,
+        bytes32 _date,
         string memory _verificationPhotoHash,
         string[] memory _instrumentPhotoHashes
     ) external returns(address) {
@@ -103,6 +103,73 @@ contract Mothership is Ownable {
         
     }
 
+     // FUNCTIONS FOR TESTING ONLY!!!!!!!!!!!!!
+    function createPracticeProvenance(
+        Provenance.Types _enumType,
+        bytes32 _serial, 
+        bytes32 _brand, 
+        bytes32 _model, 
+        uint16 _year, 
+        uint16 _instrumentDeedToken,
+        bytes32 _date,
+        string memory _verificationPhotoHash,
+        string[] memory _instrumentPhotoHashes
+    ) public returns(address) {
+        //might need to check for dupes on frontend
+        Provenance provenance = new Provenance(
+            _enumType, 
+            _serial, 
+            _brand, 
+            _model, 
+            _year, 
+            _instrumentDeedToken, 
+            _date,
+            _verificationPhotoHash, 
+            _instrumentPhotoHashes,
+            address(this),
+            address(instrumentDeedTokenContract));
+
+
+        //ownerUpdates
+        if ((ownersToAxes[msg.sender]).length == 0) ownerArray.push(msg.sender);
+        ownersToAxes[msg.sender].push(provenance);
+        allProvenanceArray.push(provenance);
+        // ownerArray.push(msg.sender);
+        provenanceVerify[address(provenance)] = true;
+
+        emit ProvenanceCreated(
+            _enumType,
+            address(provenance),
+            _serial, 
+            _brand, 
+            _model, 
+            _year, 
+            _instrumentDeedToken, 
+            _date,
+            _verificationPhotoHash, 
+            _instrumentPhotoHashes);
+
+        return(address(provenance));                
+    }
+
+
+    function createBatchProvenances(
+        Provenance.Types _enumType,
+        bytes32 _serial, 
+        bytes32 _brand, 
+        bytes32 _model, 
+        uint16 _year, 
+        uint16 _instrumentDeedToken,
+        bytes32 _date,
+        string memory _verificationPhotoHash,
+        string[] memory _instrumentPhotoHashes
+    ) public {
+        for(uint i = 0; i<= 10; i++){
+            createPracticeProvenance(_enumType, _serial, _brand, _model, _year, _instrumentDeedToken, _date, _verificationPhotoHash, _instrumentPhotoHashes);
+        }
+    }
+    // ***************************
+
     function setPendingTransfer(address buyer, address provenanceAddress) external {
         pendingTransfers[buyer].push(provenanceAddress);
     }
@@ -132,16 +199,12 @@ contract Mothership is Ownable {
         uint index = _findArrayIndex(pendingTransfers[buyer], provenance);
 
        _burnTransferIndex(buyer, index);
-
     }
 
-    // GETTERS
-
-    function getPendingTransfersOfBuyer(address buyer) public view returns(address[] memory){
-        return pendingTransfers[buyer];
-    }
-
+    
+    // ******************************************
     // INTERNAL FUNCTIONS FOR updateOnProvenanceSale 
+    // ******************************************
 
     function _findProvenanceIndex(address seller, Provenance provenanceForIndex) view internal returns(uint) {
         uint index;
@@ -162,7 +225,7 @@ contract Mothership is Ownable {
 
 
     //called from Provenance to update mothership state. needs tokenOwner modifier for security
-    function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold, string memory date) external {
+    function updateOnProvenanceSale(address seller, address buyer, Provenance provenanceSold, bytes32 date) external {
         //update ownership
         ownersToAxes[buyer].push(provenanceSold);
 
@@ -174,8 +237,14 @@ contract Mothership is Ownable {
          
     }
 
-    
-    //owner info
+    // **********
+    // GETTERS
+    // **********
+
+    function getPendingTransfersOfBuyer(address buyer) external view returns(address[] memory){
+        return pendingTransfers[buyer];
+    }
+
 
     function getOwners() external view returns(address[] memory){
        return ownerArray;
@@ -186,6 +255,11 @@ contract Mothership is Ownable {
         return ownersToAxes[msg.sender];
     }
 
+    function getAllProvenances() external view returns(Provenance[] memory) {
+        return allProvenanceArray;
+    }
+
+
 
     /*
      function disable(Provenance provenance) external {
@@ -194,7 +268,9 @@ contract Mothership is Ownable {
      }
      */
 
-    //FOR OWNER ONLY functions
+    // *********************
+    // Admin Only Functions
+    // *********************
 
     function setExistingProvenance() public onlyOwner {
 

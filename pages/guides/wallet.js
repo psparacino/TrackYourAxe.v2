@@ -1,16 +1,7 @@
-import { useEffect, useState } from 'react';
-
-
-
+import { useEffect, useState } from "react";
 
 function WalletGuide() {
+  return <p>earth failed to render</p>;
+}
 
-
-return (
-  <p>earth failed to render</p>
-)
- 
- 
-  }
-  
-  export default WalletGuide;
+export default WalletGuide;

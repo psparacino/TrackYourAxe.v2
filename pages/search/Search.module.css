@@ -1,0 +1,78 @@
+.itemTable {
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
+.tokenTable {
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
+.container {
+  text-align: center;
+  width: 75%;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.ownedContainer {
+  text-align: center;
+  width: 75%;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+.ownedContainer:hover {
+  background-color: azure;
+}
+
+.pendingContainer {
+  text-align: center;
+  border: 6px solid red;
+  border-radius: 25px;
+  width: 75%;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.linkPlacebo {
+  color: #0d6efd;
+  text-decoration: underline;
+}
+
+.itemPhotoCarousel {
+  flex: 1;
+  object-fit: cover;
+  height: 300px;
+}
+
+.cardContainer {
+  display: flex;
+  height: 250px;
+}
+
+.cardPhotoContainer {
+  flex: 1;
+  max-width: 25%;
+  object-fit: contain;
+}
+
+.cardPhoto {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.cardInfoContainer {
+  flex: 2;
+  border: solid 2px lightgray;
+  border-radius: 10px;
+
+  padding-top: 5px;
+  margin-left: 10px;
+}

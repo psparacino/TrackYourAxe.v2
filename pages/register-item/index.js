@@ -1,3 +1,3 @@
-import RegisterItem from './RegisterItem.jsx';
+import RegisterItem from "./RegisterItem.jsx";
 
 export default RegisterItem;

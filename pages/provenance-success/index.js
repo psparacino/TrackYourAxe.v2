@@ -1,3 +1,3 @@
-import ProvenanceSuccess from './ProvenanceSuccess.js';
+import ProvenanceSuccess from "./ProvenanceSuccess.js";
 
 export default ProvenanceSuccess;

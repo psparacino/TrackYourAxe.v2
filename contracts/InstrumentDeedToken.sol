@@ -30,6 +30,14 @@ contract InstrumentDeedToken is ERC721, ERC721Enumerable, ERC721URIStorage, Owna
         return tokenId;
     }
 
+    // TESTING FUNCTION, DELETE
+
+    function batchMint(uint _amount, string memory hash) public {
+        for(uint i = 0; i<= _amount; i++){
+            safeMint(msg.sender, hash);
+        }
+    }
+
     function tokensOfOwner(address _owner) 
          external 
          view 

@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-ethers");
 require("hardhat-gas-reporter");
-require('dotenv').config()
+require("dotenv").config();
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();
@@ -14,14 +14,14 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 module.exports = {
   gasReporter: {
     enabled: true,
-    currency: 'USD'
+    currency: "USD",
   },
   paths: {
-    sources: './contracts'
+    sources: "./contracts",
   },
   networks: {
     hardhat: {
-      chainId: 1337  
+      chainId: 31337,
     },
     /*  
     kovan: {
@@ -33,21 +33,14 @@ module.exports = {
       accounts:[`${process.env.REACT_APP_PRIVATE_KEY}`],
     }
     */
-    
-    
-  }, 
+  },
   solidity: {
-    version: '0.8.10'
-    /*
-    re-introduce optimizer once code has been tightened up
-    ,
+    version: "0.8.10",
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1000,
-      }
-    }
-    */
-  } 
+        runs: 200,
+      },
+    },
+  },
 };
-  
