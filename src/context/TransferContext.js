@@ -19,7 +19,7 @@ export function TransferContextProvider({ children }) {
   const [pendingTransferContracts, setPendingTransferContracts] = useState();
 
   //load all pending transfers
-  useEffect(async () => {
+  useEffect(() => {
     if (MothershipContract) {
       populateTransfers()
         .then((result) => console.log(result, "transfer populate result"))
@@ -56,7 +56,7 @@ export function TransferContextProvider({ children }) {
       setPendingTransferContracts(transferArray);
       // setTransferInitiated(false)
     }
-  }, [MothershipContract, mainAccount]);
+  }, [MothershipContract, mainAccount, signer]);
 
   const state = {
     pendingTransferContracts,

@@ -28,7 +28,7 @@ module.exports = {
       accounts:[`${process.env.PRIVATE_KEY}`],
     },
     mumbai: {
-      url: `${process.env.MUMBAI_INFURA_URL}`,
+      url: `${process.env.MUMBAI_ENDPOINT}`,
       accounts:[`${process.env.PRIVATE_KEY}`],
     },
   },

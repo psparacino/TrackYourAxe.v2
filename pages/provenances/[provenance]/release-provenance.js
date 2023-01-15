@@ -218,7 +218,7 @@ const ReleaseProvenance = () => {
               <h2>
                 Step 1: Approve This Token For Transfer{" "}
                 {tokenApproved ? (
-                  <Image src={greenCheckMark.src} height="20px" />
+                  <Image alt="green checkmark" src={greenCheckMark.src} height="20px" />
                 ) : null}
               </h2>
             </Row>

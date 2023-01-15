@@ -26,13 +26,13 @@ export function ContractContextProvider({ children }) {
   //   const { MothershipContract, TokenContract } = useContractObjectRepo()
 
   const { provider, modalProvider, signer } = useUserContext();
-  // console.log(signer, "top signer check")
+
 
   const [MothershipContract, setMothershipContract] = useState("");
   const [TokenContract, setTokenContract] = useState("");
 
   //need to adjust this hook for non-Ethereum
-  useEffect(async () => {
+  useEffect(() => {
     contractObjects();
 
     async function contractObjects() {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer, useMemo } from "react";
 //import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 
@@ -80,6 +80,7 @@ const RegisterItem = () => {
   const { mainAccount, provider, signer, dateString } = useUserContext();
   const { MothershipContract, TokenContract } = useContractContext();
   const { stringToBytes32 } = useItemContext();
+
 
   const {
     items,
@@ -211,7 +212,7 @@ const RegisterItem = () => {
 
   //check if token has been used in a Provenance
   const UserTokens = () => {
-    let provenanceTokens = [];
+    const provenanceTokens = useMemo(() => [], []);
     let unusedTokens = [];
 
     useEffect(() => {

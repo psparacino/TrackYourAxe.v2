@@ -1,5 +1,5 @@
 // src/context/state.js
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 // import { networkParams } from "./networks";
 import { toHex, truncateAddress } from "../hooks/utils";
 import { ethers } from "ethers";
@@ -25,7 +25,7 @@ export function UserContextProvider({ children }) {
 
   //set web3Modal instance
 
-  useEffect(async () => {
+  useEffect(() => {
     loadModal();
     // console.log("load modal firing")
 
@@ -38,14 +38,7 @@ export function UserContextProvider({ children }) {
     }
   }, []);
 
-  //connect page on reload
-  useEffect(async () => {
-    if (web3Modal && web3Modal.cachedProvider) {
-      connectWallet();
-    }
-  }, [web3Modal]);
-
-  const connectWallet = async () => {
+  const connectWallet = useCallback(async() => {
     try {
       const modalProvider = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(modalProvider);
@@ -67,7 +60,16 @@ export function UserContextProvider({ children }) {
       );
       console.error(error, "connect error");
     }
-  };
+  },[web3Modal]);
+
+  //connect page on reload
+  useEffect(() => {
+    if (web3Modal && web3Modal.cachedProvider) {
+      connectWallet();
+    }
+  }, [web3Modal, connectWallet]);
+
+  
 
   const handleNetwork = (e) => {
     const id = e.target.value;
@@ -108,11 +110,11 @@ export function UserContextProvider({ children }) {
     setNetwork("");
   };
 
-  const disconnect = async () => {
+  const disconnect = useCallback(async () => {
     await web3Modal.clearCachedProvider();
     refreshState();
     console.log("disconnect");
-  };
+  },[web3Modal]);
 
   //EVENT LISTENERS
 
@@ -148,7 +150,7 @@ export function UserContextProvider({ children }) {
         }
       };
     }
-  }, [modalProvider]);
+  }, [modalProvider, disconnect, error]);
 
   const ipfsGetterRootURL = "https://gateway.pinata.cloud/ipfs/";
   const date = new Date();
