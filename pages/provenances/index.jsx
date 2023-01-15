@@ -38,7 +38,7 @@ const OwnedProvenanceHub = () => {
   const router = useRouter();
 
   // to rebuild page and add new item. can probably be optimized.
-  useEffect(async () => {
+  useEffect(() => {
     confirmAdded();
 
     async function confirmAdded() {

@@ -4,7 +4,7 @@ import { Spinner, Button } from "react-bootstrap";
 
 import Image from "next/image";
 
-import waitingkitten from "../../public/images/waitingkitten.jpeg";
+import waitingkitten from "../../../public/images/waitingkitten.jpeg";
 
 //import './DragAndDrop.css';
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 // component imports
-import ConnectWalletButton from "../ConnectWalletButton";
+import ConnectWalletButton from "../ConnectWalletButton/ConnectWalletButton";
 
 // context imports
 import { useUserContext } from "../../context/UserContext";

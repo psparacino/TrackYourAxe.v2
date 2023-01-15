@@ -23,16 +23,14 @@ module.exports = {
     hardhat: {
       chainId: 31337,
     },
-    /*  
-    kovan: {
-      url: `${process.env.REACT_APP_KOVAN_INFURA_URL}`,
-      accounts:[`${process.env.REACT_APP_PRIVATE_KEY}`],
+    sepolia: {
+      url: `${process.env.KOVAN_INFURA_URL}`,
+      accounts:[`${process.env.PRIVATE_KEY}`],
     },
-    rinkeby: {
-      url: `${process.env.REACT_APP_RINKEBY_INFURA_URL}`,
-      accounts:[`${process.env.REACT_APP_PRIVATE_KEY}`],
-    }
-    */
+    mumbai: {
+      url: `${process.env.MUMBAI_INFURA_URL}`,
+      accounts:[`${process.env.PRIVATE_KEY}`],
+    },
   },
   solidity: {
     version: "0.8.10",

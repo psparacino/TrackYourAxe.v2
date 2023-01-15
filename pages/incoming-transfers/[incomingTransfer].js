@@ -26,7 +26,7 @@ import { useUserContext } from "../../src/context/UserContext";
 import { useTransferContext } from "../../src/context/TransferContext";
 
 // component imports
-import DragAndDrop from "../../src/components/DragAndDrop.js";
+import DragAndDrop from "../../src/components/DragAndDrop/DragAndDrop.js";
 import PhotoPreviews from "../../src/components/PhotoPreviews.js";
 
 // styles

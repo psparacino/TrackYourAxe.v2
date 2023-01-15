@@ -7,11 +7,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 //component imports
-import DragAndDrop from "../../src/components/DragAndDrop.js";
+import DragAndDrop from "../../src/components/DragAndDrop/DragAndDrop.js";
 import PhotoPreviews from "../../src/components/PhotoPreviews.js";
 
 // import { Modal } from '../../src/components/Modal.js';
-import { ConfirmationModal } from "../../src/components/ConfirmationModal.js";
+import { ConfirmationModal } from "../../src/components/ConfirmationModal/ConfirmationModal";
 
 //context imports
 import { useUserContext } from "../../src/context/UserContext.js";

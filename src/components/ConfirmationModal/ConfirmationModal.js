@@ -12,9 +12,7 @@ import {
 
 //import './ConfirmationModal.css';
 
-import waitingkitten from "../../public/images/waitingkitten.jpeg";
-
-import { useUserContext } from "../context/UserContext";
+import { useUserContext } from "../../context/UserContext";
 
 import styles from "./ConfirmationModal.module.css";
 

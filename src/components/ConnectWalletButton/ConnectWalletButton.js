@@ -1,15 +1,15 @@
 import { useState, React, useEffect } from "react";
 
 import { ethers } from "ethers";
-import { useUserContext } from "../context/UserContext";
+import { useUserContext } from "../../context/UserContext";
 
 // images
-import greenCheckMark from "../../public/images/green_checkmark.png";
+import greenCheckMark from "../../../public/images/green_checkmark.png";
 
 // styles
 import { Button, Image, Dropdown } from "react-bootstrap";
 import styles from "./ConnectWalletButton.module.css";
-import { truncateAddress } from "../hooks/utils";
+import { truncateAddress } from "../../hooks/utils";
 
 const ConnectWalletButton = () => {
   const {

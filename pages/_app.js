@@ -3,7 +3,7 @@ import "../styles/global.css";
 import { useEffect } from "react";
 
 //temp style imports
-import "../src/components/DragAndDrop.css";
+import "../src/components/DragAndDrop/DragAndDrop.css";
 
 //component imports
 import NavBar from "../src/components/NavBar/NavBar";
