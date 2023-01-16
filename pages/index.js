@@ -48,9 +48,9 @@ function App() {
             a blockchain-backed provenance and verification solution for <br />
             instruments and musical items
           </h3>
-          {chainId && chainId != 31337 ? (
+          {chainId && chainId != 80001 ? (
             <h4 style={{ color: "red" }}>
-              PLEASE CONNECT TO LOCALHOST IN YOUR WALLET TO CONTINUE
+              PLEASE CONNECT TO MUMBAI IN YOUR WALLET TO CONTINUE
             </h4>
           ) : null}
           <Row>

@@ -7,7 +7,7 @@ import { useUserContext } from "../../context/UserContext";
 import greenCheckMark from "../../../public/images/green_checkmark.png";
 
 // styles
-import { Button, Image, Dropdown } from "react-bootstrap";
+import { Button, Image, Dropdown, Modal } from "react-bootstrap";
 import styles from "./ConnectWalletButton.module.css";
 import { truncateAddress } from "../../hooks/utils";
 
@@ -22,9 +22,28 @@ const ConnectWalletButton = () => {
     connectWallet,
   } = useUserContext();
 
+  const [showModal, setShowModal] = useState(false);
+  const [showConnectButton, setShowConnectButton] = useState(true);
+  
   useEffect(() => {
-    if (mainAccount) setConnectionErrorMessage("");
+    if (mainAccount) {
+      setShowConnectButton(false);
+      setConnectionErrorMessage("");
+    }
   }, [mainAccount, setConnectionErrorMessage]);
+
+  useEffect(() => {
+    let timeoutId;
+
+      setShowModal(true);
+      setShowConnectButton(false);
+      timeoutId = setTimeout(() => {
+        setShowModal(false);
+        setShowConnectButton(true);
+      }, 1500);
+    
+    return () => clearTimeout(timeoutId);
+  }, [ setShowModal, setShowConnectButton]);
 
   return (
     <div>
@@ -60,37 +79,11 @@ const ConnectWalletButton = () => {
           <p className={styles.buttonText}>Connect Wallet</p>
         </Button>
       )}
-      {connectionErrorMessage ? (
-        <p style={{ color: "red", marginLeft: "200px" }}>
-          {connectionErrorMessage}
-        </p>
-      ) : null}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+          <Modal.Body>{connectionErrorMessage}</Modal.Body>
+        </Modal>
     </div>
   );
 };
 
 export default ConnectWalletButton;
-
-/*
-
-<div>
-<Button className={styles.button} id="connectButton" onClick={connectWallet} disabled={mainAccount} >
-
-{mainAccount ? `Account: ${truncateAddress(mainAccount)}` : "Connect Wallet"}
-
-{mainAccount ? 
-<Image 
-className={styles.checkmarkImage}
-src={'images/green_checkmark.png'} 
-alt="checkmark"/> : 
-<Image 
-className={styles.checkmarkImage}
-src={'images/Red_x.svg'} 
-alt="checkmark"/>}
-
-<hr />
-{`Chain Id: ${chainId}`}
-
-</Button>
-
-*/
