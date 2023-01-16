@@ -2,36 +2,19 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 //next imports
-import Link from "next/link";
+
 import { useRouter } from "next/router";
 
 //react-bootstrap imports
-import {
-  Container,
-  Carousel,
-  Table,
-  Row,
-  Col,
-  Card,
-  Image,
-  Button,
-  ListGroup,
-  ListGroupItem,
-  InputGroup,
-  Form,
-  FormControl,
-} from "react-bootstrap";
+import { Container, Row, Col, Image, Button } from "react-bootstrap";
 
 // context imports
 import { useItemContext } from "../../../src/context/ItemContext";
 import { useContractContext } from "../../../src/context/ContractContext";
 import { useUserContext } from "../../../src/context/UserContext";
 
-import { useTransferContext } from "../../../src/context/TransferContext";
-
 // styles
 import styles from "./release-provenance.module.css";
-import { use } from "chai";
 
 // images
 
@@ -62,24 +45,31 @@ const ReleaseProvenance = () => {
   const [escrowActive, setEscowActive] = useState();
 
   const router = useRouter();
+
   const { provenance } = router.query;
 
-  // this will change if prov objects is an object with address key instead of array
   useEffect(() => {
-    if (provenanceObjects && provenance) {
-      loadProvenance();
+    if (!provenanceObjects || !provenance || provenanceObjects.length === 0) {
+      return;
     }
-    async function loadProvenance() {
-      for (let contract of provenanceObjects) {
-        if (contract.ProvenanceContract.address == provenance) {
-          const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } =
-            contract;
 
-          setOutgoingContract(ProvenanceContract);
-          setOutgoingProvenanceProps(ProvenanceProps);
-          setOutgoingProvenanceOwnerInfo(ProvenanceOwnerInfo);
-          setLoaded(true);
-        }
+    loadProvenance();
+
+    async function loadProvenance() {
+      const contract = provenanceObjects.find(
+        (contract) =>
+          contract.ProvenanceContract &&
+          contract.ProvenanceContract.address === provenance
+      );
+
+      if (contract) {
+        const { ProvenanceContract, ProvenanceProps, ProvenanceOwnerInfo } =
+          contract;
+
+        setOutgoingContract(ProvenanceContract);
+        setOutgoingProvenanceProps(ProvenanceProps);
+        setOutgoingProvenanceOwnerInfo(ProvenanceOwnerInfo);
+        setLoaded(true);
       }
     }
   }, [provenanceObjects, provenance]);
@@ -96,7 +86,7 @@ const ReleaseProvenance = () => {
         setTokenApproved(true);
       }
     }
-  }, [TokenContract, outgoingProvenanceProps, outgoingContract.address]);
+  }, [TokenContract, outgoingProvenanceProps, outgoingContract]);
 
   useEffect(() => {
     if (outgoingContract || transferInitiated) {
@@ -123,26 +113,42 @@ const ReleaseProvenance = () => {
   async function approveTransfer() {
     setSuccessMessage("");
     setAddressErrorMessage("");
-    await TokenContract.approve(
-      outgoingContract.address,
-      outgoingProvenanceProps.instrumentDeedToken.toString()
-    )
-      .then(async (result) => {
-        provider
-          .waitForTransaction(result.hash)
-          .then(async (mined) => {
-            if (mined) {
-              setSuccessMessage("Transaction Success");
-              setTokenApproved(true);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error.message, "User denied approval txn");
-      });
+    if (
+      TokenContract &&
+      outgoingContract &&
+      outgoingProvenanceProps.instrumentDeedToken
+    ) {
+      // alert, change instrumentDeedTokent type
+      await TokenContract.approve(
+        outgoingContract.address,
+        outgoingProvenanceProps.instrumentDeedToken
+      )
+        .then(async (result) => {
+          provider
+            .waitForTransaction(result.hash)
+            .then(async (mined) => {
+              if (mined) {
+                setSuccessMessage("Transaction Success");
+                setTokenApproved(true);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error.message, "User denied approval txn");
+        });
+    } else {
+      console.log(
+        "TokenContract",
+        TokenContract,
+        "outgoingContract",
+        outgoingContract,
+        "outgoingProvenanceProps",
+        outgoingProvenanceProps
+      );
+    }
   }
 
   async function revokeTransferApproval() {
@@ -192,7 +198,7 @@ const ReleaseProvenance = () => {
     }
   }
 
-  if (loaded) {
+  if (loaded && outgoingContract && outgoingProvenanceProps) {
     return (
       <Container>
         <div style={{ textAlign: "center" }}>
@@ -218,7 +224,11 @@ const ReleaseProvenance = () => {
               <h2>
                 Step 1: Approve This Token For Transfer{" "}
                 {tokenApproved ? (
-                  <Image alt="green checkmark" src={greenCheckMark.src} height="20px" />
+                  <Image
+                    alt="green checkmark"
+                    src={greenCheckMark.src}
+                    height="20px"
+                  />
                 ) : null}
               </h2>
             </Row>

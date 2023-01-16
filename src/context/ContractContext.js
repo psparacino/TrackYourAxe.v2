@@ -27,7 +27,6 @@ export function ContractContextProvider({ children }) {
 
   const { provider, modalProvider, signer } = useUserContext();
 
-
   const [MothershipContract, setMothershipContract] = useState("");
   const [TokenContract, setTokenContract] = useState("");
 

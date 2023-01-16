@@ -388,37 +388,3 @@ function PublicProvenanceSearchTable() {
 }
 
 export default PublicProvenanceSearchTable;
-
-//   if (!(isEmptyObject(values))) {
-//     const filteredData = allProvenanceObjects.filter((item) => {
-//         const itemProps = item.ProvenanceProps;
-//         const itemOwnerInfo = item.ProvenanceOwnerInfo;
-//         const combinedObj = {
-//             ...itemProps,
-//            ...itemOwnerInfo
-//         }
-//         const valuesKeys = Object.keys(values);
-//         const combinedObjKeys = Object.keys(combinedObj);
-//         for (const [key, value] of Object.entries(values)) {
-
-//             console.log(key, value)
-//             return Object.values(combinedObj).join('').toLowerCase().includes(value.toLowerCase());
-
-//             // console.log(Object.entries(values), "object entires")
-//             // console.log(combinedObj, "combinedObj")
-//             // return Object.values(combinedObj).join('').toLowerCase().includes(value.toLowerCase());
-//           }
-//         })
-
-//     // const filteredData = allProvenanceObjects.filter(function(item) {
-//     //     for (const [key, value] of Object.entries(values)) {
-//     //         console.log(key, "key")
-//     //       if (item[key] === undefined || item[key] != filter[key])
-//     //         return false;
-//     //     }
-//     //     return true;
-//     //   });
-
-//     console.log(filteredData, "filteredData")
-//     setFilteredResults(filteredData)
-// }

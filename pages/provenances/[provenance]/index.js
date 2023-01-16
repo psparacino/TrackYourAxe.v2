@@ -74,8 +74,12 @@ const ProvenanceProfile = () => {
   }, [provenanceObjects, provenance]);
 
   function loadAndPush() {
-    const address = provenanceContract.address;
-    router.push(`/provenances/${address}/release-provenance`);
+    if (provenanceContract && provenanceContract.address) {
+      const address = provenanceContract.address;
+      router.push(`/provenances/${address}/release-provenance`);
+    } else {
+      console.log("no provenance contract");
+    }
   }
 
   const ItemPhotoCarousel = () => {

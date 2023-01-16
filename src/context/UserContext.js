@@ -1,5 +1,11 @@
 // src/context/state.js
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 // import { networkParams } from "./networks";
 import { toHex, truncateAddress } from "../hooks/utils";
 import { ethers } from "ethers";
@@ -38,7 +44,7 @@ export function UserContextProvider({ children }) {
     }
   }, []);
 
-  const connectWallet = useCallback(async() => {
+  const connectWallet = useCallback(async () => {
     try {
       const modalProvider = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(modalProvider);
@@ -60,7 +66,7 @@ export function UserContextProvider({ children }) {
       );
       console.error(error, "connect error");
     }
-  },[web3Modal]);
+  }, [web3Modal]);
 
   //connect page on reload
   useEffect(() => {
@@ -68,8 +74,6 @@ export function UserContextProvider({ children }) {
       connectWallet();
     }
   }, [web3Modal, connectWallet]);
-
-  
 
   const handleNetwork = (e) => {
     const id = e.target.value;
@@ -114,7 +118,7 @@ export function UserContextProvider({ children }) {
     await web3Modal.clearCachedProvider();
     refreshState();
     console.log("disconnect");
-  },[web3Modal]);
+  }, [web3Modal]);
 
   //EVENT LISTENERS
 

@@ -81,7 +81,6 @@ const RegisterItem = () => {
   const { MothershipContract, TokenContract } = useContractContext();
   const { stringToBytes32 } = useItemContext();
 
-
   const {
     items,
     setItems,

@@ -11,7 +11,7 @@
     "deploymothership": "hh run --network localhost scripts/deployMothership.js",
     "deploytoken-mumbai": "hh run scripts/deployInstrumentToken.js --network mumbai",
     "deploymothership-mumbai": "hh run scripts/deployMothership.js --network mumbai",
-    "prettify": "yarn prettier --write ."
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "3d-earth": "^1.0.8",

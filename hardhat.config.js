@@ -25,11 +25,11 @@ module.exports = {
     },
     sepolia: {
       url: `${process.env.KOVAN_INFURA_URL}`,
-      accounts:[`${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     mumbai: {
       url: `${process.env.MUMBAI_ENDPOINT}`,
-      accounts:[`${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
   },
   solidity: {

@@ -114,7 +114,7 @@ export function ItemContextProvider({ children }) {
       }
       setProvenanceObjects(provenanceArray);
     }
-  }, [items, newProvenanceAddress, itemAdded, mainAccount]);
+  }, [items, newProvenanceAddress, itemAdded, mainAccount, signer]);
 
   const stringToBytes32 = (string) => ethers.utils.formatBytes32String(string);
 
