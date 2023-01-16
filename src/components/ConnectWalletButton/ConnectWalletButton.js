@@ -35,7 +35,7 @@ const ConnectWalletButton = () => {
   useEffect(() => {
     let timeoutId;
 
-      setShowModal(true);
+      // setShowModal(true);
       setShowConnectButton(false);
       timeoutId = setTimeout(() => {
         setShowModal(false);
@@ -44,6 +44,8 @@ const ConnectWalletButton = () => {
     
     return () => clearTimeout(timeoutId);
   }, [ setShowModal, setShowConnectButton]);
+
+  console.log("showModal", showModal);
 
   return (
     <div>
