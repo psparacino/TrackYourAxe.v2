@@ -1,34 +1,22 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+Testnet deployment: [AxeTracker](https://axetracker.netlify.app/)
 
-First, run the development server:
+  
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+***YOU MUST BE CONNECTED TO MUMBAI (POLYGON TESTNET) TO INTERACT WITH THE APP***
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+  
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Track Your Axe
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+  
+Track Your Axe is a blockchain-based platform designed to bring transparency and security to the provenance of musical instruments. 
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+With the current system of provenance relying heavily on fraying documents and hearsay, it's difficult for musicians, collectors, and buyers to accurately gauge the worth of a prospective instrumental purchase, which can range into the hundreds of thousands of dollars. Track Your Axe aims to change that by providing a tamper-proof and easily verifiable way to track the history and ownership of musical instruments. 
 
-## Learn More
+By using the transparent and permanent database of a blockchain, Track Your Axe ensures that the information about an instrument is immutable and can be easily accessed and verified by all parties. This means that musicians, collectors, and buyers can have peace of mind knowing that the information about an instrument's provenance is accurate and reliable. 
 
-To learn more about Next.js, take a look at the following resources:
+Track Your Axe also enables easy transfer of ownership, making buying and selling of musical instruments more efficient and secure. With Track Your Axe, you can trust the authenticity of your instrument and prove its provenance. 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+ 
+Track Your Axe is currently deployed on `Mumbai`
