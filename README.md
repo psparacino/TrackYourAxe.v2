@@ -1,5 +1,3 @@
-Testnet deployment: [AxeTracker](https://axetracker.netlify.app/)
-
 **_YOU MUST BE CONNECTED TO MUMBAI (POLYGON TESTNET) TO INTERACT WITH THE APP_**
 
 ## Track Your Axe
